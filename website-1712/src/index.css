@@ -1,3 +1,34 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  :root {
+    --primary: 10, 59, 21;      /* RGB for #06210c (Dark Green) */
+    --secondary: 23, 127, 46;  /* RGB for #177F2E (Light Green) */
+    --background: 232, 245, 233; /* RGB for #E8F5E9 (Light Greenish White) */
+    --text: 18, 29, 18;        /* RGB for #121d12 (Dark Green almost black) */
+  }
+
+  html,
+  body {
+    margin: 0;
+    padding: 0; 
+    height: 100%; 
+    width: 100%;
+
+    background-color: rgb(var(--background));
+    color: rgb(var(--text))
+  }
+
+   button {
+    background-color: rgb(var(--primary));
+    color: white;
+  }
+  
+   button:hover {
+    background-color: rgb(var(--secondary));
+  }
+
+}
+
