@@ -1,10 +1,12 @@
+import Footer from "./Footer"
 
-const Layout = ({ children }) => {
-    const {Header, Main} = children
+
+const Layout = ({ header, main }) => {
+
     return (
         <div className=' w-screen h-screen left-0 top-0 absolute'>
-            <Header />
-            <Main />
+            {header}
+            {main}
             <Footer />
         </div>
     )

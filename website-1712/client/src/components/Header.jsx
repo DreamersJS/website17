@@ -1,4 +1,5 @@
 import { NavLink, useNavigate } from "react-router-dom";
+import ResponsiveComponent from "./ResponsiveComponent";
 
 const Header = ({ admin, userId }) => {
     const navigate = useNavigate();
@@ -8,7 +9,7 @@ const Header = ({ admin, userId }) => {
         {({ width, height }) => (
             // mobile
 
-           <header>
+        <header>
            {/* no user */}
            <div className="">
             {/* Home */}
@@ -50,7 +51,7 @@ const Header = ({ admin, userId }) => {
                    </div>
                )
            }
-       </header>
+        </header>
         )}
       </ResponsiveComponent>
        
