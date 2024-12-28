@@ -11,6 +11,8 @@ import CoachesPage from './components/CoachesPage';
 // https://excalidraw.com/#json=rSo3sN2fJiBowpks8Aw-h,bYdqBNvCUjKXOchU2HEJMg
 
 function App() {
+  const [userId, setUserId] = useState('1');
+  const [admin, setAdmin] = useState(true);
 
   return (
     <>
@@ -25,7 +27,7 @@ function App() {
               <Route path="/home/:userId" element={<Layout header={<AdminHeader />} main={<Home />} />} />
                  */}
 
-                <Route path="/" element={<Layout header={<Header />} main={<Home />} />} />
+                <Route path="/" element={<Layout header={<Header userId={userId} admin={admin} />} main={<Home />} />} />
                 <Route path="/coach" element={<Layout header={<Header />} main={<CoachesPage />} />} />
 
                 {/* <Route path='/' element={<Home />} /> */}
