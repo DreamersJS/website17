@@ -10,7 +10,9 @@ const Header = ({ admin, userId }) => {
             {({ width, height }) => (
                 // mobile
 
-                <header>
+                <header className="
+                w-full h-16 bg-primary text-white flex justify-center items-center sticky top-0 left-0 z-50
+                ">
 
                     {/* no user */}
                     <div className="">

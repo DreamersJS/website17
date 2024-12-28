@@ -12,8 +12,8 @@ export default {
       },
       // bg-green-gradient or bg-green-radial
       backgroundImage: {
-        'green-gradient': 'linear-gradient(to bottom, #06210c, #177F2E)', // Custom gradient
-        'green-radial': 'radial-gradient(circle, #06210c, #177F2E)', // Radial gradient
+        'green-gradient': 'linear-gradient(to bottom, #06210c, #177F2E)', // dark to light green
+        'green-radial': 'radial-gradient(circle, #06210c, #177F2E)', 
       },
     },
   },
