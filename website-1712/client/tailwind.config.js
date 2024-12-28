@@ -8,7 +8,7 @@ export default {
         primary: "rgb(var(--primary))",
         secondary: "rgb(var(--secondary))",
         background: "rgb(var(--background))",
-        text: "rgb(var(--text))",
+        text: "rgb(var(--text-color))",
       },
       // bg-green-gradient or bg-green-radial
       backgroundImage: {

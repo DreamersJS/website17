@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --primary: 10, 59, 21;      /* RGB for #06210c (Dark Green) */
+    --primary: 11, 64, 23;      /* RGB for #06210c  #0b4017  (Dark Green) */
     --secondary: 23, 127, 46;  /* RGB for #177F2E (Light Green) */
     --background: 232, 245, 233; /* RGB for #E8F5E9 (Light Greenish White) */
     --text: 18, 29, 18;        /* RGB for #121d12 (Dark Green almost black) */
