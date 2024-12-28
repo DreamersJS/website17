@@ -7,19 +7,21 @@ import SearchIcon from '@mui/icons-material/Search';
 import { AppBar, Toolbar, IconButton, Typography, Box, Drawer, Menu, MenuItem, Divider, List, ListItem, ListItemText } from '@mui/material';
 
 const Header = ({ admin, userId }) => {
-    const [openMenu, setOpenMenu] = useState(false);
-    const navigate = useNavigate();
-    const [anchorEl, setAnchorEl] = useState(null); // To handle the Profile dropdown menu
+    const [openMenu, setOpenMenu] = useState(false); // Handles mobile menu
+    const [anchorEl, setAnchorEl] = useState(null); // Handles profile/admin menu dropdown
+    const [menuType, setMenuType] = useState(''); // To track which menu is open (profile, admin)
     const [openSearch, setOpenSearch] = useState(false); // To handle the search input visibility
 
-    // Open Profile Menu
-    const handleProfileMenu = (event) => {
+    // Open Menu
+    const handleMenuOpen = (event, type) => {
         setAnchorEl(event.currentTarget);
+        setMenuType(type); // Set the menu type (either 'profile' or 'admin')
     };
 
-    // Close Profile Menu
+    // Close Menu
     const handleClose = () => {
         setAnchorEl(null);
+        setMenuType(''); // Reset menu type when closing
     };
 
     const toggleSearch = () => {
@@ -59,10 +61,10 @@ const Header = ({ admin, userId }) => {
                         <>
                             {/* Profile with Logout submenu */}
                             <Box display="flex" alignItems="center" sx={{ margin: '0 10px' }}>
-                                <ButtonUsage content="Profile" onClick={handleProfileMenu} />
+                                <ButtonUsage content="Profile" onClick={(e) => handleMenuOpen(e, 'profile')} />
                                 <Menu
                                     anchorEl={anchorEl}
-                                    open={Boolean(anchorEl)}
+                                    open={menuType === 'profile'}
                                     onClose={handleClose}
                                 >
                                     <MenuItem component={NavLink} to="/profile" onClick={handleClose}>
@@ -78,22 +80,39 @@ const Header = ({ admin, userId }) => {
                                     </MenuItem>
                                 </Menu>
                             </Box>
-                            <NavLink to="/coach" style={{ margin: '0 10px' }}>
-                                <ButtonUsage content="Coaches" />
-                            </NavLink>
-                            <NavLink to="/testimonials" style={{ margin: '0 10px' }}>
-                                <ButtonUsage content="Testimonials" />
-                            </NavLink>
-                            <NavLink to="/products" style={{ margin: '0 10px' }}>
-                                <ButtonUsage content="Products" />
-                            </NavLink>
                         </>
                     )}
+
+                    {/* Admin with submenu */}
                     {admin && (
-                        <NavLink to="/admin" style={{ margin: '0 10px' }}>
-                            <ButtonUsage content="Admin" />
-                        </NavLink>
+                        <Box display="flex" alignItems="center" sx={{ margin: '0 10px' }}>
+                            <ButtonUsage content="Admin" onClick={(e) => handleMenuOpen(e, 'admin')} />
+                            <Menu
+                                anchorEl={anchorEl}
+                                open={menuType === 'admin'}
+                                onClose={handleClose}
+                            >
+                                <MenuItem component={NavLink} to="/admin" onClick={handleClose}>
+                                    Admin
+                                </MenuItem>
+                                <Divider />
+                                <MenuItem component={NavLink} to="/results" onClick={handleClose}>
+                                    Block Users
+                                </MenuItem>
+                            </Menu>
+                        </Box>
                     )}
+
+                    {/* Available to all users */}
+                    <NavLink to="/coach" style={{ margin: '0 10px' }}>
+                        <ButtonUsage content="Coaches" />
+                    </NavLink>
+                    <NavLink to="/testimonials" style={{ margin: '0 10px' }}>
+                        <ButtonUsage content="Testimonials" />
+                    </NavLink>
+                    <NavLink to="/products" style={{ margin: '0 10px' }}>
+                        <ButtonUsage content="Products" />
+                    </NavLink>
 
                     {/* Search Bar with Button */}
                     <Box display="flex" alignItems="center" sx={{ marginLeft: 2 }}>
