@@ -1,6 +1,8 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import ResponsiveComponent from "./ResponsiveComponent";
 import ButtonUsage from "./Button";
+import HomeIcon from '@mui/icons-material/Home';
+import MenuIcon from '@mui/icons-material/Menu';
 
 const Header = ({ admin, userId }) => {
     const navigate = useNavigate();
@@ -8,63 +10,67 @@ const Header = ({ admin, userId }) => {
     return (
         <ResponsiveComponent>
             {({ width, height }) => (
-                // mobile
-
                 <header className="
                 w-full h-16 bg-primary text-white flex justify-center items-center sticky top-0 left-0 z-50
                 ">
-
-                    {/* no user */}
-                    <div className="">
-                        {/* Home */}
-                        <NavLink to="/" className="">
-                            <span>
-                                <ButtonUsage content={'Home'}></ButtonUsage>
-                            </span>
-                        </NavLink>
-                        {/* Login */}
-                        <NavLink to="/login" className="">
-                            <span>
-                                <ButtonUsage content={'Login'}></ButtonUsage>
-                            </span>
-                        </NavLink>
-                        {/* Register */}
-                        <NavLink to="/register" className="">
-                            <span>
-                                <ButtonUsage content={'Register'}></ButtonUsage>
-                            </span>
-                        </NavLink>
-                    </div>
-
-                    {/* user */}
-                    {
-                        userId && (
+                    {width < 500 ? (
+                        <MenuIcon />
+                    ) : (
+                        <div>
+                            {/* No user */}
                             <div>
-                                <NavLink to="/profile">
-                                    <ButtonUsage content={'Profile'}></ButtonUsage>
+                                <NavLink to="/">
+                                    <span>
+                                        <HomeIcon sx={{ fontSize: 30, color: '#177F2E' }} />
+                                        <ButtonUsage content="Home" />
+                                    </span>
                                 </NavLink>
-                                <NavLink to="/logout">
-                                    <ButtonUsage content={'Logout'}></ButtonUsage>
+                                <NavLink to="/login">
+                                    <span>
+                                        <ButtonUsage content="Login" />
+                                    </span>
                                 </NavLink>
-                                {/* + list of other pages? to map them for a reusable header component */}
-                            </div>
-                        )
-                    }
-
-                    {/* admin ?with dropdown?*/}
-                    {
-                        admin && (
-                            <div>
-                                <NavLink to="/admin">
-                                    <ButtonUsage content={'Admin'}></ButtonUsage>
+                                <NavLink to="/register">
+                                    <span>
+                                        <ButtonUsage content="Register" />
+                                    </span>
                                 </NavLink>
                             </div>
-                        )
-                    }
+
+                            {/* User */}
+                            {userId && (
+                                <div>
+                                    <NavLink to="/profile">
+                                        <ButtonUsage content="Profile" />
+                                    </NavLink>
+                                    <NavLink to="/logout">
+                                        <ButtonUsage content="Logout" />
+                                    </NavLink>
+                                    <NavLink to="/coach">
+                                        <ButtonUsage content="Coaches" />
+                                    </NavLink>
+                                    <NavLink to="/testimonials">
+                                        <ButtonUsage content="Testimonials" />
+                                    </NavLink>
+                                </div>
+                            )}
+
+                            {/* Admin */}
+                            {admin && (
+                                <div>
+                                    <NavLink to="/admin">
+                                        <ButtonUsage content="Admin" />
+                                    </NavLink>
+                                </div>
+                            )}
+
+                            {/* Internationalization */}
+                        </div>
+                    )}
                 </header>
             )}
         </ResponsiveComponent>
+    );
+};
 
-    )
-}
 export default Header;

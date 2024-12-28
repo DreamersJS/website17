@@ -20,7 +20,7 @@ const useScreenSize = () => {
                 width: window.innerWidth,
                 height: window.innerHeight,
             });
-        }, 1000);
+        }, 500);
     
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
