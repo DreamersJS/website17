@@ -1,6 +1,7 @@
 import React from "react";
 import Grid from "@mui/material/Grid";
 import CoachesCard from "./CoachesCard";
+import { Paper } from "@mui/material";
 
 const coaches = [
   {
@@ -21,6 +22,9 @@ const CoachesPage = () => {
   return (
     <div>
       <h1>Coaches</h1>
+      {/* to add some info and photo together */}
+
+      {/* individual coach info */}
       {coaches.length === 0 ? (
         <p>No coaches available</p>
       ) : (
@@ -29,22 +33,30 @@ const CoachesPage = () => {
             container
             spacing={3}
             key={index}
-            direction={index % 2 === 0 ? "row" : "row-reverse"} // Reverse row direction for every second coach
+            direction={{ xs: "column", md: index % 2 === 0 ? "row" : "row-reverse" }} // Column on small screens
             alignItems="center"
           >
-            <Grid item xs={8}>
+            <Grid item xs={12} md={8}>
               <CoachesCard coach={coach} />
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={12} md={4}>
+            <Paper elevation={3}>
               <img
                 src={coach.image}
                 alt={coach.name}
                 style={{ width: "100%", borderRadius: "8px" }}
               />
+                </Paper>
             </Grid>
           </Grid>
         ))
       )}
+      {/* become a coach? join us
+      Join us in the shadows where we stand vigilant. 
+      Join us as we carry the duty that cannot be forsworn. 
+      And should you perish, know that your sacrifice will not be forgotten. 
+      And that one day we shall join you.
+      */}
     </div>
   );
 };
