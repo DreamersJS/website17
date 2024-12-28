@@ -33,5 +33,21 @@ npm install concurrently --save-dev
 - since I know from my last project that at some point I will need foreign key and cascade delete: I checked that with Prisma ORM is easy to implement it in the schema and migrating is easy(easier than Knex, less code than SQL lang, and for now I won't need difficult queries). 
 - why i choose PostgreSQL over MySQL(which I used in one of my previous apps):
 - I just love learning new stuff and this time I intend to deploy the app based on my research I can FREE & easy deploy PostgreSQL with Heroku.
+- I had to lower the prisma version
+
 - db error: ERROR: foreign key constraint "User_coachId_fkey" cannot be implemented
 DETAIL: Key columns "coachId" and "id" are of incompatible types: text and uuid.
+- delete the old migration from the table, 
+- rm prisma/migration_lock.toml
+- psql -U user \c dbname DROP TABLE IF EXISTS public."_prisma_migrations";
+
+
+-  id        String   @id @default(uuid()) @db.Uuid 
+-  coachId   String?  @db.Uuid  
+-  
+-  npx prisma migrate reset
+-  npx prisma generate
+- npx prisma migrate dev --name fix-coach-relationship
+- that fixed the err
+  
+
