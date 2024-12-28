@@ -61,7 +61,7 @@ const Header = ({ admin, userId }) => {
                         <>
                             {/* Profile with Logout submenu */}
                             <Box display="flex" alignItems="center" sx={{ margin: '0 10px' }}>
-                                <ButtonUsage content="Profile" onClick={(e) => handleMenuOpen(e, 'profile')} />
+                                <ButtonUsage content="Profile" onClick={(e) => handleMenuOpen(e, 'profile')}  aria-haspopup="menu" aria-expanded={menuType === 'profile' ? 'true' : 'false'} />
                                 <Menu
                                     anchorEl={anchorEl}
                                     open={menuType === 'profile'}
@@ -86,7 +86,7 @@ const Header = ({ admin, userId }) => {
                     {/* Admin with submenu */}
                     {admin && (
                         <Box display="flex" alignItems="center" sx={{ margin: '0 10px' }}>
-                            <ButtonUsage content="Admin" onClick={(e) => handleMenuOpen(e, 'admin')} />
+                            <ButtonUsage content="Admin" onClick={(e) => handleMenuOpen(e, 'admin')}  aria-haspopup="menu" aria-expanded={menuType === 'admin' ? 'true' : 'false'} />
                             <Menu
                                 anchorEl={anchorEl}
                                 open={menuType === 'admin'}
@@ -136,7 +136,7 @@ const Header = ({ admin, userId }) => {
 
                 {/* Mobile Menu Icon */}
                 <Box display={{ xs: 'flex', sm: 'none' }}>
-                    <IconButton onClick={toggleDrawer(true)}>
+                    <IconButton onClick={toggleDrawer(true)} aria-label="Open mobile navigation menu">
                         <MenuIcon sx={{ color: '#FFF' }} />
                     </IconButton>
                     {/* Search Bar with Button */}
@@ -148,6 +148,7 @@ const Header = ({ admin, userId }) => {
                             <input
                                 type="text"
                                 placeholder="Search..."
+                                aria-label="Search input"
                                 style={{
                                     backgroundColor: '#FFF',
                                     borderRadius: '4px',
@@ -162,7 +163,7 @@ const Header = ({ admin, userId }) => {
             </Toolbar>
 
             {/* Mobile Drawer */}
-            <Drawer anchor="right" open={openMenu} onClose={toggleDrawer(false)}>
+            <Drawer anchor="right" aria-label="Mobile navigation menu" open={openMenu} onClose={toggleDrawer(false)}>
                 <Box
                     sx={{ width: 250 }}
                     role="presentation"

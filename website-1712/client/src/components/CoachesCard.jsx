@@ -1,12 +1,14 @@
 
 const CoachesCard = ({ coach }) => {
     return (
-        <div className="card">
-            
-                <h2>{coach.name}</h2>
-                <p>{coach.description}</p>
-           
-        </div>
+        <article>
+        <header>
+          <h2>{coach.name}</h2>
+        </header>
+        <section>
+          <p>{coach.description}</p>
+        </section>
+      </article>
     );
 };
 export default CoachesCard;

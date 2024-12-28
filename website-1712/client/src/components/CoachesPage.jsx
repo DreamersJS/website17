@@ -21,10 +21,7 @@ const coaches = [
 const CoachesPage = () => {
   return (
     <div>
-      <h1>Coaches</h1>
-      {/* to add some info and photo together */}
-
-      {/* individual coach info */}
+      <h1 aria-label={'Browse Coaches'}>Coaches</h1>
       {coaches.length === 0 ? (
         <p>No coaches available</p>
       ) : (
@@ -33,30 +30,30 @@ const CoachesPage = () => {
             container
             spacing={3}
             key={index}
-            direction={{ xs: "column", md: index % 2 === 0 ? "row" : "row-reverse" }} // Column on small screens
+            direction={{
+              xs: "column",
+              md: index % 2 === 0 ? "row" : "row-reverse",
+            }}
             alignItems="center"
+            aria-label={`Coach ${index + 1}`}
           >
             <Grid item xs={12} md={8}>
-              <CoachesCard coach={coach} />
+              <CoachesCard
+                coach={coach}
+              />
             </Grid>
             <Grid item xs={12} md={4}>
-            <Paper elevation={3}>
-              <img
-                src={coach.image}
-                alt={coach.name}
-                style={{ width: "100%", borderRadius: "8px" }}
-              />
-                </Paper>
+              <Paper elevation={3} role="img">
+                <img
+                  src={coach.image}
+                  alt={coach.name}
+                  style={{ width: "100%", borderRadius: "8px" }}
+                />
+              </Paper>
             </Grid>
           </Grid>
         ))
       )}
-      {/* become a coach? join us
-      Join us in the shadows where we stand vigilant. 
-      Join us as we carry the duty that cannot be forsworn. 
-      And should you perish, know that your sacrifice will not be forgotten. 
-      And that one day we shall join you.
-      */}
     </div>
   );
 };
