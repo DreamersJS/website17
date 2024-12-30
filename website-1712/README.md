@@ -107,3 +107,6 @@ Design Considerations:
 
     In short, your homepage should be a combination of engagement (through visuals, CTAs, and content) and usability (easy navigation, search, and relevant links). Prioritize what's most important for your users to know and interact with right away.
 
+## profile page suggestions:
+https://chatgpt.com/c/67707c5b-c518-800b-915f-b0419c04f0f3
+

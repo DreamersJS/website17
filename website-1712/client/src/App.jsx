@@ -6,9 +6,11 @@ import Layout from './components/Layout';
 import Header from './components/Header';
 import Home from './components/Home';
 import CoachesPage from './components/CoachesPage';
+import ProfilePage from './components/ProfilePage';
 // import Login from './components/Login';
 // import Register from './components/Register';
 // https://excalidraw.com/#json=rSo3sN2fJiBowpks8Aw-h,bYdqBNvCUjKXOchU2HEJMg
+
 
 function App() {
   const [userId, setUserId] = useState('1');
@@ -29,8 +31,8 @@ function App() {
 
                 <Route path="/" element={<Layout header={<Header userId={userId} admin={admin} />} main={<Home />} />} />
                 <Route path="/coach" element={<Layout header={<Header />} main={<CoachesPage />} />} />
+                <Route path="/profile" element={<Layout header={<Header />} main={<ProfilePage/>} />} />
 
-                {/* <Route path='/' element={<Home />} /> */}
                 {/* <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} /> */}
               </Routes>
