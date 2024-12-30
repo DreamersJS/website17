@@ -22,7 +22,7 @@ import { validateForm, registerUser } from '../../service/service.js';
     setLoading(true);
 
     try {
-      const data = await registerUser({ username, password, email });
+      const data =  await registerUser({ username, email, password, coachId });
      // Persist user and token
      
       navigate('/');  // Redirect to home or authenticated area

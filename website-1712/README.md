@@ -110,3 +110,17 @@ Design Considerations:
 ## profile page suggestions:
 https://chatgpt.com/c/67707c5b-c518-800b-915f-b0419c04f0f3
 
+Not sure which metrics to track in Diary & Profile, how to structure the view
+ - purchases can be removed
+ - coaching sessions is nice to have as a reminder for an arranged meeting with the coach, but maybe i should place it in Diary?
+ - the table: Shall I keep, it will ppl like to write in it?
+ - progress tracking for kg, size, fats, toxins, muscle mass? ppl with less result may get discouraged, ppl with great result will wanna show of?
+ - Messages from Coach !!! most dangerous - one woman was feeling good but gave up after Beny pushed her for results
+ - Секция popup msg "приемаш ли предизвикателството"? (маратон, състезание...  със асайд елемент и да виждаш кой е на 123 място?)
+ - Still a lot of thinking to do for Diary
+  
+## To Do:
+- Login , Register, Recoil, atom, persist login, jwt, bcrypt, auth cookie, roles: user, coach, admin. 
+- Home - what to put in it?
+- Profile edit
+- Diary - what to put in it? 

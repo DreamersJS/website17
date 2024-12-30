@@ -1,19 +1,49 @@
 import prisma from '../config/prisma.js';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+
+const JWT_SECRET = process.env.JWT_SECRET
 
 /**
  * Create a new user
- * const { username, email, coachId } = req.body;
+ * const { username, email, password, coachId  } = req.body;
  */
 export const createUser = async (req, res) => {
-  const { username, email, coachId } = req.body;
+  const { username, email, password, coachId } = req.body;
+
   try {
+    if (!username || !email || !password) {
+      return res.status(400).json({ error: 'Username, email, and password are required.' });
+    }
+
+    const existingUser = await prisma.user.findUnique({ where: { email } });
+    if (existingUser) {
+      return res.status(409).json({ error: 'Email is already in use.' });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     const newUser = await prisma.user.create({
       data: {
         username,
         email,
-        coachId,
+        coachId: coachId || null,
+        password: hashedPassword,
       },
     });
+
+    const token = jwt.sign({ userId: newUser.id, email: newUser.email }, JWT_SECRET, {
+      expiresIn: '1h',
+    });
+
+    // Store token in HTTP-only cookie
+    res.cookie('authToken', token, {
+      httpOnly: true, // Prevents JavaScript access
+      secure: process.env.NODE_ENV === 'production', // Use HTTPS in production
+      sameSite: 'Strict', // Prevents CSRF
+      maxAge: 3600 * 1000, // 1 hour
+    });
+
     res.status(201).json({ message: 'User created successfully', user: newUser });
   } catch (error) {
     console.error('Error creating user:', error);
