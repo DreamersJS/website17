@@ -26,16 +26,12 @@ import { userState } from "../recoil/userAtom.js";
 
     try {
       const data = await loginUser({ email, password });
-
-      if (!data || !data.username || !data.token || !data.id) {
-        console.log('LoginData:', data);
-        throw new Error("Username, id, or token is missing in the response");
+      const user = data.user;
+      console.log('LoginData:', data);
+      if (!user || !data.user.username || !data.user.id) {
+        throw new Error("Username or id is missing in the response");
       }
-      const { token, user } = data;
 
-      // Save token in cookie
-      Cookies.set('authToken', token, { secure: true, sameSite: 'Strict', expires: 1 });
-  
       // Update Recoil state
       setUser({
         id: user.id,

@@ -37,7 +37,6 @@ export const registerUser = async ({ username, password, email }) => {
         throw new Error(errorData.error || 'Failed to register user');
       }
   
-      console.log('User registered successfully');
       const data = await response.json();
       console.log('User registered successfully:', data);
       return data; 
@@ -67,8 +66,9 @@ export const loginUser = async ({ email, password }) => {
       throw new Error(errorData.error || 'Failed to login');
     }
 
-    console.log('User logged in successfully');
-    return await response.json();
+    const data = await response.json();
+    console.log('User logged in successfully:', data);
+    return data;
   } catch (error) {
     console.error('Error logging in:', error);
     throw error;

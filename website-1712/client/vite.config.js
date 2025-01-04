@@ -25,7 +25,7 @@ export default defineConfig({
     // globals: true,
     globals: true,       // Use global test APIs like `describe`, `it`, etc.
     environment: 'jsdom', // Testing environment ('node' or 'jsdom')
-    setupFiles: './vitest.setup.js', // Optional: Path to setup file
+    setupFiles: './tests/setup/vitest.setup.js', // Optional: Path to setup file
     css: true,            // Allow CSS imports for testing styled components
     coverage: {
       reporter: ['text', 'json', 'html'], // Optional: Add coverage reporters
