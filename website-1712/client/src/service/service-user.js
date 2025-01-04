@@ -38,8 +38,9 @@ export const registerUser = async ({ username, password, email }) => {
       }
   
       console.log('User registered successfully');
-      console.log(`response.json(): ${response.json()}`);
-      return await response.json(); 
+      const data = await response.json();
+      console.log('User registered successfully:', data);
+      return data; 
     } catch (error) {
       console.error('Error registering user:', error);
       throw error;
