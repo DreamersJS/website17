@@ -14,12 +14,12 @@ export const validateForm = ({ username, email, password }) => {
   
 /**
  * 
- * @param {*} param0 { username, password, email, coachId }
- * @returns response.json()
+ * @param {*} param0 { username, password, email }
+ * @returns response.json() containing user details
  */
-export const registerUser = async ({ username, password, email, coachId }) => {
+export const registerUser = async ({ username, password, email }) => {
     try {
-      const response = await fetch('/api/users', {
+      const response = await fetch('/api/users/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -28,7 +28,6 @@ export const registerUser = async ({ username, password, email, coachId }) => {
           username,
           password,
           email,
-          coachId: coachId || null,
         }),
         credentials: 'include', // Include cookies with the request
       });
@@ -38,7 +37,8 @@ export const registerUser = async ({ username, password, email, coachId }) => {
         throw new Error(errorData.error || 'Failed to register user');
       }
   
-      console.log('User registered successfully');// later use ShowFeedback
+      console.log('User registered successfully');
+      console.log(`response.json(): ${response.json()}`);
       return await response.json(); 
     } catch (error) {
       console.error('Error registering user:', error);
@@ -47,3 +47,46 @@ export const registerUser = async ({ username, password, email, coachId }) => {
   };
   
   
+export const loginUser = async ({ email, password }) => {
+  try {
+    const response = await fetch('/api/users/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+      credentials: 'include', // Include cookies with the request
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to login');
+    }
+
+    console.log('User logged in successfully');
+    return await response.json();
+  } catch (error) {
+    console.error('Error logging in:', error);
+    throw error;
+  }
+};
+
+export const logoutUser = async () => {
+  try {
+    const response = await fetch('/api/users/logout', {
+      method: 'POST',
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to log out');
+    }
+    
+  } catch (error) {
+    console.error('Error logging out:', error);
+    throw error;
+  }
+};

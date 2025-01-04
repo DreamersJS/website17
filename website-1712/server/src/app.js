@@ -1,8 +1,8 @@
 import express from 'express';
-import corsOptions from './config/corsOptions';
-import routes from './routes/index';
-import errorHandler from './middleware/errorHandler';
-import connectDB from './config/db';
+import corsOptions from './config/corsOptions.js';
+import routes from './routes/index.js';
+import errorHandler from './middleware/errorHandler.js';
+import prisma from './config/prisma.js';
 import cookieParser from 'cookie-parser';
 
 const app = express();
@@ -19,6 +19,17 @@ app.use('/api', routes);
 app.use(errorHandler);
 
 // Connect to DB
-connectDB();
+async function connectToDatabase() {
+    try {
+      await prisma.$connect(); // Establish the database connection
+      console.log('Connected to the database successfully.');
+    } catch (error) {
+      console.error('Failed to connect to the database:', error);
+    }
+  }
+  
+  connectToDatabase(); // Call the database connection
+  
+
 
 export default app;

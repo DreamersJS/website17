@@ -2,11 +2,12 @@ import prisma from '../config/prisma.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = process.env.JWT_SECRET
+const JWT_SECRET = process.env.JWT_SECRET_KEY
 
 /**
- * Create a new user
+ * Create a new user(Register)
  * const { username, email, password, coachId  } = req.body;
+ * coachId is optional and can be null for now
  */
 export const createUser = async (req, res) => {
   const { username, email, password, coachId } = req.body;
@@ -29,6 +30,7 @@ export const createUser = async (req, res) => {
         email,
         coachId: coachId || null,
         password: hashedPassword,
+        role: 'user', // Default role
       },
     });
 
@@ -39,16 +41,63 @@ export const createUser = async (req, res) => {
     // Store token in HTTP-only cookie
     res.cookie('authToken', token, {
       httpOnly: true, // Prevents JavaScript access
-      secure: process.env.NODE_ENV === 'production', // Use HTTPS in production
+      secure: process.env.NODE_ENV === 'production', // Use HTTPS in production 
       sameSite: 'Strict', // Prevents CSRF
       maxAge: 3600 * 1000, // 1 hour
     });
 
-    res.status(201).json({ message: 'User created successfully', user: newUser });
+    res.status(201).json({ message: 'User created successfully', user: { id: newUser.id, username, email } });
   } catch (error) {
     console.error('Error creating user:', error);
     res.status(500).json({ error: 'Failed to create user' });
   }
+};
+
+// login a user
+/*Only include the token in the res if your application explicitly needs to support clients that cannot rely on cookies (e.g., mobile apps). */
+export const loginUser = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      return res.status(404).json({ error: 'User not found.' });
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ error: 'Invalid credentials.' });
+    }
+
+    const token = jwt.sign({ userId: user.id, email: user.email }, JWT_SECRET, {
+      expiresIn: '1h',
+    });
+
+    res.cookie('authToken', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'Strict',
+      maxAge: 3600 * 1000,
+    });
+
+    res.status(200).json({ 
+      message: 'Login successful', 
+      user: { id: user.id, username: user.username, email: user.email, role: user.role } 
+    });
+  } catch (error) {
+    console.error('Error logging in:', error);
+    res.status(500).json({ error: 'Failed to log in user' });
+  }
+};
+
+// Logout a user
+export const logoutUser = (req, res) => {
+  res.clearCookie('authToken', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'Strict',
+  });
+  res.status(200).json({ message: 'Logged out successfully' });
 };
 
 // Update an existing user
