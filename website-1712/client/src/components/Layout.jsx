@@ -1,11 +1,13 @@
 import { Container } from "@mui/material";
 import Footer from "./Footer";
+import Header from "./Header";
 
-const Layout = ({ header, main }) => {
+const Layout = ({main }) => {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header Section */}
-      <div>{header}</div>
+      <Header/>
+
 
       {/* Main Content */}
       <Container 
