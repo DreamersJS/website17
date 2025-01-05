@@ -1,8 +1,8 @@
 import { Box, Typography, Link, Grid } from '@mui/material';
-
+// #06210c   #062001  #051901 
 const Footer = () => {
     return (
-        <footer style={{ backgroundColor: '#06210c', color: 'white', padding: '1rem 0' }}>
+        <footer style={{ backgroundColor: '#051901', color: 'white', padding: '1rem 0' }}>
             <Grid container spacing={2} justifyContent="center">
                 {/* Navigation Links */}
                 <Grid item xs={12} sm={6} md={4}>
