@@ -6,7 +6,7 @@ import TwitterIcon from '@mui/icons-material/Twitter';
 // #06210c   #062001  #051901 
 const Footer = () => {
     return (
-        <footer style={{ backgroundColor: '#051901', color: 'white', padding: '1rem 0' }}>
+        <footer className='mt-10 text-white py-4' style={{ backgroundColor: '#051901' }}>
             <Grid container spacing={2} justifyContent="center">
                 {/* Navigation Links */}
                 <Grid item xs={12} sm={6} md={4}>

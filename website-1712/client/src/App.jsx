@@ -7,6 +7,8 @@ import { userState } from './recoil/userAtom';
 import ResponsiveComponent from './components/ResponsiveComponent';
 import Layout from './components/Layout';
 import Home from './components/Home';
+import Testimonials from './components/Testimonials';
+import ProductsPage from './components/Products';
 
 // protected components
 const CoachesPage = lazy(() => import('./components/CoachesPage'));
@@ -44,6 +46,9 @@ function App() {
                   <Route path="/" element={<Layout main={<Home />} />} />
                   <Route path="/coach" element={<Layout main={<CoachesPage />} />} />
                   <Route path="/profile" element={<Layout main={<ProfilePage />} />} />
+                  <Route path="/testimonials" element={<Layout main={<Testimonials />} />} />
+                  <Route path="/products" element={<Layout main={<ProductsPage />} />} />
+
 
                   <Route path="/logout" element={<Layout main={<Logout />} />} />
                   <Route path="/login" element={<Login />} />
