@@ -66,7 +66,7 @@ const ProductsPage = () => {
       {/* Header Section */}
       <Box sx={{ textAlign: 'center', marginBottom: 5 }}>
         <Typography variant="h3" fontWeight="bold">Shop Our Products</Typography>
-        <Typography variant="h6" color="textSecondary" sx={{ marginTop: 2 }}>
+        <Typography variant="h6" color="#000" sx={{ marginTop: 2 }}>
           Browse through our collection of wellness and fitness products.
         </Typography>
       </Box>
@@ -88,8 +88,8 @@ const ProductsPage = () => {
         />
         <Box sx={{ display: 'flex', gap: 2 }}>
           {/* Add filter buttons or dropdowns */}
-          <Button variant="outlined">Category</Button>
-          <Button variant="outlined">Sort by Price</Button>
+          <Button variant="outlined" color="#000">Category</Button>
+          <Button variant="outlined" color="#000">Sort by Price</Button>
         </Box>
       </Box>
 
@@ -105,7 +105,7 @@ const ProductsPage = () => {
 
       {/* Pagination or Load More Button */}
       <Box sx={{ textAlign: 'center', marginTop: 5 }}>
-        <Button variant="outlined" color="primary" size="large">
+        <Button variant="outlined" color="#000" size="large">
           Load More Products
         </Button>
       </Box>

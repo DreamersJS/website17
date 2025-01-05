@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useLogout } from '../recoil/userAtom.js'; 
-import { logoutUser } from '../service/service-user.js';
+import { useLogout } from '../../recoil/userAtom.js'; 
+import { logoutUser } from '../../service/service-user.js';
 
 const Logout = () => {
   const logout = useLogout();

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { validateForm, registerUser } from '../service/service-user.js';
+import { validateForm, registerUser } from '../../service/service-user.js';
 import { useSetRecoilState } from "recoil";
-import { userState } from "../recoil/userAtom.js";
+import { userState } from "../../recoil/userAtom.js";
 import {
   Box,
   Typography,
