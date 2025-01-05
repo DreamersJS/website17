@@ -1,4 +1,8 @@
 import { Box, Typography, Link, Grid } from '@mui/material';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import TwitterIcon from '@mui/icons-material/Twitter';
+
 // #06210c   #062001  #051901 
 const Footer = () => {
     return (
@@ -51,13 +55,19 @@ const Footer = () => {
                         alignItems="center"
                         justifyContent="center" gap="0.5rem">
                         <Link href="https://facebook.com" target="_blank" rel="noopener" aria-label="Facebook" sx={{ fontSize: '0.875rem' }}>
-                            <img src="/icons/facebook-icon.png" alt="Facebook" style={{ width: 24 }} />
+                            <span>
+                                <FacebookIcon style={{ fontSize: 24, marginRight: 8, color: '#fff' }} />
+                            </span>
+                        </Link>
+                        <Link href="https://linkedin.com" target="_blank" rel="noopener" aria-label="Linkedin" sx={{ fontSize: '0.875rem' }}>
+                            <span>
+                                <LinkedInIcon style={{ fontSize: 24, marginRight: 8, color: '#fff' }} />
+                            </span>
                         </Link>
                         <Link href="https://twitter.com" target="_blank" rel="noopener" aria-label="Twitter" sx={{ fontSize: '0.875rem' }}>
-                            <img src="/icons/twitter-icon.png" alt="Twitter" style={{ width: 24 }} />
-                        </Link>
-                        <Link href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram" sx={{ fontSize: '0.875rem' }}>
-                            <img src="/icons/instagram-icon.png" alt="Instagram" style={{ width: 24 }} />
+                            <span>
+                                <TwitterIcon style={{ fontSize: 24, marginRight: 8, color: '#fff' }} />
+                            </span>
                         </Link>
                     </Box>
                 </Grid>
