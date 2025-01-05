@@ -8,21 +8,21 @@ const testimonials = [
     name: "John Doe",
     photoBefore: "https://via.placeholder.com/150", 
     photoAfter: "https://via.placeholder.com/150",
-    testimonial: "This product has transformed my daily routine! It's simple, effective, and reliable.",
+    text: "This product has transformed my daily routine! It's simple, effective, and reliable.",
     role: "Software Engineer",
   },
   {
     name: "Jane Smith",
     photoBefore: "https://via.placeholder.com/150", 
     photoAfter: "https://via.placeholder.com/150",
-    testimonial: "I’ve never felt better. The fitness plans are personalized and easy to follow.",
+    text: "I’ve never felt better. The fitness plans are personalized and easy to follow.",
     role: "Fitness Enthusiast",
   },
   {
     name: "Michael Lee",
     photoBefore: "https://via.placeholder.com/150", 
     photoAfter: "https://via.placeholder.com/150",
-    testimonial: "Amazing customer service and high-quality products. Highly recommend!",
+    text: "Amazing customer service and high-quality products. Highly recommend!",
     role: "Business Owner",
   }
 ];

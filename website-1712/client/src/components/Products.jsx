@@ -28,6 +28,34 @@ const products = [
     price: "$19.99",
     rating: 4.8,
     image: "https://via.placeholder.com/200",
+  }, {
+    id: 3,
+    name: "Protein Powder",
+    description: "High-quality protein powder for muscle recovery.",
+    price: "$19.99",
+    rating: 4.8,
+    image: "https://via.placeholder.com/200",
+  }, {
+    id: 3,
+    name: "Protein Powder",
+    description: "High-quality protein powder for muscle recovery.",
+    price: "$19.99",
+    rating: 4.8,
+    image: "https://via.placeholder.com/200",
+  }, {
+    id: 3,
+    name: "Protein Powder",
+    description: "High-quality protein powder for muscle recovery.",
+    price: "$19.99",
+    rating: 4.8,
+    image: "https://via.placeholder.com/200",
+  }, {
+    id: 3,
+    name: "Protein Powder",
+    description: "High-quality protein powder for muscle recovery.",
+    price: "$19.99",
+    rating: 4.8,
+    image: "https://via.placeholder.com/200",
   },
   // Add more products as needed
 ];
@@ -67,8 +95,11 @@ const ProductsPage = () => {
 
       {/* Product List */}
       <Grid container spacing={4}>
-        {products.map((product) => (
-          <ProductsCard product={product} />
+
+        {products.map((product, index) => (
+          <Grid item xs={12} sm={6} md={4} key={index}>
+            <ProductsCard product={product} />
+          </Grid>
         ))}
       </Grid>
 

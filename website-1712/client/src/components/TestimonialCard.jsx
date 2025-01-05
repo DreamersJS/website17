@@ -1,8 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Typography, Box, Card, CardContent } from '@mui/material';
 
 const TestimonialCard = ({ testimonial }) => {
-    const { name, photoBefore, photoAfter, role } = testimonial;
+    const [testimonialData, setTestimonialData] = useState({
+        name: testimonial.name,
+        photoBefore: testimonial.photoBefore, 
+        photoAfter: testimonial.photoAfter,
+        text: testimonial.text,
+        role: testimonial.role,
+      });
+      const { name, photoBefore, photoAfter, text, role } = testimonialData;
 
     return(
         <Card sx={{ padding: 2, borderRadius: 2, boxShadow: 3 }}>
@@ -22,7 +29,7 @@ const TestimonialCard = ({ testimonial }) => {
                   {role}
                 </Typography>
                 <Typography variant="body1" sx={{ textAlign: 'center', marginTop: 2 }}>
-                  "{testimonial}"
+                  {text}
                 </Typography>
               </CardContent>
             </Card>
