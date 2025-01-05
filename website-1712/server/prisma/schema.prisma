@@ -1,6 +1,14 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+// cd prisma
+// npx prisma migrate dev --name add-coach
+// npx prisma studio
+// npx prisma generate
+// npx prisma migrate reset
+
+// npx prisma migrate deploy       for production
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -22,7 +30,9 @@ model User {
   id        String   @id @default(uuid()) @db.Uuid  
   username  String
   email     String   @unique
+  password  String   // Store hashed password
   createdAt DateTime @default(now())
+  role      String  @default("user") // Role can be 'user' or 'admin'
   coachId   String?  @db.Uuid  
   coach     Coach?   @relation("CoachUsers", fields: [coachId], references: [id], onDelete: SetNull)
 

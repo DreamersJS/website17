@@ -1,16 +1,22 @@
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { userState } from "../recoil/userAtom";
 import ButtonUsage from "./Button";
 import HomeIcon from '@mui/icons-material/Home';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import { AppBar, Toolbar, IconButton, Typography, Box, Drawer, Menu, MenuItem, Divider, List, ListItem, ListItemText } from '@mui/material';
+import ResponsiveComponent from './ResponsiveComponent'; // Import your responsive component
 
-const Header = ({ admin, userId }) => {
+const Header = () => {
     const [openMenu, setOpenMenu] = useState(false); // Handles mobile menu
     const [anchorEl, setAnchorEl] = useState(null); // Handles profile/admin menu dropdown
     const [menuType, setMenuType] = useState(''); // To track which menu is open (profile, admin)
     const [openSearch, setOpenSearch] = useState(false); // To handle the search input visibility
+    const user = useRecoilValue(userState);
+    const userId = user?.id;
+    const admin = user?.role;
 
     // Open Menu
     const handleMenuOpen = (event, type) => {
@@ -33,15 +39,21 @@ const Header = ({ admin, userId }) => {
     };
 
     return (
+        <ResponsiveComponent>
+    {({ width }) => (
         <AppBar position="sticky" sx={{ backgroundColor: '#177F2E', zIndex: 50 }}>
             <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 {/* Left section: Logo/Home */}
                 <Box display="flex" alignItems="center">
                     <NavLink to="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
                         <HomeIcon sx={{ fontSize: 30, color: '#FFF', marginRight: 1 }} />
-                        <Typography variant="h6" sx={{ color: '#FFF' }}>
-                            Home
-                        </Typography>
+
+                        {/* Conditionally render the text based on screen width */}
+                        {width > 805 && (
+                            <Typography variant="h6" sx={{ color: '#FFF' }}>
+                                Home
+                            </Typography>
+                        )}
                     </NavLink>
                 </Box>
 
@@ -49,10 +61,10 @@ const Header = ({ admin, userId }) => {
                 <Box display={{ xs: 'none', sm: 'flex' }} justifyContent="center" flexGrow={1}>
                     {!userId && (
                         <>
-                            <NavLink to="/login" style={{ margin: '0 10px' }}>
+                            <NavLink to="/login" style={{ margin: width <= 805 ? '0 3px' : '0 10px' }}>
                                 <ButtonUsage content="Login" />
                             </NavLink>
-                            <NavLink to="/register" style={{ margin: '0 10px' }}>
+                            <NavLink to="/register" style={{ margin: width <= 805 ? '0 3px' : '0 10px' }}>
                                 <ButtonUsage content="Register" />
                             </NavLink>
                         </>
@@ -60,7 +72,7 @@ const Header = ({ admin, userId }) => {
                     {userId && (
                         <>
                             {/* Profile with Logout submenu */}
-                            <Box display="flex" alignItems="center" sx={{ margin: '0 10px' }}>
+                            <Box display="flex" alignItems="center" sx={{ margin: width <= 805 ? '0 3px' : '0 10px' }}>
                                 <ButtonUsage content="Profile" onClick={(e) => handleMenuOpen(e, 'profile')}  aria-haspopup="menu" aria-expanded={menuType === 'profile' ? 'true' : 'false'} />
                                 <Menu
                                     anchorEl={anchorEl}
@@ -85,7 +97,7 @@ const Header = ({ admin, userId }) => {
 
                     {/* Admin with submenu */}
                     {admin && (
-                        <Box display="flex" alignItems="center" sx={{ margin: '0 10px' }}>
+                        <Box display="flex" alignItems="center" sx={{ margin: width <= 805 ? '0 3px' : '0 10px' }}>
                             <ButtonUsage content="Admin" onClick={(e) => handleMenuOpen(e, 'admin')}  aria-haspopup="menu" aria-expanded={menuType === 'admin' ? 'true' : 'false'} />
                             <Menu
                                 anchorEl={anchorEl}
@@ -104,13 +116,13 @@ const Header = ({ admin, userId }) => {
                     )}
 
                     {/* Available to all users */}
-                    <NavLink to="/coach" style={{ margin: '0 10px' }}>
+                    <NavLink to="/coach" style={{ margin: width <= 805 ? '0 3px' : '0 10px' }}>
                         <ButtonUsage content="Coaches" />
                     </NavLink>
-                    <NavLink to="/testimonials" style={{ margin: '0 10px' }}>
+                    <NavLink to="/testimonials" style={{ margin: width <= 805 ? '0 3px' : '0 10px' }}>
                         <ButtonUsage content="Testimonials" />
                     </NavLink>
-                    <NavLink to="/products" style={{ margin: '0 10px' }}>
+                    <NavLink to="/products" style={{ margin: width <= 805 ? '0 3px' : '0 10px' }}>
                         <ButtonUsage content="Products" />
                     </NavLink>
 
@@ -216,7 +228,9 @@ const Header = ({ admin, userId }) => {
                     </List>
                 </Box>
             </Drawer>
-        </AppBar>
+            </AppBar>
+    )}
+</ResponsiveComponent>
     );
 };
 

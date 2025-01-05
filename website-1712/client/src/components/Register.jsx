@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { validateForm, registerUser } from '../../service/service.js';
+import { validateForm, registerUser } from '../service/service-user.js';
+import { useSetRecoilState } from "recoil";
+import { userState } from "../recoil/userAtom.js";
 
  const Register = () => {
   const [username, setUsername] = useState('');
@@ -9,6 +11,7 @@ import { validateForm, registerUser } from '../../service/service.js';
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+  const setUser = useSetRecoilState(userState); // Recoil setter for user state
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,9 +25,20 @@ import { validateForm, registerUser } from '../../service/service.js';
     setLoading(true);
 
     try {
-      const data = await registerUser({ username, password, email });
-     // Persist user and token
-     
+      const data =  await registerUser({ username, email, password });
+     // Persist user and token in recoil state
+     // Assuming the response includes user details and initial results
+      const { user } = data;
+
+      // Update Recoil state
+      setUser({
+        id: user.id,
+        email: user.email,
+        username: user.username,
+        photo: user.photo,
+        role: user.role,
+        coachId: user.coachId,
+      });
       navigate('/');  // Redirect to home or authenticated area
 
     } catch (err) {
@@ -35,10 +49,10 @@ import { validateForm, registerUser } from '../../service/service.js';
   };
 
   return (
-    <div className="form-container">
+    <div className="">
       <h1>Register</h1>
       <form onSubmit={handleSubmit}>
-        <div className="form-group">
+        <div className="">
           <label htmlFor="username">Username:</label>
           <input
             id="username"
@@ -49,7 +63,7 @@ import { validateForm, registerUser } from '../../service/service.js';
             required
           />
         </div>
-        <div className="form-group">
+        <div className="">
           <label htmlFor="email">Email:</label>
           <input
             id="email"
@@ -60,7 +74,7 @@ import { validateForm, registerUser } from '../../service/service.js';
             required
           />
         </div>
-        <div className="form-group">
+        <div className="">
           <label htmlFor="password">Password:</label>
           <input
             id="password"
