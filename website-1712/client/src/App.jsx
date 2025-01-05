@@ -1,7 +1,7 @@
 import React, { lazy, Suspense, useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, useParams } from "react-router-dom";
 import './App.css'
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { userState } from './recoil/userAtom';
 // components for not logged in users
 import ResponsiveComponent from './components/ResponsiveComponent';
@@ -22,6 +22,14 @@ const Register = lazy(() => import('./components/Register'));
 
 
 function App() {
+  const user = useRecoilValue(userState); // Read-only access
+
+  useEffect(() => {
+    console.log(`user`, user);
+    if (user?.id) {
+      console.log(`no user`);
+    }
+}, [user]);
 
   return (
     <>
