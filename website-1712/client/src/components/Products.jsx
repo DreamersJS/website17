@@ -72,25 +72,43 @@ const ProductsPage = () => {
       </Box>
 
       {/* Search and Filter Section */}
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-        <TextField
-          label="Search Products"
-          variant="outlined"
-          size="small"
-          sx={{ width: '40%' }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <Search />
-              </InputAdornment>
-            ),
+      <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: 'space-between', marginBottom: 4 }}>
+        <Grid
+          container
+          spacing={3}
+          direction={{
+            xs: "column",
+            sm: "row"
           }}
-        />
-        <Box sx={{ display: 'flex', gap: 2 }}>
-          {/* Add filter buttons or dropdowns */}
-          <Button variant="outlined" color="#000">Category</Button>
-          <Button variant="outlined" color="#000">Sort by Price</Button>
-        </Box>
+        >
+
+          <Box sx={{ display: { xs: 'none', sm: 'block' }, flexGrow: 1, marginBottom: 4 }}>
+            <TextField
+              label="Search Products"
+              variant="outlined"
+              size="small"
+              sx={{ width: '40%' }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Search />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Box>
+
+          <Box sx={{
+            display: 'flex', width: {
+              xs: "auto",
+              sm: "45%"
+            }, flexDirection: { xs: 'column', sm: 'row' }, gap: { xs: 1, sm: 2 }
+          }}>
+            {/* Add filter buttons or dropdowns */}
+            <Button variant="outlined" sx={{ borderColor: '#177F2E', color: '#000' }}>Category</Button>
+            <Button variant="outlined" sx={{ borderColor: '#177F2E', color: '#000' }}>Sort by Price</Button>
+          </Box>
+        </Grid>
       </Box>
 
       {/* Product List */}
@@ -105,7 +123,7 @@ const ProductsPage = () => {
 
       {/* Pagination or Load More Button */}
       <Box sx={{ textAlign: 'center', marginTop: 5 }}>
-        <Button variant="outlined" color="#000" size="large">
+        <Button variant="outlined" sx={{ borderColor: '#177F2E', color: '#000' }} size="large">
           Load More Products
         </Button>
       </Box>
