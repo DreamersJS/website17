@@ -83,8 +83,14 @@ const Header = () => {
                                         Profile
                                     </MenuItem>
                                     <Divider />
+                                    {/* can submit Results for testimonials, marathons(who can verify the results? само клиенти 'на живо' могат да събмитнат?); take them from Diary logic like DirectChat-ChannelChat */}
                                     <MenuItem component={NavLink} to="/results" onClick={handleClose}>
                                         Results
+                                    </MenuItem>
+                                    <Divider />
+                                    {/* tabliza moeto hranene?  */}
+                                    <MenuItem component={NavLink} to="/diary" onClick={handleClose}>
+                                        Diary
                                     </MenuItem>
                                     <Divider />
                                     <MenuItem component={NavLink} to="/logout" onClick={handleClose}>
@@ -108,7 +114,7 @@ const Header = () => {
                                     Admin
                                 </MenuItem>
                                 <Divider />
-                                <MenuItem component={NavLink} to="/results" onClick={handleClose}>
+                                <MenuItem component={NavLink} to="/block" onClick={handleClose}>
                                     Block Users
                                 </MenuItem>
                             </Menu>

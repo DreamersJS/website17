@@ -1,23 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, Avatar, Divider, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField } from '@mui/material';
+import { Box, Typography, Divider, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField } from '@mui/material';
 // import ProfileSkeleton from './ProfileSkeleton';
-import ButtonUsage from "./Button";
 
 const Diary = () => {
 
-    // Sample user data (in a real scenario, this would be fetched from an API)
     // not sure which metrics to track, how to structure the view
     const [userData, setUserData] = useState({
-        name: "John Doe",
-        email: "john.doe@example.com",
-        profilePicture: "https://via.placeholder.com/100",
         coachingSessions: [
             { title: "Fitness Coaching", date: "Jan 10, 2024", status: "Completed" },
             { title: "Nutrition Coaching", date: "Feb 20, 2024", status: "Upcoming" },
-        ],
-        purchases: [
-            { product: "Premium Membership", date: "Jan 15, 2024" },
-            { product: "Yoga Mat", date: "Feb 5, 2024" },
         ],
         feedingHabits: [
             { meal: 'Breakfast', calories: 400, type: 'Oats', notes: 'High fiber' },
@@ -29,8 +20,13 @@ const Diary = () => {
         waterIntake: 2, // Liters
         physicalProgress: [
             { metric: 'Weight', value: 75, date: 'Jan 15, 2024' }, // Value in kg
+            { metric: 'BMI', value: 25, date: 'Jan 15, 2024' }, // Value in kg/m^2
             { metric: 'Body Fat %', value: 20, date: 'Jan 15, 2024' }, // Value in %
-            { metric: 'Muscle Mass', value: 35, date: 'Jan 15, 2024' } // Value in kg
+            { metric: 'Muscle Mass', value: 35, date: 'Jan 15, 2024' }, // Value in kg
+            { metric: 'Bone Mass', value: 2.4, date: 'Jan 15, 2024' }, // Value in kg
+            { metric: 'age', value: 25, date: 'Jan 15, 2024' }, // Metabolic age
+            { metric: 'hydration', value: 55, date: 'Jan 15, 2024' }, // % of body water
+            { metric: 'Visceral Fat', value: 5, date: 'Jan 15, 2024' } // Value in ?
         ],
         healthImprovements: [
             { metric: 'Energy Levels', value: 70, date: 'Jan 15, 2024' }, // Percentage
