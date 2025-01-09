@@ -67,6 +67,7 @@ const Register = () => {
 
       <Box
         component="form"
+        role="form"
         onSubmit={handleSubmit}
         sx={{
           display: 'flex',

@@ -1,6 +1,11 @@
 import { render, screen } from '@testing-library/react'
+import { vi } from 'vitest';
 import Home from '../../src/components/Home'
 import { MemoryRouter } from 'react-router-dom'; // To mock React Router's NavLink
+
+
+// https://learn.telerikacademy.com/mod/page/view.php?id=58097
+// https://learn.telerikacademy.com/mod/page/view.php?id=58102
 
 describe('Home Component', () => {
   
