@@ -7,6 +7,9 @@
 // npx prisma generate
 // npx prisma migrate reset
 
+// npx prisma migrate status
+// npx prisma migrate dev
+
 // npx prisma migrate deploy       for production
 
 generator client {
@@ -18,24 +21,31 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Coach {
-  id        String   @id @default(uuid()) @db.Uuid  
-  name      String
-  bio       String
-  clients   User[]   @relation("CoachUsers")
-  createdAt DateTime @default(now())
-}
 
 model User {
   id        String   @id @default(uuid()) @db.Uuid  
   username  String
   email     String   @unique
-  password  String   // Store hashed password
+  password  String   
+  role      String  @default("user") // Role can be 'user','coach' or 'admin'
   createdAt DateTime @default(now())
-  role      String  @default("user") // Role can be 'user' or 'admin'
-  coachId   String?  @db.Uuid  
-  coach     Coach?   @relation("CoachUsers", fields: [coachId], references: [id], onDelete: SetNull)
 
+  coachId      String?       @db.Uuid
+  coach        User?         @relation("UserCoach", fields: [coachId], references: [id], onDelete: SetNull)
+
+   // Relationships to other features
+  clients      User[]        @relation("UserCoach")
+  coachProfile CoachProfile? @relation("CoachProfileUser")  
+  
+  
   @@index([email])
 }
 
+model CoachProfile {
+  id         String   @id @default(uuid()) @db.Uuid
+  bio        String
+  expertise  String?   // Example: Fitness, Nutrition
+  userId     String?   @unique @db.Uuid // Allows nullability for flexibility
+  user       User?     @relation("CoachProfileUser", fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
