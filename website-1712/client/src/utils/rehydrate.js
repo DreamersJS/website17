@@ -11,6 +11,7 @@ export const useHydrateUserState = () => {
       try {
         const token = userCookie;
         const userPayload = JSON.parse(atob(token.split('.')[1])); // Decode JWT payload
+       // shall I add a role?
         setUser((prev) => ({
           ...prev,
           id: userPayload.userId,

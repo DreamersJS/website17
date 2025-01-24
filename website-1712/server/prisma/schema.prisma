@@ -21,13 +21,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  USER
+  COACH
+  ADMIN
+}
 
 model User {
   id        String   @id @default(uuid()) @db.Uuid  
   username  String
   email     String   @unique
   password  String   
-  role      String  @default("user") // Role can be 'user','coach' or 'admin'
+  role      Role     @default(USER)
+  isBlocked Boolean  @default(false)
   createdAt DateTime @default(now())
 
   coachId      String?       @db.Uuid
