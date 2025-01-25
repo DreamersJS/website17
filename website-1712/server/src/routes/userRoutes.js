@@ -1,10 +1,10 @@
 import express from 'express';
 import {
   createUser,
-  // fetchUser,
+  fetchUser,
   updateUser,
   deleteUser,
-  // getUserByEmail,
+  getUserByEmail,
   fetchAllUsers,
   loginUser,
   logoutUser,
@@ -20,11 +20,11 @@ router.post('/register', createUser);
 router.post('/login', loginUser);
 router.post('/logout', logoutUser);  
      
-// router.get('/:id', fetchUser);     
-router.put('/:id', updateUser);     
-router.delete('/:id', authenticateUser, authorizeRole('USER'), deleteUser);  
-// router.get('/email/:email', getUserByEmail); 
 router.get('/all', fetchAllUsers); // for testing purposes only
 // router.get('/all', authenticateUser, verifyAdmin, fetchAllUsers);
+router.get('/:id', fetchUser);     
+router.put('/:id', updateUser);     
+router.delete('/:id', authenticateUser, authorizeRole('USER'), deleteUser);  
+router.get('/email/:email', getUserByEmail); 
 
 export default router;

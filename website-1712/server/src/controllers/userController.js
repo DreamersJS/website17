@@ -1,6 +1,7 @@
 import prisma from '../config/prisma.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { validate as isUUID } from 'uuid';
 
 const JWT_SECRET = process.env.JWT_SECRET_KEY
 
@@ -125,42 +126,50 @@ export const updateUser = async (req, res) => {
 };
 
 // Fetch a single user by ID
-// export const fetchUser = async (req, res) => {
-//   const { id } = req.params;
-//   try {
-//     const user = await prisma.user.findUnique({
-//       where: { id },
-//       include: { coach: true }, // Include related coach information
-//     });
-//     if (!user) {
-//       return res.status(404).json({ error: 'User not found' });
-//     }
-//     res.status(200).json({ user });
-//   } catch (error) {
-//     console.error('Error fetching user:', error);
-//     res.status(500).json({ error: 'Failed to fetch user' });
-//   }
-// };
+export const fetchUser = async (req, res) => {
+  const { id } = req.params;
+
+  console.log("id being passed:", id);
+  if (!isUUID(id)) {
+    return res.status(400).json({ error: 'Invalid UUID format' });
+  }
+
+  try {
+    debugger;
+    const user = await prisma.user.findFirst({
+      where: {
+        id: id,  // Fetch by ID
+      }
+    });
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    res.status(200).json({ user });
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    res.status(500).json({ error: 'Failed to fetch user' });
+  }
+};
 
 // Fetch a single user by email
-// export const getUserByEmail = async (req, res) => {
-//   const { email } = req.params; // Extract email from request params
-//   try {
-//     const user = await prisma.user.findUnique({
-//       where: { email },
-//       include: { coach: true }, // Optionally include related coach information
-//     });
+export const getUserByEmail = async (req, res) => {
+  const { email } = req.params;
 
-//     if (!user) {
-//       return res.status(404).json({ error: 'User not found' });
-//     }
+  try {
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
 
-//     res.status(200).json({ user });
-//   } catch (error) {
-//     console.error('Error fetching user by email:', error);
-//     res.status(500).json({ error: 'Failed to fetch user by email' });
-//   }
-// };
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    res.status(200).json({ user });
+  } catch (error) {
+    console.error('Error fetching user by email:', error);
+    res.status(500).json({ error: 'Failed to fetch user by email' });
+  }
+};
 
 // Fetch all users
 export const fetchAllUsers = async (req, res) => {
