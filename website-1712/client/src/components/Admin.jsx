@@ -30,7 +30,7 @@ const Admin = () => {
   useEffect(() => {
     fetchUsers();
   }, []);
-
+console.log(users.map(user => user.role));
   const fetchUsers = async () => {
     try {
       const response = await fetch("/api/users/all");
@@ -156,7 +156,7 @@ const Admin = () => {
                       <TableCell>{user.email}</TableCell>
                       <TableCell>
                         <select
-                          value={user.role}
+                          value={user.role.toLowerCase()}
                           onChange={(e) =>
                             handleRoleChange(user.id, e.target.value)
                           }

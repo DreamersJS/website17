@@ -52,8 +52,6 @@ export const registerUser = async ({ username, password, email }) => {
     throw error;
   }
 };
-
-  
   
 export const loginUser = async ({ email, password }) => {
   try {
@@ -99,3 +97,17 @@ export const logoutUser = async () => {
     throw error;
   }
 };
+
+export const fetchUsers = async () => {
+  try {
+    const response = await fetch("/api/users/all");
+    if (!response.ok) {
+      throw new Error("Failed to fetch users");
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching users:", error);
+  }
+};
+
