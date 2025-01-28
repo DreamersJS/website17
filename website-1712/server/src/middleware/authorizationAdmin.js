@@ -1,5 +1,8 @@
 export const verifyAdmin = (req, res, next) => {
-    if (req.user?.role !== 'ADMIN') {
+  console.log('verifyAdmin req ' + req);
+  console.log("verifyAdmin req.user:", JSON.stringify(req.user, null, 2));
+
+    if (req.user?.role.toUpperCase() !== 'ADMIN') {
       return res.status(403).json({ error: 'Forbidden: Admin access required' });
     }
   

@@ -98,9 +98,19 @@ export const logoutUser = async () => {
   }
 };
 
+/**
+ * 
+ * Since your auth token is HTTP-only, it is not accessible in JavaScript, meaning you cannot directly reference authToken in the frontend. This means your frontend should not manually send the token in the headers. Instead, just ensure that requests include credentials so the cookie is automatically sent.
+ */
 export const fetchUsers = async () => {
   try {
-    const response = await fetch("/api/users/all");
+    const response = await fetch("/api/users/all", {
+      method: "GET",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include'
+    });
     if (!response.ok) {
       throw new Error("Failed to fetch users");
     }
@@ -111,3 +121,41 @@ export const fetchUsers = async () => {
   }
 };
 
+export const updateUserRole = async (userId, newRole) => {
+  try {
+    const response = await fetch(`/api/coaches/${userId}/role`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ role: newRole }),
+      credentials: 'include'
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to update role');
+    }
+    console.log('Role updated');
+  } catch (error) {
+    console.error("Error updating role:", error);
+  }
+}
+
+export const updateIsBlocked = async (userId) => {
+  try {
+    const response = await fetch(`/api/coaches/${userId}/block`, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include'
+    });
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || 'Failed to update block status');
+    }
+    console.log('Block status updated');
+  } catch (error) {
+    console.error("Error updating block status:", error);
+  }
+}

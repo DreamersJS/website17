@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import { useRecoilValue } from "recoil";
 import { userState } from "../recoil/userAtom";
+import { fetchUsers, updateUserRole, updateIsBlocked } from "../service/service-user";
 
 const Admin = () => {
   const user = useRecoilValue(userState);
@@ -28,45 +29,34 @@ const Admin = () => {
   const [orderBy, setOrderBy] = useState("username");
 
   useEffect(() => {
-    fetchUsers();
+    handleFetchUsers();
   }, []);
-console.log(users.map(user => user.role));
-  const fetchUsers = async () => {
+
+  const handleFetchUsers = async () => {
     try {
-      const response = await fetch("/api/users/all");
-      if (!response.ok) {
-        throw new Error("Failed to fetch users");
-      }
-      const data = await response.json();
+      
+      const data = await fetchUsers();
       setUsers(data);
     } catch (error) {
       console.error("Error fetching users:", error);
     }
   };
-
+    
   const handleRoleChange = async (userId, newRole) => {
-    // Handle role change API request
+
     try {
-      await fetch(`/api/users/${userId}/role`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ role: newRole }),
-      });
-      fetchUsers(); // Refresh user list
+      await updateUserRole(userId, newRole);
+      handleFetchUsers(); 
     } catch (error) {
       console.error("Error updating role:", error);
     }
   };
 
   const toggleIsBlocked = async (userId) => {
-    // Handle block/unblock API request
+
     try {
-      await fetch(`/api/users/${userId}/block`, {
-        method: "POST",
-      });
-      fetchUsers(); // Refresh user list
+      await updateIsBlocked(userId);
+      handleFetchUsers(); 
     } catch (error) {
       console.error("Error updating block status:", error);
     }
