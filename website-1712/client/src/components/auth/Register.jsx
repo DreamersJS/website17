@@ -43,6 +43,7 @@ const Register = () => {
         username: user.username,
         photo: user.photo,
         role: user.role,
+        isBlocked: user.isBlocked,
         coachId: user.coachId,
       });
 
@@ -67,6 +68,7 @@ const Register = () => {
 
       <Box
         component="form"
+        role="form"
         onSubmit={handleSubmit}
         sx={{
           display: 'flex',

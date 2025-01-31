@@ -39,6 +39,7 @@ const Login = () => {
         username: user.username,
         photo: user.photo,
         role: user.role,
+        isBlocked: user.isBlocked,
         coachId: user.coachId,
       });
 

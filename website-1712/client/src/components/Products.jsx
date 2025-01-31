@@ -1,66 +1,38 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Typography, Box, Grid, Button, TextField, InputAdornment } from '@mui/material';
 import { Search } from '@mui/icons-material';
 import ProductsCard from './ProductsCard';
 
-// Sample products data
-const products = [
-  {
-    id: 1,
-    name: "Fitness Tracker",
-    description: "Track your fitness goals with this advanced fitness tracker.",
-    price: "$49.99",
-    rating: 4.5,
-    image: "https://via.placeholder.com/200",
-  },
-  {
-    id: 2,
-    name: "Yoga Mat",
-    description: "Premium yoga mat for maximum comfort and stability.",
-    price: "$29.99",
-    rating: 4.0,
-    image: "https://via.placeholder.com/200",
-  },
-  {
-    id: 3,
-    name: "Protein Powder",
-    description: "High-quality protein powder for muscle recovery.",
-    price: "$19.99",
-    rating: 4.8,
-    image: "https://via.placeholder.com/200",
-  }, {
-    id: 3,
-    name: "Protein Powder",
-    description: "High-quality protein powder for muscle recovery.",
-    price: "$19.99",
-    rating: 4.8,
-    image: "https://via.placeholder.com/200",
-  }, {
-    id: 3,
-    name: "Protein Powder",
-    description: "High-quality protein powder for muscle recovery.",
-    price: "$19.99",
-    rating: 4.8,
-    image: "https://via.placeholder.com/200",
-  }, {
-    id: 3,
-    name: "Protein Powder",
-    description: "High-quality protein powder for muscle recovery.",
-    price: "$19.99",
-    rating: 4.8,
-    image: "https://via.placeholder.com/200",
-  }, {
-    id: 3,
-    name: "Protein Powder",
-    description: "High-quality protein powder for muscle recovery.",
-    price: "$19.99",
-    rating: 4.8,
-    image: "https://via.placeholder.com/200",
-  },
-  // Add more products as needed
-];
-
 const ProductsPage = () => {
+  const [products, setProducts] = useState([]);
+  const [filterProducts, setFilterProducts] = useState([]);
+
+  const handleFetchProducts = async () => {
+    try {
+      const response = await fetch('/api/product/all', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include'
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch products');
+      }
+
+      const data = await response.json();
+      setProducts(data);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    }
+  }
+
+  useEffect(() => {
+    handleFetchProducts();
+  }, []);
+
+
   return (
     <Container maxWidth="lg" sx={{ marginTop: 8 }}>
       {/* Header Section */}

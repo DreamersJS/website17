@@ -1,6 +1,7 @@
 import prisma from '../config/prisma.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { validate as isUUID } from 'uuid';
 
 const JWT_SECRET = process.env.JWT_SECRET_KEY
 
@@ -11,6 +12,7 @@ const JWT_SECRET = process.env.JWT_SECRET_KEY
  */
 export const createUser = async (req, res) => {
   const { username, email, password, coachId } = req.body;
+  console.log("coachId being passed:", coachId);
 
   try {
     if (!username || !email || !password) {
@@ -23,18 +25,21 @@ export const createUser = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
+    const isValidUUID = (id) => /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(id);
 
+    const sanitizedCoachId = coachId && isValidUUID(coachId) ? coachId : null;
+    console.log("Sanitized coachId:", sanitizedCoachId);
     const newUser = await prisma.user.create({
       data: {
         username,
         email,
-        coachId: coachId || null,
+        coachId: sanitizedCoachId || null,
         password: hashedPassword,
-        role: 'user', // Default role
+        // role: 'user', // Default role
       },
     });
 
-    const token = jwt.sign({ userId: newUser.id, email: newUser.email }, JWT_SECRET, {
+    const token = jwt.sign({ userId: newUser.id, email: newUser.email, role: newUser.role }, JWT_SECRET, {
       expiresIn: '1h',
     });
 
@@ -69,7 +74,7 @@ export const loginUser = async (req, res) => {
       return res.status(401).json({ error: 'Invalid credentials.' });
     }
 
-    const token = jwt.sign({ userId: user.id, email: user.email }, JWT_SECRET, {
+    const token = jwt.sign({ userId: user.id, email: user.email, role: user.role }, JWT_SECRET, {
       expiresIn: '1h',
     });
 
@@ -80,9 +85,9 @@ export const loginUser = async (req, res) => {
       maxAge: 3600 * 1000,
     });
 
-    res.status(200).json({ 
-      message: 'Login successful', 
-      user: { id: user.id, username: user.username, email: user.email, role: user.role } 
+    res.status(200).json({
+      message: 'Login successful',
+      user: { id: user.id, username: user.username, email: user.email, role: user.role }
     });
   } catch (error) {
     console.error('Error logging in:', error);
@@ -123,10 +128,18 @@ export const updateUser = async (req, res) => {
 // Fetch a single user by ID
 export const fetchUser = async (req, res) => {
   const { id } = req.params;
+
+  console.log("id being passed:", id);
+  if (!isUUID(id)) {
+    return res.status(400).json({ error: 'Invalid UUID format' });
+  }
+
   try {
-    const user = await prisma.user.findUnique({
-      where: { id },
-      include: { coach: true }, // Include related coach information
+    debugger;
+    const user = await prisma.user.findFirst({
+      where: {
+        id: id,  // Fetch by ID
+      }
     });
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
@@ -140,37 +153,44 @@ export const fetchUser = async (req, res) => {
 
 // Fetch a single user by email
 export const getUserByEmail = async (req, res) => {
-    const { email } = req.params; // Extract email from request params
-    try {
-      const user = await prisma.user.findUnique({
-        where: { email },
-        include: { coach: true }, // Optionally include related coach information
-      });
-  
-      if (!user) {
-        return res.status(404).json({ error: 'User not found' });
-      }
-  
-      res.status(200).json({ user });
-    } catch (error) {
-      console.error('Error fetching user by email:', error);
-      res.status(500).json({ error: 'Failed to fetch user by email' });
+  const { email } = req.params;
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
     }
-  };
-  
-  // Fetch all users
-  export const fetchAllUsers = async (req, res) => {
-    try {
-      const users = await prisma.user.findMany({
-        include: { coach: true }, // Include related coach data, if applicable
-      });
-  
-      res.status(200).json({ users });
-    } catch (error) {
-      console.error('Error fetching users:', error);
-      res.status(500).json({ error: 'Failed to fetch users' });
-    }
-  };
+
+    res.status(200).json({ user });
+  } catch (error) {
+    console.error('Error fetching user by email:', error);
+    res.status(500).json({ error: 'Failed to fetch user by email' });
+  }
+};
+
+// Fetch all users
+export const fetchAllUsers = async (req, res) => {
+  console.log('Fetching all users...');
+  try {
+    const users = await prisma.user.findMany({
+      where: {
+        OR: [
+          { coachId: null }, // Optional `null` coachId
+          { coachId: { not: null } }, // Valid UUID coachId
+        ],
+      },
+
+    });
+    console.log(users);
+    res.status(200).json(users);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ error: 'Failed to fetch users' });
+  }
+};
 
 // Delete a user by ID
 export const deleteUser = async (req, res) => {

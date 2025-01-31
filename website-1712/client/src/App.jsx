@@ -18,6 +18,7 @@ const Logout = lazy(() => import('./components/auth/Logout'));
 const Login = lazy(() => import('./components/auth/Login'));
 const Register = lazy(() => import('./components/auth/Register'));
 
+const Admin = lazy(() => import('./components/Admin'));
 
 // https://excalidraw.com/#json=rSo3sN2fJiBowpks8Aw-h,bYdqBNvCUjKXOchU2HEJMg
 
@@ -29,6 +30,7 @@ function App() {
     console.log(`user`, user);
     if (user?.id) {
       console.log(`no user`);
+      console.log(user?.id);
     }
   }, [user]);
 
@@ -49,6 +51,7 @@ function App() {
                   <Route path="/testimonials" element={<Layout main={<Testimonials />} />} />
                   <Route path="/products" element={<Layout main={<ProductsPage />} />} />
 
+                  <Route path="/admin" element={<Layout main={<Admin />} />} />
 
                   <Route path="/logout" element={<Layout main={<Logout />} />} />
                   <Route path="/login" element={<Login />} />

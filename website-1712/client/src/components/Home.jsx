@@ -3,6 +3,13 @@ import { Box, Typography, Grid, Button, Container } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 import WellnessImage from '../assets/wellness-image.jpg'; // Sample image path
 
+// "vegan diets", "beginner workouts", "boost your energy", "boost your mood", "improve your sleep", "improve your digestion", "improve your skin", "improve your posture", "boost your immunity", "improve your microbiome health", 
+// Story Highlights: Feature personal stories or testimonials with clickable links to read more.
+// Optimize images and implement lazy loading.
+//     Clear CTAs: Use calls-to-action (e.g., “Try a New Recipe” or “Explore Stories”).
+// Dynamic Content:
+// Show content based on seasons (e.g., “Winter Wellness Tips”).
+
 const Home = () => {
     return (
         <Box sx={{ backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
@@ -47,7 +54,7 @@ const Home = () => {
                                 Join Now
                             </Button>
                         </NavLink>
-                        <NavLink to="/shop" style={{ textDecoration: 'none' }}>
+                        <NavLink to="/products" style={{ textDecoration: 'none' }}>
                             <Button variant="outlined" sx={{ borderColor: '#177F2E', color: '#fff', padding: '10px 20px' }}>
                                 Shop Wellness
                             </Button>

@@ -7,6 +7,9 @@
 // npx prisma generate
 // npx prisma migrate reset
 
+// npx prisma migrate status
+// npx prisma migrate dev
+
 // npx prisma migrate deploy       for production
 
 generator client {
@@ -18,24 +21,73 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Coach {
-  id        String   @id @default(uuid()) @db.Uuid  
-  name      String
-  bio       String
-  clients   User[]   @relation("CoachUsers")
-  createdAt DateTime @default(now())
+enum Role {
+  USER
+  COACH
+  ADMIN
 }
 
 model User {
   id        String   @id @default(uuid()) @db.Uuid  
   username  String
   email     String   @unique
-  password  String   // Store hashed password
+  password  String   
+  role      Role     @default(USER)
+  isBlocked Boolean  @default(false)
   createdAt DateTime @default(now())
-  role      String  @default("user") // Role can be 'user' or 'admin'
-  coachId   String?  @db.Uuid  
-  coach     Coach?   @relation("CoachUsers", fields: [coachId], references: [id], onDelete: SetNull)
 
+  coachId      String?       @db.Uuid
+  coach        User?         @relation("UserCoach", fields: [coachId], references: [id], onDelete: SetNull)
+
+   // Relationships to other features
+  clients      User[]        @relation("UserCoach")
+  coachProfile CoachProfile? @relation("CoachProfileUser")  
+  
+  
   @@index([email])
 }
 
+model CoachProfile {
+  id         String   @id @default(uuid()) @db.Uuid
+  bio        String
+  expertise  String?   // Example: Fitness, Nutrition
+  userId     String?   @unique @db.Uuid // Allows nullability for flexibility
+  user       User?     @relation("CoachProfileUser", fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+model Category {
+  id          Int      @id @default(autoincrement())
+  name     String    @unique
+  products Product[]
+}
+
+model Tag {
+  id          Int      @id @default(autoincrement())
+  name String @unique
+  products ProductTag[]
+}
+
+model ProductTag {
+  product   Product @relation(fields: [productId], references: [id])
+  productId Int
+  tag       Tag @relation(fields: [tagId], references: [id])
+  tagId     Int      
+
+  @@id([productId, tagId]) // Prevents duplicate product-tag pairs
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  name       String
+  description String?
+  photo      String    // Base64 OR URL 
+  price      Float
+  inStock    Boolean
+  quantity   Int
+  tags       ProductTag[]
+  category   Category  @relation(fields: [categoryId], references: [id])
+  categoryId Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt //ALTER TABLE "Product" ALTER COLUMN "updatedAt" SET DEFAULT CURRENT_TIMESTAMP;
+}

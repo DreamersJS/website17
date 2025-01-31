@@ -1,12 +1,15 @@
 export const verifyAdmin = (req, res, next) => {
-    if (req.user?.role !== 'admin') {
+  console.log('verifyAdmin req ' + req);
+  console.log("verifyAdmin req.user:", JSON.stringify(req.user, null, 2));
+
+    if (req.user?.role.toUpperCase() !== 'ADMIN') {
       return res.status(403).json({ error: 'Forbidden: Admin access required' });
     }
   
     next(); // Proceed to the next middleware or route handler
   };
   
-  // for moderator, editor roles
+  // for coach roles
   export const authorizeRole = (requiredRole) => (req, res, next) => {
     if (!req.user?.role) {
       return res.status(403).json({ error: 'Access denied. Role not found.' });
