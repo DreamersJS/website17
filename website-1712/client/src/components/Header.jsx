@@ -113,10 +113,10 @@ const Header = () => {
                                 <MenuItem component={NavLink} to="/admin" onClick={handleClose}>
                                     Admin
                                 </MenuItem>
-                                <Divider />
+                                {/* <Divider />
                                 <MenuItem component={NavLink} to="/block" onClick={handleClose}>
                                     Block Users
-                                </MenuItem>
+                                </MenuItem> */}
                             </Menu>
                         </Box>
                     )}
