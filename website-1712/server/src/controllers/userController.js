@@ -109,6 +109,8 @@ export const logoutUser = (req, res) => {
 export const updateUser = async (req, res) => {
   const { id } = req.params;
   const { username, email, photo, coachId } = req.body;
+  console.log("Received data:", req.body);
+
   try {
     const updatedUser = await prisma.user.update({
       where: { id },

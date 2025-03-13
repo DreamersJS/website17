@@ -15,7 +15,7 @@ const ProfilePage = () => {
     useEffect(() => {
         if (user?.id) {
             setLoading(false);
-            setFormData({ name: user.username, email: user.email, photo: user.photo });
+            setFormData({ username: user.username, email: user.email, photo: user.photo });
         }
     }, [user]);
 
@@ -49,7 +49,7 @@ const ProfilePage = () => {
         <Box sx={{ padding: '20px' }}>
             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <Avatar src={user.photo || "https://via.placeholder.com/100"} sx={{ width: 100, height: 100 }} />
-                <Typography variant="h5" sx={{ marginTop: '15px' }}>{user.name}</Typography>
+                <Typography variant="h5" sx={{ marginTop: '15px' }}>{user.username}</Typography>
                 <Typography variant="body1" sx={{ color: 'gray', marginTop: '5px' }}>{user.email}</Typography>
 
                 <Box sx={{ marginTop: '20px', display: 'flex', gap: 2 }}>
@@ -63,7 +63,7 @@ const ProfilePage = () => {
             <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
                 <DialogTitle>Edit Profile</DialogTitle>
                 <DialogContent>
-                    <TextField fullWidth margin="dense" label="Name" name="name" value={formData.username} onChange={handleChange} />
+                    <TextField fullWidth margin="dense" label="Username" name="username" value={formData.username} onChange={handleChange} />
                     <TextField fullWidth margin="dense" label="Email" name="email" value={formData.email} onChange={handleChange} />
                     <TextField fullWidth margin="dense" label="Photo URL" name="photo" value={formData.photo} onChange={handleChange} />
                 </DialogContent>
