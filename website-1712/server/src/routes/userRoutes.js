@@ -23,7 +23,7 @@ router.post('/logout', logoutUser);
 router.get('/all', fetchAllUsers); // for testing purposes only
 // router.get('/all', authenticateUser, verifyAdmin, fetchAllUsers);
 router.get('/:id', fetchUser);     
-router.put('/:id', updateUser);     
+router.put('/:id/update', updateUser);     
 router.delete('/:id', authenticateUser, authorizeRole('USER'), deleteUser);  
 router.get('/email/:email', getUserByEmail); 
 
