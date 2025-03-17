@@ -44,3 +44,30 @@ export const blockUser = async (req, res) => {
     }
 };
 
+export const verifyAdminDB = async (req, res) => {
+    const { userId } = req.params;
+
+    // User ID from token (set by authenticateUser middleware)
+    const authUserId = req.user.id; 
+    const authUserRole = req.user.role;
+
+    // Allow only if the user is checking their own role OR is an admin
+    if (authUserId !== userId && authUserRole !== 'ADMIN') {
+        return res.status(403).json({ message: "Forbidden: Not authorized" });
+    }
+
+    try {
+        const user = await prisma.user.findUnique({
+            where: { id: userId },
+        });
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found in db" });
+        }
+
+        res.status(200).json({ role: user.role });
+    } catch (error) {
+        console.error("Error verifying admin role:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+};
