@@ -1,54 +1,4 @@
-import React, { useState } from "react";
-import {
-  Container,
-  Grid,
-  Card,
-  CardContent,
-  Typography,
-  TextField,
-  Button,
-  MenuItem,
-  Slider,
-} from "@mui/material";
-import useScreenSize from '../hooks/useScreenSize';
-import ResponsiveComponent from '../components/ResponsiveComponent';
-
-const Diary = () => {
-  const { width, height } = useScreenSize();
-  if (width === null || height === null) {
-    return <div>Loading...</div>;
-}
-  console.log("Width:", width);
-  const [meals, setMeals] = useState([
-    { meal: "Breakfast", grams: 150, type: "Boiled", notes: "High fiber" },
-    { meal: "Lunch", grams: 200, type: "Grilled", notes: "Low fat" },
-    { meal: "Dinner", grams: 180, type: "Steamed", notes: "High protein" },
-  ]);
-
-  const [waterIntake, setWaterIntake] = useState(2);
-  const [energyLevel, setEnergyLevel] = useState(3);
-  const [sleepQuality, setSleepQuality] = useState(4);
-  const [mood, setMood] = useState(5);
-
-  const cookingMethods = ["Boiled", "Steamed", "Grilled", "Baked", "Raw", "Fried"];
-
-  const handleMealChange = (index, field, value) => {
-    const updatedMeals = [...meals];
-    updatedMeals[index][field] = value;
-    setMeals(updatedMeals);
-  };
-
-  const handleAddMeal = () => {
-    setMeals([...meals, { meal: "", grams: "", type: "Boiled", notes: "" }]);
-  };
-
-  const handleSaveDiary = () => {
-    console.log("Saved Diary:", { meals, waterIntake, energyLevel, sleepQuality, mood });
-    alert("Diary Saved!");
-  };
-
-  return (
-    <>
+<>
     <Container sx={{ mt: 4 }}>
         <Grid container spacing={3}>
             {/* Feeding Habits */}
@@ -221,7 +171,3 @@ const Diary = () => {
     </Container>
 
 </>
-  );
-};
-
-export default Diary;
