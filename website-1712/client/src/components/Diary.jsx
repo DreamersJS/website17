@@ -1,165 +1,179 @@
-import React, { useState, useEffect } from 'react';
-import { Box, Typography, Divider, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField } from '@mui/material';
-// import ProfileSkeleton from './ProfileSkeleton';
+import React, { useState } from "react";
+import {
+  Container,
+  Grid,
+  Card,
+  CardContent,
+  Typography,
+  TextField,
+  Button,
+  MenuItem,
+  Slider,
+  IconButton,
+} from "@mui/material";
+import { Delete } from "@mui/icons-material";
+import useScreenSize from "../hooks/useScreenSize";
+import ResponsiveComponent from "../components/ResponsiveComponent";
 
 const Diary = () => {
+  const { width, height } = useScreenSize();
+  if (width === null || height === null) {
+    return <div>Loading...</div>;
+  }
+  console.log("Width:", width);
 
-    // not sure which metrics to track, how to structure the view
-    const [userData, setUserData] = useState({
-        coachingSessions: [
-            { title: "Fitness Coaching", date: "Jan 10, 2024", status: "Completed" },
-            { title: "Nutrition Coaching", date: "Feb 20, 2024", status: "Upcoming" },
-        ],
-        feedingHabits: [
-            { meal: 'Breakfast', calories: 400, type: 'Oats', notes: 'High fiber' },
-            { meal: 'Brunch', calories: '', type: '', notes: '' },
-            { meal: 'Lunch', calories: 600, type: 'Grilled Chicken Salad', notes: 'Low fat' },
-            { meal: 'Snacks', calories: '', type: '', notes: '' },
-            { meal: 'Dinner', calories: 500, type: 'Steamed Vegetables', notes: 'High protein' }
-        ],
-        waterIntake: 2, // Liters
-        physicalProgress: [
-            { metric: 'Weight', value: 75, date: 'Jan 15, 2024' }, // Value in kg
-            { metric: 'BMI', value: 25, date: 'Jan 15, 2024' }, // Value in kg/m^2
-            { metric: 'Body Fat %', value: 20, date: 'Jan 15, 2024' }, // Value in %
-            { metric: 'Muscle Mass', value: 35, date: 'Jan 15, 2024' }, // Value in kg
-            { metric: 'Bone Mass', value: 2.4, date: 'Jan 15, 2024' }, // Value in kg
-            { metric: 'age', value: 25, date: 'Jan 15, 2024' }, // Metabolic age
-            { metric: 'hydration', value: 55, date: 'Jan 15, 2024' }, // % of body water
-            { metric: 'Visceral Fat', value: 5, date: 'Jan 15, 2024' } // Value in ?
-        ],
-        healthImprovements: [
-            { metric: 'Energy Levels', value: 70, date: 'Jan 15, 2024' }, // Percentage
-            { metric: 'Sleep Quality', value: 80, date: 'Jan 15, 2024' }, // Percentage
-            { metric: 'Mood', value: 85, date: 'Jan 15, 2024' } // Percentage
-        ],
-        fitnessProgress: [
-            { metric: 'Endurance', value: 60, date: 'Jan 15, 2024' }, // Percentage
-            { metric: 'Strength', value: 65, date: 'Jan 15, 2024' }, // Percentage
-            { metric: 'Mobility', value: 55, date: 'Jan 15, 2024' } // Percentage
-        ],
-        successStories: [
-            { story: "Maria couldn't lift her knee, but now she can after consistent training. She's amazed by her progress!", date: 'Jan 10, 2024' },
-            { story: "John couldn't run for more than 5 minutes, but now he runs 30 minutes without stopping!", date: 'Jan 12, 2024' }
-        ],
-        coachMessages: [
-            { message: "Congrats, you reduced your fat by 3%!", date: "Jan 15, 2024" },
-            { message: "Great job on completing your workout today!", date: "Jan 17, 2024" }
-        ]
-    });
+  const [meals, setMeals] = useState([
+    { meal: "Breakfast", grams: 150, type: "Boiled", notes: "High fiber" },
+    { meal: "Lunch", grams: 200, type: "Grilled", notes: "Low fat" },
+    { meal: "Dinner", grams: 180, type: "Steamed", notes: "High protein" },
+  ]);
 
-    const handleInputChange = (e, section, index, field) => {
-        const updatedData = { ...userData };
-        updatedData[section][index][field] = e.target.value;
-        setUserData(updatedData);
-    };
+  const [waterIntake, setWaterIntake] = useState(2);
+  const [energyLevel, setEnergyLevel] = useState(3);
+  const [sleepQuality, setSleepQuality] = useState(4);
+  const [mood, setMood] = useState(5);
 
-    const handleProgressChange = (e, index) => {
-        const updatedData = { ...userData };
-        updatedData.progress[index].progress = e.target.value;
-        setUserData(updatedData);
-    };
+  const cookingMethods = ["Boiled", "Steamed", "Grilled", "Baked", "Raw", "Fried"];
 
-    const handleWaterIntakeChange = (e) => {
-        const updatedData = { ...userData };
-        updatedData.waterIntake = e.target.value;
-        setUserData(updatedData);
-    };
+  const handleMealChange = (index, field, value) => {
+    const updatedMeals = [...meals];
+    updatedMeals[index][field] = value;
+    setMeals(updatedMeals);
+  };
 
-    return (
-        <div>
-            <h1>Track your progress here!</h1>
+  const handleAddMeal = () => {
+    setMeals([...meals, { meal: "", grams: "", type: "Boiled", notes: "" }]);
+  };
 
-            {/* Coaching Sessions */}
-            <Typography variant="h6">Coaching Sessions</Typography>
-            {userData.coachingSessions.map((session, index) => (
-                <Box key={index} sx={{ marginTop: '15px' }}>
-                    <Typography variant="body1">{session.title}</Typography>
-                    <Typography variant="body2" sx={{ color: 'gray' }}>{session.date} - {session.status}</Typography>
-                </Box>
-            ))}
+  const handleRemoveMeal = (index) => {
+    const updatedMeals = meals.filter((_, i) => i !== index);
+    setMeals(updatedMeals);
+  };
 
-            {/* Feeding Habits Table */}
-            <Typography variant="h6">Feeding Habits</Typography>
-            <TableContainer component={Paper} sx={{ marginTop: '20px' }}>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>Meal</TableCell>
-                            <TableCell>Calories</TableCell>
-                            <TableCell>Type</TableCell>
-                            <TableCell>Notes</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {userData.feedingHabits.map((habit, index) => (
-                            <TableRow key={index}>
-                                <TableCell>{habit.meal}</TableCell>
-                                <TableCell>
-                                    <TextField
-                                        value={habit.calories}
-                                        onChange={(e) => handleInputChange(e, 'feedingHabits', index, 'calories')}
-                                        type="number"
-                                    />
-                                </TableCell>
-                                <TableCell>
-                                    <TextField
-                                        value={habit.type}
-                                        onChange={(e) => handleInputChange(e, 'feedingHabits', index, 'type')}
-                                    />
-                                </TableCell>
-                                <TableCell>
-                                    <TextField
-                                        value={habit.notes}
-                                        onChange={(e) => handleInputChange(e, 'feedingHabits', index, 'notes')}
-                                    />
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
+  const handleSaveDiary = () => {
+    console.log("Saved Diary:", { meals, waterIntake, energyLevel, sleepQuality, mood });
+    alert("Diary Saved!");
+  };
 
-            <Divider sx={{ marginTop: '30px', marginBottom: '30px' }} />
-
-            {/* Water Intake */}
-            <Typography variant="h6">Water Intake (Liters)</Typography>
-            <TextField
-                value={userData.waterIntake}
-                onChange={handleWaterIntakeChange}
-                type="number"
-                sx={{ marginTop: '10px' }}
-                fullWidth
-            />
-
-            <Divider sx={{ marginTop: '30px', marginBottom: '30px' }} />
-
-            {/* Progress Tracking */}
-            {/* input each day or on change ?ask for feedback? */}
-            <Typography variant="h6">Progress Tracking</Typography>
-            {userData.physicalProgress.map((progress, index) => (
-                <Box key={index} sx={{ marginTop: '15px' }}>
-                    <Typography variant="body1">{progress.metric}</Typography>
-                    <TextField
-                        value={progress.value}
-                        onChange={(e) => handleProgressChange(e, index)}
-                        sx={{ marginTop: '10px' }}
+  return (
+    <>
+      <Container sx={{ mt: 4 }}>
+        <Grid container spacing={3}>
+          {/* Feeding Habits */}
+          <ResponsiveComponent>
+            {({ width }) => {
+              const renderMeals = (isDesktop) =>
+                meals.map((meal, index) => (
+                  <Grid container spacing={2} key={index} sx={{ mb: 1 }}>
+                    <Grid item xs={isDesktop ? 3 : 12}>
+                      <TextField
                         fullWidth
-                    />
-                </Box>
-            ))}
+                        label="Meal"
+                        value={meal.meal}
+                        onChange={(e) => handleMealChange(index, "meal", e.target.value)}
+                      />
+                    </Grid>
+                    <Grid item xs={isDesktop ? 2 : 12}>
+                      <TextField
+                        fullWidth
+                        type="number"
+                        label="Grams"
+                        value={meal.grams}
+                        onChange={(e) => handleMealChange(index, "grams", e.target.value)}
+                      />
+                    </Grid>
+                    <Grid item xs={isDesktop ? 3 : 12}>
+                      <TextField
+                        select
+                        fullWidth
+                        label="Cooking Method"
+                        value={meal.type}
+                        onChange={(e) => handleMealChange(index, "type", e.target.value)}
+                      >
+                        {cookingMethods.map((method, idx) => (
+                          <MenuItem key={idx} value={method}>
+                            {method}
+                          </MenuItem>
+                        ))}
+                      </TextField>
+                    </Grid>
+                    <Grid item xs={isDesktop ? 3 : 12}>
+                      <TextField
+                        fullWidth
+                        label="Notes"
+                        value={meal.notes}
+                        onChange={(e) => handleMealChange(index, "notes", e.target.value)}
+                      />
+                    </Grid>
+                    <Grid item xs={1} display="flex" alignItems="center">
+                      <IconButton color="error" onClick={() => handleRemoveMeal(index)}>
+                        <Delete />
+                      </IconButton>
+                    </Grid>
+                  </Grid>
+                ));
 
-            <Divider sx={{ marginTop: '30px', marginBottom: '30px' }} />
+              return (
+                <Grid item xs={12}>
+                  <Card>
+                    <CardContent>
+                      <Typography variant="h6" gutterBottom>
+                        Feeding Habits
+                      </Typography>
+                      {renderMeals(width > 600)}
+                      <Button variant="contained" color="primary" onClick={handleAddMeal}>
+                        Add Meal
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              );
+            }}
+          </ResponsiveComponent>
 
-            {/* Messages from Coach */}
-            <Typography variant="h6">Messages from Your Coach:</Typography>
-            {userData.coachMessages.map((message, index) => (
-                <Box key={index} sx={{ marginTop: '15px' }}>
-                    <Typography variant="body1">{message.message}</Typography>
-                    <Typography variant="body2" sx={{ color: 'gray' }}>{message.date}</Typography>
-                </Box>
-            ))}
-        </div>
-    );
-}
+          {/* Water Intake */}
+          <Grid item xs={12} md={6}>
+            <Card>
+              <CardContent>
+                <Typography variant="h6">Water Intake</Typography>
+                <Typography>{waterIntake} Liters</Typography>
+                <Slider
+                  value={waterIntake}
+                  onChange={(e, newValue) => setWaterIntake(newValue)}
+                  min={0}
+                  max={5}
+                  step={0.5}
+                  marks
+                />
+              </CardContent>
+            </Card>
+          </Grid>
+
+          {/* Health Improvements */}
+          <Grid item xs={12} md={6}>
+            <Card>
+              <CardContent>
+                <Typography variant="h6">Health Improvements</Typography>
+                <Typography>Energy Level</Typography>
+                <Slider value={energyLevel} onChange={(e, v) => setEnergyLevel(v)} min={1} max={5} />
+                <Typography>Sleep Quality</Typography>
+                <Slider value={sleepQuality} onChange={(e, v) => setSleepQuality(v)} min={1} max={5} />
+                <Typography>Mood</Typography>
+                <Slider value={mood} onChange={(e, v) => setMood(v)} min={1} max={5} />
+              </CardContent>
+            </Card>
+          </Grid>
+
+          {/* Save Button */}
+          <Grid item xs={12}>
+            <Button variant="contained" color="success" fullWidth sx={{ mt: 2 }} onClick={handleSaveDiary}>
+              Save Diary
+            </Button>
+          </Grid>
+        </Grid>
+      </Container>
+    </>
+  );
+};
+
 export default Diary;
