@@ -1,24 +1,16 @@
 import React, { useState } from "react";
-import {
-  Container,
-  Grid,
-  Card,
-  CardContent,
-  Typography,
-  TextField,
-  Button,
-  MenuItem,
-  Slider,
-  IconButton,
-  Snackbar,
-  Alert,
-} from "@mui/material";
+import { Container, Grid, Card, CardContent, Typography, TextField, Button, MenuItem, Slider, IconButton, Snackbar, Alert} from "@mui/material";
 import { Delete } from "@mui/icons-material";
 import useScreenSize from "../hooks/useScreenSize";
 import ResponsiveComponent from "../components/ResponsiveComponent";
+import { saveDiary } from "../service/service-user";
+import { useRecoilValue } from "recoil";
+import { userState } from "../recoil/userAtom";
 
 const Diary = () => {
   const { width, height } = useScreenSize();
+  const user = useRecoilValue(userState);
+
   if (width === null || height === null) {
     return <div>Loading...</div>;
   }
@@ -69,7 +61,9 @@ const Diary = () => {
       setOpenSnackbar(true);
       return;
     }
-
+    const userId = user._id;
+    saveDiary({ meals, waterIntake, energyLevel, sleepQuality, mood, userId });
+    
     console.log("Saved Diary:", { meals, waterIntake, energyLevel, sleepQuality, mood });
     setSnackbarMessage("Diary saved successfully!");
     setOpenSnackbar(true);

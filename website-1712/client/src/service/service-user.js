@@ -159,3 +159,20 @@ export const updateIsBlocked = async (userId) => {
     console.error("Error updating block status:", error);
   }
 }
+
+export const fetchDiary = async () => {};
+export const saveDiary = async () => {
+  const response = await fetch(`/api/users/${userId}/diary`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ meals, waterIntake, energyLevel, sleepQuality, mood, userId }),
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to save diary");
+  }
+  return response.json();
+};

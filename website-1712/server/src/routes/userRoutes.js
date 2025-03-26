@@ -27,4 +27,6 @@ router.put('/:id/update', updateUser);
 router.delete('/:id', authenticateUser, authorizeRole('USER'), deleteUser);  
 router.get('/email/:email', getUserByEmail); 
 
+router.post('/:id/diary', authenticateUser, createDiary ); 
+
 export default router;
