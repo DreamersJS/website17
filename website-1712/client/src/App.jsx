@@ -10,6 +10,8 @@ import Home from './components/Home';
 import Testimonials from './components/Testimonials';
 import ProductsPage from './components/Products';
 import SearchPage from './components/SearchPage'; // not logged in users but with restrictions
+import ErrorBoundary from './components/ErrorBoundry';
+import { FeedbackProvider } from './components/FeedbackContext';
 
 // protected components
 const CoachesPage = lazy(() => import('./components/CoachesPage'));
@@ -43,31 +45,33 @@ function App() {
       <ResponsiveComponent>
         {({ width, height }) => (
           <div className=' w-screen h-screen left-0 top-0 absolute'>
+            <FeedbackProvider>
+              <BrowserRouter>
+                <Suspense fallback={<div>Loading...</div>}> {/* Fallback while loading */}
+                  <ErrorBoundary>
+                    <Routes>
 
-            <BrowserRouter>
-              <Suspense fallback={<div>Loading...</div>}> {/* Fallback while loading */}
-                <Routes>
+                      <Route path="*" element={<Layout main={<Home />} />} />
+                      <Route path="/" element={<Layout main={<Home />} />} />
+                      <Route path="/coach" element={<Layout main={<CoachesPage />} />} />
+                      <Route path="/profile" element={<Layout main={<ProfilePage />} />} />
+                      <Route path="/testimonials" element={<Layout main={<Testimonials />} />} />
+                      <Route path="/products" element={<Layout main={<ProductsPage />} />} />
+                      <Route path="/diary" element={<Layout main={<Diary />} />} />
+                      {/* <Route path="/search/?q=yourSearchTerm" element={<Layout main={<SearchPage />} />} /> */}
+                      {/* no need to include ?q=... in route definition. That’s handled by useLocation(). */}
+                      <Route path="/search" element={<Layout main={<SearchPage />} />} />
 
-                  <Route path="*" element={<Layout main={<Home />} />} />
-                  <Route path="/" element={<Layout main={<Home />} />} />
-                  <Route path="/coach" element={<Layout main={<CoachesPage />} />} />
-                  <Route path="/profile" element={<Layout main={<ProfilePage />} />} />
-                  <Route path="/testimonials" element={<Layout main={<Testimonials />} />} />
-                  <Route path="/products" element={<Layout main={<ProductsPage />} />} />
-                  <Route path="/diary" element={<Layout main={<Diary />} />} />
-                  {/* <Route path="/search/?q=yourSearchTerm" element={<Layout main={<SearchPage />} />} /> */}
-                  {/* no need to include ?q=... in route definition. That’s handled by useLocation(). */}
-                  <Route path="/search" element={<Layout main={<SearchPage />} />} />
+                      <Route path="/admin" element={<Layout main={<AdminIndex />} />} />
 
-                  <Route path="/admin" element={<Layout main={<AdminIndex />} />} />
-
-                  <Route path="/logout" element={<Layout main={<Logout />} />} />
-                  <Route path="/login" element={<Layout main={<Login />} />} />
-                  <Route path="/register" element={<Layout main={<Register />} />} />
-                </Routes>
-              </Suspense>
-            </BrowserRouter>
-
+                      <Route path="/logout" element={<Layout main={<Logout />} />} />
+                      <Route path="/login" element={<Layout main={<Login />} />} />
+                      <Route path="/register" element={<Layout main={<Register />} />} />
+                    </Routes>
+                  </ErrorBoundary>
+                </Suspense>
+              </BrowserRouter>
+            </FeedbackProvider>
           </div>
         )}
       </ResponsiveComponent>

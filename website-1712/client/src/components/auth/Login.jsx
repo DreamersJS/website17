@@ -11,6 +11,7 @@ import {
   Button,
   CircularProgress,
 } from '@mui/material';
+import { useFeedback } from '../FeedbackContext.jsx';
 
 
 const Login = () => {
@@ -20,6 +21,7 @@ const Login = () => {
 
   const setUser = useSetRecoilState(userState);
   const navigate = useNavigate();
+  const { showFeedback } = useFeedback();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -42,10 +44,11 @@ const Login = () => {
         isBlocked: user.isBlocked,
         coachId: user.coachId,
       });
-
+      showFeedback('Login successful!', 'success');
       navigate('/');
     } catch (err) {
       console.error('Login error:', err);
+      showFeedback('Login failed!', 'error');
     } finally {
       setLoading(false);
     }

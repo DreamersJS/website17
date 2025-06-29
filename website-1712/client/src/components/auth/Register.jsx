@@ -12,6 +12,7 @@ import {
   Container,
   Grid,
 } from '@mui/material';
+import { useFeedback } from '../FeedbackContext.jsx';
 
 const Register = () => {
   const [username, setUsername] = useState('');
@@ -21,6 +22,7 @@ const Register = () => {
 
   const navigate = useNavigate();
   const setUser = useSetRecoilState(userState);
+  const { showFeedback } = useFeedback();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,6 +30,7 @@ const Register = () => {
     const validationError = validateForm({ username, email, password });
     if (validationError) {
       console.error('Validation error:', validationError);
+      showFeedback(`${validationError}`, 'error');
       return;
     }
 
@@ -46,10 +49,11 @@ const Register = () => {
         isBlocked: user.isBlocked,
         coachId: user.coachId,
       });
-
+      showFeedback('Registration successful!', 'success');
       navigate('/');
     } catch (err) {
       console.error('Register error', err);
+      showFeedback('Registration failed!', 'error');
     } finally {
       setLoading(false);
     }

@@ -1,14 +1,17 @@
 import React from 'react';
 import { Box, Typography, Grid, Button, Container } from '@mui/material';
 import { NavLink } from 'react-router-dom';
-import WellnessImage from '../assets/wellness-image.jpg'; // Sample image path
+import WellnessImage from '../assets/wellness-image.jpg'; 
 
 // "vegan diets", "beginner workouts", "boost your energy", "boost your mood", "improve your sleep", "improve your digestion", "improve your skin", "improve your posture", "boost your immunity", "improve your microbiome health", 
-// Story Highlights: Feature personal stories or testimonials with clickable links to read more.
+// Story Highlights: Feature personal stories with clickable links to read more.
 // Optimize images and implement lazy loading.
 //     Clear CTAs: Use calls-to-action (e.g., “Try a New Recipe” or “Explore Stories”).
 // Dynamic Content:
 // Show content based on seasons (e.g., “Winter Wellness Tips”).
+
+
+//  join now button in home: if user is logged in - remove or exchange?
 
 const Home = () => {
     return (
