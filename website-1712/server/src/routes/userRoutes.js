@@ -8,6 +8,7 @@ import {
   fetchAllUsers,
   loginUser,
   logoutUser,
+  createDiary,
 } from '../controllers/userController.js';
 import { verifyAdmin, authorizeRole } from '../middleware/authorizationAdmin.js';
 import { authenticateUser } from '../middleware/authentication.js';
