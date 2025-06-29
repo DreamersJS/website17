@@ -192,7 +192,7 @@ const Admin = () => {
         )}
       </div>)
       :
-      (<div>
+      (<div className="mt-2">
       {filteredUsers
         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
         .map((user) => (

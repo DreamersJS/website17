@@ -20,7 +20,7 @@ const Header = () => {
     const admin = user?.role;
     const navigate = useNavigate();
     const [searchQuery, setSearchQuery] = useState('');
-    
+
     // Open Menu
     const handleMenuOpen = (event, type) => {
         setAnchorEl(event.currentTarget);
@@ -43,226 +43,235 @@ const Header = () => {
 
     const handleSearch = async (searchTerm) => {
         if (!searchTerm) return;
-        console.log({searchTerm});
+        console.log({ searchTerm });
         try {
-          navigate(`/search?q=${encodeURIComponent(searchTerm)}`);
+            navigate(`/search?q=${encodeURIComponent(searchTerm)}`);
         } catch (error) {
-          console.error('Navigation failed', error);
+            console.error('Navigation failed', error);
         }
-      };
-      
-      
+    };
+
+
     return (
         <ResponsiveComponent>
-    {({ width }) => (
-        <AppBar position="sticky" sx={{ backgroundColor: '#177F2E', zIndex: 50 }}>
-            <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                {/* Left section: Logo/Home */}
-                <Box display="flex" alignItems="center">
-                    <NavLink to="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
-                        <HomeIcon sx={{ fontSize: 30, color: '#FFF', marginRight: 1 }} />
+            {({ width }) => (
+                <AppBar position="sticky" sx={{ backgroundColor: '#177F2E', zIndex: 50 }}>
+                    <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        {/* Left section: Logo/Home */}
+                        <Box display="flex" alignItems="center">
+                            <NavLink to="/" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+                                <HomeIcon sx={{ fontSize: 30, color: '#FFF', marginRight: 1 }} />
 
-                        {/* Conditionally render the text based on screen width */}
-                        {width > 805 && (
-                            <Typography variant="h6" sx={{ color: '#FFF' }}>
-                                Home
-                            </Typography>
-                        )}
-                    </NavLink>
-                </Box>
-
-                {/* Desktop Navigation Links */}
-                <Box display={{ xs: 'none', sm: 'flex' }} justifyContent="center" flexGrow={1}>
-                    {!userId && (
-                        <>
-                            <NavLink to="/login" style={{ margin: width <= 805 ? '0 3px' : '0 10px' }}>
-                                <ButtonUsage content="Login" />
+                                {/* Conditionally render the text based on screen width */}
+                                {width > 805 && (
+                                    <Typography variant="h6" sx={{ color: '#FFF' }}>
+                                        Home
+                                    </Typography>
+                                )}
                             </NavLink>
-                            <NavLink to="/register" style={{ margin: width <= 805 ? '0 3px' : '0 10px' }}>
-                                <ButtonUsage content="Register" />
-                            </NavLink>
-                        </>
-                    )}
-                    {userId && (
-                        <>
-                            {/* Profile with Logout submenu */}
-                            <Box display="flex" alignItems="center" sx={{ margin: width <= 805 ? '0 3px' : '0 10px' }}>
-                                <ButtonUsage content="Profile" onClick={(e) => handleMenuOpen(e, 'profile')}  aria-haspopup="menu" aria-expanded={menuType === 'profile' ? 'true' : 'false'} />
-                                <Menu
-                                    anchorEl={anchorEl}
-                                    open={menuType === 'profile'}
-                                    onClose={handleClose}
-                                >
-                                    <MenuItem component={NavLink} to="/profile" onClick={handleClose}>
-                                        Profile
-                                    </MenuItem>
-                                    <Divider />
-                                    {/* can submit Results for testimonials, marathons(who can verify the results? само клиенти 'на живо' могат да събмитнат?); take them from Diary logic like DirectChat-ChannelChat */}
-                                    <MenuItem component={NavLink} to="/results" onClick={handleClose}>
-                                        Results
-                                    </MenuItem>
-                                    <Divider />
-                                    {/* tabliza moeto hranene?  */}
-                                    <MenuItem component={NavLink} to="/diary" onClick={handleClose}>
-                                        Diary
-                                    </MenuItem>
-                                    <Divider />
-                                    <MenuItem component={NavLink} to="/logout" onClick={handleClose}>
-                                        Logout
-                                    </MenuItem>
-                                </Menu>
-                            </Box>
-                        </>
-                    )}
+                        </Box>
 
-                    {/* Admin with submenu */}
-                    {admin && (
-                        <Box display="flex" alignItems="center" sx={{ margin: width <= 805 ? '0 3px' : '0 10px' }}>
-                            <ButtonUsage content="Admin" onClick={(e) => handleMenuOpen(e, 'admin')}  aria-haspopup="menu" aria-expanded={menuType === 'admin' ? 'true' : 'false'} />
-                            <Menu
-                                anchorEl={anchorEl}
-                                open={menuType === 'admin'}
-                                onClose={handleClose}
-                            >
-                                <MenuItem component={NavLink} to="/admin" onClick={handleClose}>
-                                    Admin
-                                </MenuItem>
-                                {/* <Divider />
+                        {/* Desktop Navigation Links */}
+                        <Box display={{ xs: 'none', sm: 'flex' }} justifyContent="center" flexGrow={1}>
+                            {!userId && (
+                                <>
+                                    <NavLink to="/login" style={{ margin: width <= 805 ? '0 3px' : '0 10px' }}>
+                                        <ButtonUsage content="Login" />
+                                    </NavLink>
+                                    <NavLink to="/register" style={{ margin: width <= 805 ? '0 3px' : '0 10px' }}>
+                                        <ButtonUsage content="Register" />
+                                    </NavLink>
+                                </>
+                            )}
+                            {userId && (
+                                <>
+                                    {/* Profile with Logout submenu */}
+                                    <Box display="flex" alignItems="center" sx={{ margin: width <= 805 ? '0 3px' : '0 10px' }}>
+                                        <ButtonUsage content="Profile" onClick={(e) => handleMenuOpen(e, 'profile')} aria-haspopup="menu" aria-expanded={menuType === 'profile' ? 'true' : 'false'} />
+                                        <Menu
+                                            anchorEl={anchorEl}
+                                            open={menuType === 'profile'}
+                                            onClose={handleClose}
+                                        >
+                                            <MenuItem component={NavLink} to="/profile" onClick={handleClose}>
+                                                Profile
+                                            </MenuItem>
+                                            <Divider />
+                                            {/* can submit Results for testimonials, marathons(who can verify the results? само клиенти 'на живо' могат да събмитнат?); take them from Diary logic like DirectChat-ChannelChat */}
+                                            <MenuItem component={NavLink} to="/results" onClick={handleClose}>
+                                                Results
+                                            </MenuItem>
+                                            <Divider />
+                                            {/* tabliza moeto hranene?  */}
+                                            <MenuItem component={NavLink} to="/diary" onClick={handleClose}>
+                                                Diary
+                                            </MenuItem>
+                                            <Divider />
+                                            <MenuItem component={NavLink} to="/logout" onClick={handleClose}>
+                                                Logout
+                                            </MenuItem>
+                                        </Menu>
+                                    </Box>
+                                </>
+                            )}
+
+                            {/* Admin with submenu */}
+                            {admin && (
+                                <Box display="flex" alignItems="center" sx={{ margin: width <= 805 ? '0 3px' : '0 10px' }}>
+                                    <ButtonUsage content="Admin" onClick={(e) => handleMenuOpen(e, 'admin')} aria-haspopup="menu" aria-expanded={menuType === 'admin' ? 'true' : 'false'} />
+                                    <Menu
+                                        anchorEl={anchorEl}
+                                        open={menuType === 'admin'}
+                                        onClose={handleClose}
+                                    >
+                                        <MenuItem component={NavLink} to="/admin" onClick={handleClose}>
+                                            Admin
+                                        </MenuItem>
+                                        {/* <Divider />
                                 <MenuItem component={NavLink} to="/block" onClick={handleClose}>
                                     Block Users
                                 </MenuItem> */}
-                            </Menu>
+                                    </Menu>
+                                </Box>
+                            )}
+
+                            {/* Available to all users */}
+                            <NavLink to="/coach" style={{ margin: width <= 805 ? '0 3px' : '0 10px' }}>
+                                <ButtonUsage content="Coaches" />
+                            </NavLink>
+                            <NavLink to="/testimonials" style={{ margin: width <= 805 ? '0 3px' : '0 10px' }}>
+                                <ButtonUsage content="Testimonials" />
+                            </NavLink>
+                            <NavLink to="/products" style={{ margin: width <= 805 ? '0 3px' : '0 10px' }}>
+                                <ButtonUsage content="Products" />
+                            </NavLink>
+
+                            {/* Search Bar with Button */}
+                            <Box display="flex" alignItems="center" sx={{ marginLeft: 2 }}>
+                                <IconButton onClick={toggleSearch}>
+                                    <SearchIcon sx={{ color: '#FFF' }} />
+                                </IconButton>
+                                {openSearch && (
+                                    <input
+                                        type="text"
+                                        placeholder="Search..."
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter') { handleSearch(searchQuery); }; // Trigger on Enter
+                                        }}
+                                        style={{
+                                            backgroundColor: '#FFF',
+                                            color: '#000',
+                                            borderRadius: '4px',
+                                            padding: '5px 10px',
+                                            width: '200px'
+                                        }}
+                                    />
+                                )}
+                            </Box>
                         </Box>
-                    )}
 
-                    {/* Available to all users */}
-                    <NavLink to="/coach" style={{ margin: width <= 805 ? '0 3px' : '0 10px' }}>
-                        <ButtonUsage content="Coaches" />
-                    </NavLink>
-                    <NavLink to="/testimonials" style={{ margin: width <= 805 ? '0 3px' : '0 10px' }}>
-                        <ButtonUsage content="Testimonials" />
-                    </NavLink>
-                    <NavLink to="/products" style={{ margin: width <= 805 ? '0 3px' : '0 10px' }}>
-                        <ButtonUsage content="Products" />
-                    </NavLink>
+                        {/* Mobile Menu Icon */}
+                        <Box display={{ xs: 'flex', sm: 'none' }}>
+                            <IconButton onClick={toggleDrawer(true)} aria-label="Open mobile navigation menu">
+                                <MenuIcon sx={{ color: '#FFF' }} />
+                            </IconButton>
+                            {/* Search Bar with Button */}
+                            <Box display="flex" alignItems="center" sx={{ marginLeft: 2 }}>
+                                <IconButton onClick={toggleSearch}>
+                                    <SearchIcon sx={{ color: '#FFF' }} />
+                                </IconButton>
+                                {openSearch && (
+                                    <input
+                                        type="text"
+                                        placeholder="Search..."
+                                        aria-label="Search input"
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter') { handleSearch(searchQuery); }; // Trigger on Enter
+                                        }}
+                                        style={{
+                                            backgroundColor: '#FFF',
+                                            color: '#000',
+                                            borderRadius: '4px',
+                                            padding: '5px 10px',
+                                            width: '200px'
+                                        }}
+                                    />
+                                )}
+                            </Box>
+                        </Box>
 
-                    {/* Search Bar with Button */}
-                    <Box display="flex" alignItems="center" sx={{ marginLeft: 2 }}>
-                        <IconButton onClick={toggleSearch}>
-                            <SearchIcon sx={{ color: '#FFF' }} />
-                        </IconButton>
-                        {openSearch && (
-                            <input
-                                type="text"
-                                placeholder="Search..."
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                onKeyDown={(e) => {
-                                  if (e.key === 'Enter'){  handleSearch(searchQuery);}; // Trigger on Enter
-                                }}
-                                style={{
-                                    backgroundColor: '#FFF',
-                                    color: '#000',
-                                    borderRadius: '4px',
-                                    padding: '5px 10px',
-                                    width: '200px'
-                                }}
-                            />
-                        )}
-                    </Box>
-                </Box>
+                    </Toolbar>
 
-                {/* Mobile Menu Icon */}
-                <Box display={{ xs: 'flex', sm: 'none' }}>
-                    <IconButton onClick={toggleDrawer(true)} aria-label="Open mobile navigation menu">
-                        <MenuIcon sx={{ color: '#FFF' }} />
-                    </IconButton>
-                    {/* Search Bar with Button */}
-                    <Box display="flex" alignItems="center" sx={{ marginLeft: 2 }}>
-                        <IconButton onClick={toggleSearch}>
-                            <SearchIcon sx={{ color: '#FFF' }} />
-                        </IconButton>
-                        {openSearch && (
-                            <input
-                                type="text"
-                                placeholder="Search..."
-                                aria-label="Search input"
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                onKeyDown={(e) => {
-                                  if (e.key === 'Enter'){  handleSearch(searchQuery);}; // Trigger on Enter
-                                }}
-                                style={{
-                                    backgroundColor: '#FFF',
-                                    color: '#000',
-                                    borderRadius: '4px',
-                                    padding: '5px 10px',
-                                    width: '200px'
-                                }}
-                            />
-                        )}
-                    </Box>
-                </Box>
-
-            </Toolbar>
-
-            {/* Mobile Drawer */}
-            <Drawer anchor="right" aria-label="Mobile navigation menu" open={openMenu} onClose={toggleDrawer(false)}>
-                <Box
-                    sx={{ width: 250 }}
-                    role="presentation"
-                    onClick={toggleDrawer(false)}
-                    onKeyDown={toggleDrawer(false)}
-                >
-                    <List>
-                        <ListItem button component={NavLink} to="/">
-                            <ListItemText primary="Home" />
-                        </ListItem>
-
-                        {userId ? (
-                            <>
-                                <ListItem button component={NavLink} to="/profile">
-                                    <ListItemText primary="Profile" />
+                    {/* Mobile Drawer */}
+                    <Drawer anchor="right" aria-label="Mobile navigation menu" open={openMenu} onClose={toggleDrawer(false)}>
+                        <Box
+                            sx={{ width: 250 }}
+                            role="presentation"
+                            onClick={toggleDrawer(false)}
+                            onKeyDown={toggleDrawer(false)}
+                        >
+                            <List>
+                                <ListItem button component={NavLink} to="/">
+                                    <ListItemText primary="Home" />
                                 </ListItem>
-                                <ListItem button component={NavLink} to="/logout">
-                                    <ListItemText primary="Logout" />
-                                </ListItem>
-                                {/* <ListItem button component={NavLink} to="/shop">
+
+                                {userId ? (
+                                    <>
+                                        <ListItem button component={NavLink} to="/profile">
+                                            <ListItemText primary="Profile" />
+                                        </ListItem>
+                                        <ListItem button component={NavLink} to="/logout">
+                                            <ListItemText primary="Logout" />
+                                        </ListItem>
+                                        <ListItem button component={NavLink} to="/coach">
+                                            <ListItemText primary="Coaches" />
+                                        </ListItem>
+                                        <ListItem button component={NavLink} to="/testimonials">
+                                            <ListItemText primary="Testimonials" />
+                                        </ListItem>
+                                        <ListItem button component={NavLink} to="/products">
+                                            <ListItemText primary="Products" />
+                                        </ListItem>
+                                        {/* <ListItem button component={NavLink} to="/shop">
                                     <ListItemText primary="Shop" />
                                 </ListItem> */}
-                            </>
-                        )
-                            :
-                            (
-                                <>
-                                    <ListItem button component={NavLink} to="/login">
-                                        <ListItemText primary="Login" />
+                                    </>
+                                )
+                                    :
+                                    (
+                                        <>
+                                            <ListItem button component={NavLink} to="/login">
+                                                <ListItemText primary="Login" />
+                                            </ListItem>
+                                            <ListItem button component={NavLink} to="/register">
+                                                <ListItemText primary="Register" />
+                                            </ListItem>
+                                            <ListItem button component={NavLink} to="/coach">
+                                                <ListItemText primary="Coaches" />
+                                            </ListItem>
+                                            <ListItem button component={NavLink} to="/testimonials">
+                                                <ListItemText primary="Testimonials" />
+                                            </ListItem>
+                                            <ListItem button component={NavLink} to="/products">
+                                                <ListItemText primary="Products" />
+                                            </ListItem>
+                                        </>
+                                    )}
+                                {admin && (
+                                    <ListItem button component={NavLink} to="/admin">
+                                        <ListItemText primary="Admin" />
                                     </ListItem>
-                                    <ListItem button component={NavLink} to="/register">
-                                        <ListItemText primary="Register" />
-                                    </ListItem>
-                                    <ListItem button component={NavLink} to="/coach">
-                                    <ListItemText primary="Coaches" />
-                                </ListItem>
-                                <ListItem button component={NavLink} to="/testimonials">
-                                    <ListItemText primary="Testimonials" />
-                                </ListItem>
-                                <ListItem button component={NavLink} to="/products">
-                                    <ListItemText primary="Products" />
-                                </ListItem>
-                                </>
-                            )}
-                        {admin && (
-                            <ListItem button component={NavLink} to="/admin">
-                                <ListItemText primary="Admin" />
-                            </ListItem>
-                        )}
-                    </List>
-                </Box>
-            </Drawer>
-            </AppBar>
-    )}
-</ResponsiveComponent>
+                                )}
+                            </List>
+                        </Box>
+                    </Drawer>
+                </AppBar>
+            )}
+        </ResponsiveComponent>
     );
 };
 
