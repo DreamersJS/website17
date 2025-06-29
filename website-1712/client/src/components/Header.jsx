@@ -227,15 +227,6 @@ const Header = () => {
                                 <ListItem button component={NavLink} to="/logout">
                                     <ListItemText primary="Logout" />
                                 </ListItem>
-                                <ListItem button component={NavLink} to="/coach">
-                                    <ListItemText primary="Coaches" />
-                                </ListItem>
-                                <ListItem button component={NavLink} to="/testimonials">
-                                    <ListItemText primary="Testimonials" />
-                                </ListItem>
-                                <ListItem button component={NavLink} to="/products">
-                                    <ListItemText primary="Products" />
-                                </ListItem>
                                 {/* <ListItem button component={NavLink} to="/shop">
                                     <ListItemText primary="Shop" />
                                 </ListItem> */}
@@ -250,6 +241,15 @@ const Header = () => {
                                     <ListItem button component={NavLink} to="/register">
                                         <ListItemText primary="Register" />
                                     </ListItem>
+                                    <ListItem button component={NavLink} to="/coach">
+                                    <ListItemText primary="Coaches" />
+                                </ListItem>
+                                <ListItem button component={NavLink} to="/testimonials">
+                                    <ListItemText primary="Testimonials" />
+                                </ListItem>
+                                <ListItem button component={NavLink} to="/products">
+                                    <ListItemText primary="Products" />
+                                </ListItem>
                                 </>
                             )}
                         {admin && (
