@@ -208,3 +208,27 @@ export const deleteUser = async (req, res) => {
     res.status(500).json({ error: 'Failed to delete user' });
   }
 };
+
+// Create a diary entry for a user
+export const createDiary = async (req, res) => {
+  const { id } = req.params;
+  const { meals, waterIntake, energyLevel, sleepQuality, mood } = req.body;
+
+  try {
+    const diaryEntry = await prisma.diary.create({
+      data: {
+        userId: id,
+        waterIntake,
+        energyLevel,
+        sleepQuality,
+        mood,
+        meals: { create: meals },
+      },
+    });
+
+    res.json(diaryEntry);
+    } catch (error) {
+    console.error('Error creating diary entry:', error);
+    res.status(500).json({ error: 'Failed to create diary entry' });
+  }
+};

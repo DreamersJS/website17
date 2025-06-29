@@ -9,6 +9,7 @@ import Layout from './components/Layout';
 import Home from './components/Home';
 import Testimonials from './components/Testimonials';
 import ProductsPage from './components/Products';
+import SearchPage from './components/SearchPage'; // not logged in users but with restrictions
 
 // protected components
 const CoachesPage = lazy(() => import('./components/CoachesPage'));
@@ -54,6 +55,9 @@ function App() {
                   <Route path="/testimonials" element={<Layout main={<Testimonials />} />} />
                   <Route path="/products" element={<Layout main={<ProductsPage />} />} />
                   <Route path="/diary" element={<Layout main={<Diary />} />} />
+                  {/* <Route path="/search/?q=yourSearchTerm" element={<Layout main={<SearchPage />} />} /> */}
+                  {/* no need to include ?q=... in route definition. That’s handled by useLocation(). */}
+                  <Route path="/search" element={<Layout main={<SearchPage />} />} />
 
                   <Route path="/admin" element={<Layout main={<AdminIndex />} />} />
 

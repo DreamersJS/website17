@@ -1,26 +1,19 @@
 import React, { useState } from "react";
-import {
-  Container,
-  Grid,
-  Card,
-  CardContent,
-  Typography,
-  TextField,
-  Button,
-  MenuItem,
-  Slider,
-  IconButton,
-} from "@mui/material";
+import { Container, Grid, Card, CardContent, Typography, TextField, Button, MenuItem, Slider, IconButton, Snackbar, Alert} from "@mui/material";
 import { Delete } from "@mui/icons-material";
 import useScreenSize from "../hooks/useScreenSize";
 import ResponsiveComponent from "../components/ResponsiveComponent";
+import { saveDiary } from "../service/service-user";
+import { useRecoilValue } from "recoil";
+import { userState } from "../recoil/userAtom";
 
 const Diary = () => {
   const { width, height } = useScreenSize();
+  const user = useRecoilValue(userState);
+
   if (width === null || height === null) {
     return <div>Loading...</div>;
   }
-  console.log("Width:", width);
 
   const [meals, setMeals] = useState([
     { meal: "Breakfast", grams: 150, type: "Boiled", notes: "High fiber" },
@@ -32,6 +25,9 @@ const Diary = () => {
   const [energyLevel, setEnergyLevel] = useState(3);
   const [sleepQuality, setSleepQuality] = useState(4);
   const [mood, setMood] = useState(5);
+
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 
   const cookingMethods = ["Boiled", "Steamed", "Grilled", "Baked", "Raw", "Fried"];
 
@@ -50,9 +46,27 @@ const Diary = () => {
     setMeals(updatedMeals);
   };
 
+  const validateMeals = () => {
+    for (let meal of meals) {
+      if (!meal.meal.trim()) return "Meal name cannot be empty!";
+      if (isNaN(meal.grams) || meal.grams <= 0) return "Grams must be a positive number!";
+    }
+    return null;
+  };
+
   const handleSaveDiary = () => {
+    const errorMessage = validateMeals();
+    if (errorMessage) {
+      setSnackbarMessage(errorMessage);
+      setOpenSnackbar(true);
+      return;
+    }
+    const userId = user._id;
+    saveDiary({ meals, waterIntake, energyLevel, sleepQuality, mood, userId });
+    
     console.log("Saved Diary:", { meals, waterIntake, energyLevel, sleepQuality, mood });
-    alert("Diary Saved!");
+    setSnackbarMessage("Diary saved successfully!");
+    setOpenSnackbar(true);
   };
 
   return (
@@ -71,6 +85,8 @@ const Diary = () => {
                         label="Meal"
                         value={meal.meal}
                         onChange={(e) => handleMealChange(index, "meal", e.target.value)}
+                        error={!meal.meal.trim()}
+                        helperText={!meal.meal.trim() ? "Meal cannot be empty" : ""}
                       />
                     </Grid>
                     <Grid item xs={isDesktop ? 2 : 12}>
@@ -80,6 +96,10 @@ const Diary = () => {
                         label="Grams"
                         value={meal.grams}
                         onChange={(e) => handleMealChange(index, "grams", e.target.value)}
+                        error={isNaN(meal.grams) || meal.grams <= 0}
+                        helperText={
+                          isNaN(meal.grams) || meal.grams <= 0 ? "Enter a positive number" : ""
+                        }
                       />
                     </Grid>
                     <Grid item xs={isDesktop ? 3 : 12}>
@@ -171,6 +191,17 @@ const Diary = () => {
             </Button>
           </Grid>
         </Grid>
+
+        {/* Snackbar Notification */}
+        <Snackbar
+          open={openSnackbar}
+          autoHideDuration={3000}
+          onClose={() => setOpenSnackbar(false)}
+        >
+          <Alert onClose={() => setOpenSnackbar(false)} severity="success" sx={{ width: "100%" }}>
+            {snackbarMessage}
+          </Alert>
+        </Snackbar>
       </Container>
     </>
   );

@@ -8,6 +8,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import { AppBar, Toolbar, IconButton, Typography, Box, Drawer, Menu, MenuItem, Divider, List, ListItem, ListItemText } from '@mui/material';
 import ResponsiveComponent from './ResponsiveComponent'; // Import your responsive component
+import { searchService } from '../service/service';
 
 const Header = () => {
     const [openMenu, setOpenMenu] = useState(false); // Handles mobile menu
@@ -17,7 +18,9 @@ const Header = () => {
     const user = useRecoilValue(userState);
     const userId = user?.id;
     const admin = user?.role;
-
+    const navigate = useNavigate();
+    const [searchQuery, setSearchQuery] = useState('');
+    
     // Open Menu
     const handleMenuOpen = (event, type) => {
         setAnchorEl(event.currentTarget);
@@ -38,6 +41,17 @@ const Header = () => {
         setOpenMenu(open);
     };
 
+    const handleSearch = async (searchTerm) => {
+        if (!searchTerm) return;
+        console.log({searchTerm});
+        try {
+          navigate(`/search?q=${encodeURIComponent(searchTerm)}`);
+        } catch (error) {
+          console.error('Navigation failed', error);
+        }
+      };
+      
+      
     return (
         <ResponsiveComponent>
     {({ width }) => (
@@ -141,8 +155,14 @@ const Header = () => {
                             <input
                                 type="text"
                                 placeholder="Search..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                onKeyDown={(e) => {
+                                  if (e.key === 'Enter'){  handleSearch(searchQuery);}; // Trigger on Enter
+                                }}
                                 style={{
                                     backgroundColor: '#FFF',
+                                    color: '#000',
                                     borderRadius: '4px',
                                     padding: '5px 10px',
                                     width: '200px'
