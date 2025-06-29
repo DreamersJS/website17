@@ -62,8 +62,8 @@ function App() {
                   <Route path="/admin" element={<Layout main={<AdminIndex />} />} />
 
                   <Route path="/logout" element={<Layout main={<Logout />} />} />
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/register" element={<Register />} />
+                  <Route path="/login" element={<Layout main={<Login />} />} />
+                  <Route path="/register" element={<Layout main={<Register />} />} />
                 </Routes>
               </Suspense>
             </BrowserRouter>
