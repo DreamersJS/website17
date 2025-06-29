@@ -31,6 +31,11 @@ const Admin = () => {
   const [orderBy, setOrderBy] = useState("username");
   const isMobile = width <= 600;
 
+  useEffect(() => {
+    if (!user?.id) {
+      navigate('/login');
+    }
+  }, [user]);
 
   useEffect(() => {
     handleFetchUsers();
@@ -38,19 +43,19 @@ const Admin = () => {
 
   const handleFetchUsers = async () => {
     try {
-      
+
       const data = await fetchUsers();
       setUsers(data);
     } catch (error) {
       console.error("Error fetching users:", error);
     }
   };
-    
+
   const handleRoleChange = async (userId, newRole) => {
 
     try {
       await updateUserRole(userId, newRole);
-      handleFetchUsers(); 
+      handleFetchUsers();
     } catch (error) {
       console.error("Error updating role:", error);
     }
@@ -60,7 +65,7 @@ const Admin = () => {
 
     try {
       await updateIsBlocked(userId);
-      handleFetchUsers(); 
+      handleFetchUsers();
     } catch (error) {
       console.error("Error updating block status:", error);
     }
@@ -99,132 +104,132 @@ const Admin = () => {
       return 0;
     });
 
-    return (
-      <>
+  return (
+    <>
       {!isMobile ? (
-      <div className="flex flex-col items-center justify-center w-full h-full my-2">
-        {isAdmin ? (
-          <ResponsiveComponent>
-            {({ width }) => (
-              <Paper sx={{ width: '100%', padding: width > 600 ? 3 : 1 }}>
-                <h2>Welcome, Admin {user.username}</h2>
-                <TextField
-                  label="Search"
-                  variant="outlined"
-                  value={search}
-                  onChange={handleSearchChange}
+        <div className="flex flex-col items-center justify-center w-full h-full my-2">
+          {isAdmin ? (
+            <ResponsiveComponent>
+              {({ width }) => (
+                <Paper sx={{ width: '100%', padding: width > 600 ? 3 : 1 }}>
+                  <h2>Welcome, Admin {user.username}</h2>
+                  <TextField
+                    label="Search"
+                    variant="outlined"
+                    value={search}
+                    onChange={handleSearchChange}
+                    fullWidth
+                    margin="normal"
+                  />
+                  <TableContainer>
+                    <Table size={width > 600 ? "medium" : "small"}>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>
+                            <TableSortLabel
+                              active={orderBy === "username"}
+                              direction={order}
+                              onClick={() => handleSort("username")}
+                            >
+                              Username
+                            </TableSortLabel>
+                          </TableCell>
+                          <TableCell>
+                            <TableSortLabel
+                              active={orderBy === "email"}
+                              direction={order}
+                              onClick={() => handleSort("email")}
+                            >
+                              Email
+                            </TableSortLabel>
+                          </TableCell>
+                          <TableCell>Role</TableCell>
+                          <TableCell>Status</TableCell>
+                          <TableCell>Actions</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {filteredUsers
+                          .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                          .map((user) => (
+                            <TableRow key={user.id}>
+                              <TableCell>{user.username}</TableCell>
+                              <TableCell>{user.email}</TableCell>
+                              <TableCell>
+                                <select
+                                  value={user.role.toLowerCase()}
+                                  onChange={(e) => handleRoleChange(user.id, e.target.value)}
+                                >
+                                  <option value="user">User</option>
+                                  <option value="coach">Coach</option>
+                                  <option value="admin">Admin</option>
+                                </select>
+                              </TableCell>
+                              <TableCell>{user.isBlocked ? "Blocked" : "Active"}</TableCell>
+                              <TableCell>
+                                <Button
+                                  variant="contained"
+                                  color={user.isBlocked ? "warning" : "success"}
+                                  onClick={() => toggleIsBlocked(user.id)}
+                                >
+                                  {user.isBlocked ? "Unblock" : "Block"}
+                                </Button>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                  <TablePagination
+                    rowsPerPageOptions={[5, 10, 15]}
+                    component="div"
+                    count={filteredUsers.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                  />
+                </Paper>
+              )}
+            </ResponsiveComponent>
+          ) : (
+            <h3>You don't have permission to access this page.</h3>
+          )}
+        </div>)
+        :
+        (<div className="mt-2">
+          {filteredUsers
+            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            .map((user) => (
+              <Paper key={user.id} sx={{ p: 2, mb: 2 }}>
+                <p><strong>Username:</strong> {user.username}</p>
+                <p><strong>Email:</strong> {user.email}</p>
+                <p><strong>Role:</strong>
+                  <select
+                    value={user.role.toLowerCase()}
+                    onChange={(e) => handleRoleChange(user.id, e.target.value)}
+                  >
+                    <option value="user">User</option>
+                    <option value="coach">Coach</option>
+                    <option value="admin">Admin</option>
+                  </select>
+                </p>
+                <p><strong>Status:</strong> {user.isBlocked ? "Blocked" : "Active"}</p>
+                <Button
+                  variant="contained"
+                  color={user.isBlocked ? "warning" : "success"}
+                  onClick={() => toggleIsBlocked(user.id)}
                   fullWidth
-                  margin="normal"
-                />
-                <TableContainer>
-                  <Table size={width > 600 ? "medium" : "small"}>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>
-                          <TableSortLabel
-                            active={orderBy === "username"}
-                            direction={order}
-                            onClick={() => handleSort("username")}
-                          >
-                            Username
-                          </TableSortLabel>
-                        </TableCell>
-                        <TableCell>
-                          <TableSortLabel
-                            active={orderBy === "email"}
-                            direction={order}
-                            onClick={() => handleSort("email")}
-                          >
-                            Email
-                          </TableSortLabel>
-                        </TableCell>
-                        <TableCell>Role</TableCell>
-                        <TableCell>Status</TableCell>
-                        <TableCell>Actions</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {filteredUsers
-                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                        .map((user) => (
-                          <TableRow key={user.id}>
-                            <TableCell>{user.username}</TableCell>
-                            <TableCell>{user.email}</TableCell>
-                            <TableCell>
-                              <select
-                                value={user.role.toLowerCase()}
-                                onChange={(e) => handleRoleChange(user.id, e.target.value)}
-                              >
-                                <option value="user">User</option>
-                                <option value="coach">Coach</option>
-                                <option value="admin">Admin</option>
-                              </select>
-                            </TableCell>
-                            <TableCell>{user.isBlocked ? "Blocked" : "Active"}</TableCell>
-                            <TableCell>
-                              <Button
-                                variant="contained"
-                                color={user.isBlocked ? "warning" : "success"}
-                                onClick={() => toggleIsBlocked(user.id)}
-                              >
-                                {user.isBlocked ? "Unblock" : "Block"}
-                              </Button>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-                <TablePagination
-                  rowsPerPageOptions={[5, 10, 15]}
-                  component="div"
-                  count={filteredUsers.length}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  onPageChange={handleChangePage}
-                  onRowsPerPageChange={handleChangeRowsPerPage}
-                />
+                  sx={{ mt: 1 }}
+                >
+                  {user.isBlocked ? "Unblock" : "Block"}
+                </Button>
               </Paper>
-            )}
-          </ResponsiveComponent>
-        ) : (
-          <h3>You don't have permission to access this page.</h3>
+            ))}
+        </div>
         )}
-      </div>)
-      :
-      (<div className="mt-2">
-      {filteredUsers
-        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-        .map((user) => (
-          <Paper key={user.id} sx={{ p: 2, mb: 2 }}>
-            <p><strong>Username:</strong> {user.username}</p>
-            <p><strong>Email:</strong> {user.email}</p>
-            <p><strong>Role:</strong>
-              <select
-                value={user.role.toLowerCase()}
-                onChange={(e) => handleRoleChange(user.id, e.target.value)}
-              >
-                <option value="user">User</option>
-                <option value="coach">Coach</option>
-                <option value="admin">Admin</option>
-              </select>
-            </p>
-            <p><strong>Status:</strong> {user.isBlocked ? "Blocked" : "Active"}</p>
-            <Button
-              variant="contained"
-              color={user.isBlocked ? "warning" : "success"}
-              onClick={() => toggleIsBlocked(user.id)}
-              fullWidth
-              sx={{ mt: 1 }}
-            >
-              {user.isBlocked ? "Unblock" : "Block"}
-            </Button>
-          </Paper>
-        ))}
-    </div>
-      )}
-      </>
-    );
+    </>
+  );
 };
 
 export default Admin;

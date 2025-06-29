@@ -4,6 +4,7 @@ import ProfileSkeleton from './ProfileSkeleton';
 import ButtonUsage from "./Button";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { userState } from '../recoil/userAtom';
+import { useNavigate } from 'react-router-dom';
 
 const ProfilePage = () => {
     const setUser = useSetRecoilState(userState);
@@ -11,11 +12,14 @@ const ProfilePage = () => {
     const [loading, setLoading] = useState(true);
     const [open, setOpen] = useState(false);
     const [formData, setFormData] = useState({ username: '', email: '', photo: '' });
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (user?.id) {
             setLoading(false);
             setFormData({ username: user.username, email: user.email, photo: user.photo });
+        }else{
+            navigate('/login');
         }
     }, [user]);
 
