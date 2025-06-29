@@ -29,6 +29,8 @@ const Admin = () => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("username");
+  const isMobile = width <= 600;
+
 
   useEffect(() => {
     handleFetchUsers();
@@ -98,6 +100,8 @@ const Admin = () => {
     });
 
     return (
+      <>
+      {!isMobile ? (
       <div className="flex flex-col items-center justify-center w-full h-full my-2">
         {isAdmin ? (
           <ResponsiveComponent>
@@ -186,7 +190,40 @@ const Admin = () => {
         ) : (
           <h3>You don't have permission to access this page.</h3>
         )}
-      </div>
+      </div>)
+      :
+      (<div>
+      {filteredUsers
+        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+        .map((user) => (
+          <Paper key={user.id} sx={{ p: 2, mb: 2 }}>
+            <p><strong>Username:</strong> {user.username}</p>
+            <p><strong>Email:</strong> {user.email}</p>
+            <p><strong>Role:</strong>
+              <select
+                value={user.role.toLowerCase()}
+                onChange={(e) => handleRoleChange(user.id, e.target.value)}
+              >
+                <option value="user">User</option>
+                <option value="coach">Coach</option>
+                <option value="admin">Admin</option>
+              </select>
+            </p>
+            <p><strong>Status:</strong> {user.isBlocked ? "Blocked" : "Active"}</p>
+            <Button
+              variant="contained"
+              color={user.isBlocked ? "warning" : "success"}
+              onClick={() => toggleIsBlocked(user.id)}
+              fullWidth
+              sx={{ mt: 1 }}
+            >
+              {user.isBlocked ? "Unblock" : "Block"}
+            </Button>
+          </Paper>
+        ))}
+    </div>
+      )}
+      </>
     );
 };
 
