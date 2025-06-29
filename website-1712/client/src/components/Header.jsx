@@ -187,8 +187,14 @@ const Header = () => {
                                 type="text"
                                 placeholder="Search..."
                                 aria-label="Search input"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                onKeyDown={(e) => {
+                                  if (e.key === 'Enter'){  handleSearch(searchQuery);}; // Trigger on Enter
+                                }}
                                 style={{
                                     backgroundColor: '#FFF',
+                                    color: '#000',
                                     borderRadius: '4px',
                                     padding: '5px 10px',
                                     width: '200px'
