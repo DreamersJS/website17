@@ -79,17 +79,17 @@ model ProductTag {
 
 model Product {
   id          Int      @id @default(autoincrement())
-  name       String
+  name        String
   description String?
-  photo      String    // Base64 OR URL 
-  price      Float
-  inStock    Boolean
-  quantity   Int
-  tags       ProductTag[]
-  category   Category  @relation(fields: [categoryId], references: [id])
-  categoryId Int
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt //ALTER TABLE "Product" ALTER COLUMN "updatedAt" SET DEFAULT CURRENT_TIMESTAMP;
+  photo       String?
+  price       Float
+  inStock     Boolean
+  quantity    Int
+  tags        ProductTag[]
+  category    Category? @relation(fields: [categoryId], references: [id]) // make relation optional
+  categoryId  Int?                                           // make FK nullable
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Diary {

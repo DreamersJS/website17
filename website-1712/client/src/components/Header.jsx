@@ -129,8 +129,12 @@ const Header = () => {
                                         </MenuItem>
                                         {/* <Divider />
                                 <MenuItem component={NavLink} to="/block" onClick={handleClose}>
-                                    Block Users
+                                    Block Users 
                                 </MenuItem> */}
+                                        <Divider />
+                                        <MenuItem component={NavLink} to="/manage-products" onClick={handleClose}>
+                                            Manage Products
+                                        </MenuItem>
                                     </Menu>
                                 </Box>
                             )}
@@ -265,9 +269,14 @@ const Header = () => {
                                         </>
                                     )}
                                 {admin && (
-                                    <ListItem button component={NavLink} to="/admin">
-                                        <ListItemText primary="Admin" />
-                                    </ListItem>
+                                    <>
+                                        <ListItem button component={NavLink} to="/admin">
+                                            <ListItemText primary="Admin" />
+                                        </ListItem>
+                                        <ListItem button component={NavLink} to="/manage-products">
+                                            <ListItemText primary="Manage Products" />
+                                        </ListItem>
+                                    </>
                                 )}
                             </List>
                         </Box>

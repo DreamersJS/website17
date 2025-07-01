@@ -12,6 +12,7 @@ import ProductsPage from './components/Products';
 import SearchPage from './components/SearchPage'; // not logged in users but with restrictions
 import ErrorBoundary from './components/ErrorBoundry';
 import { FeedbackProvider } from './components/FeedbackContext';
+import AddProduct from './components/AddProduct';
 
 // protected components
 const CoachesPage = lazy(() => import('./components/CoachesPage'));
@@ -61,6 +62,7 @@ function App() {
                       {/* <Route path="/search/?q=yourSearchTerm" element={<Layout main={<SearchPage />} />} /> */}
                       {/* no need to include ?q=... in route definition. That’s handled by useLocation(). */}
                       <Route path="/search" element={<Layout main={<SearchPage />} />} />
+                      <Route path="/manage-products" element={<Layout main={<AddProduct />} />} />
 
                       <Route path="/admin" element={<Layout main={<AdminIndex />} />} />
 
