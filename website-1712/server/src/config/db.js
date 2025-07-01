@@ -1,4 +1,7 @@
-import { Pool } from 'pg';
+// import { Pool } from 'pg'; //SyntaxError trying to use ES Module (ESM) syntax (import { Pool } from 'pg') with a package (pg) that is written in CommonJS format. In Node.js, CommonJS modules can't always be destructured like ESM modules.
+import pkg from 'pg';
+const { Pool } = pkg;
+
 import { DATABASE_URL } from './env.js';
 
 // Create a new pool of connections

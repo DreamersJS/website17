@@ -6,9 +6,11 @@ import ProductsCard from './ProductsCard';
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
   const [filterProducts, setFilterProducts] = useState([]);
-
+  const [searchLocal, setSearchLocal] = useState("");
+console.log({products});
   const handleFetchProducts = async () => {
     try {
+      // to service
       const response = await fetch('/api/product/all', {
         method: 'GET',
         headers: {
@@ -32,6 +34,17 @@ const ProductsPage = () => {
     handleFetchProducts();
   }, []);
 
+  useEffect(() => {
+    if (!searchLocal) {
+        setFilterProducts(products);
+        return;
+    }
+    setFilterProducts(products.filter(p => ((p.name).toLocaleLowerCase()).includes(searchLocal.toLocaleLowerCase()) ));
+}, [searchLocal, products]);
+
+  const handleSearchChange = async (e) => {
+    setSearchLocal(e.target.value);
+};
 
   return (
     <Container maxWidth="lg" sx={{ marginTop: 8 }}>
@@ -57,6 +70,8 @@ const ProductsPage = () => {
           <Box sx={{ display: { xs: 'none', sm: 'block' }, flexGrow: 1, marginBottom: 4 }}>
             <TextField
               label="Search Products"
+              value={searchLocal}
+              onChange={handleSearchChange}
               variant="outlined"
               size="small"
               sx={{ width: '40%' }}
@@ -86,8 +101,8 @@ const ProductsPage = () => {
       {/* Product List */}
       <Grid container spacing={4}>
 
-        {products.map((product, index) => (
-          <Grid item xs={12} sm={6} md={4} key={index}>
+        {filterProducts.map((product, index) => (
+          <Grid item xs={12} sm={6} md={4} key={product.id}>
             <ProductsCard product={product} />
           </Grid>
         ))}

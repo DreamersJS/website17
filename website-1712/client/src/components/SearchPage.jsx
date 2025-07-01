@@ -40,7 +40,7 @@ const useSearchQuery = () => {
     <ul>
       {results.map(product => (
         <li key={product.id}>
-          <strong>{product.name}</strong> — {product.category.name}
+          <strong>{product.name}</strong> — {product.categoryName}
         </li>
       ))}
     </ul>
