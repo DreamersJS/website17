@@ -2,29 +2,23 @@ import React, { useEffect, useState } from 'react';
 import { Container, Typography, Box, Grid, Button, TextField, InputAdornment } from '@mui/material';
 import { Search } from '@mui/icons-material';
 import ProductsCard from './ProductsCard';
+import { getAllProductsService } from '../service/service';
 
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
   const [filterProducts, setFilterProducts] = useState([]);
   const [searchLocal, setSearchLocal] = useState("");
-console.log({products});
+// console.log({products});
+// useEffect(()=>{
+//   console.log(products)
+// },[products])
+
+
   const handleFetchProducts = async () => {
     try {
       // to service
-      const response = await fetch('/api/product/all', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        credentials: 'include'
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch products');
-      }
-
-      const data = await response.json();
-      setProducts(data);
+      const response = await getAllProductsService();;
+      setProducts(response);
     } catch (error) {
       console.error('Error fetching products:', error);
     }
