@@ -1,5 +1,66 @@
-import { createProduct } from "../../../server/src/controllers/productsController";
+import prisma from "../../../server/src/config/prisma.js";
 
+const createProduct = async (products) => {
+    console.log('createProduct!!!');
+    const {
+      name,
+      description,
+      photo,
+      price,
+      quantity,
+      inStock,
+      categoryName,
+      tagNames = []
+    } = products;
+    console.log("categoryName being passed:", categoryName);
+  
+    try {
+      // 1. Find or create category
+      let category = await prisma.category.findUnique({ where: { name: categoryName } });
+  
+      if (!category) {
+        console.log(`Category '${categoryName}' not found in DB. Creating it...`);
+        category = await prisma.category.create({
+          data: { name: categoryName },
+        });
+      }
+  
+      // 2. Create product
+      console.log('Creating product with categoryId:', category.id);
+      const product = await prisma.product.create({
+        data: {
+          name,
+          description,
+          photo,
+          price,
+          quantity,
+          inStock,
+          categoryId: category.id,
+        },
+      });
+  
+      // 3. Handle tags
+      for (const tagName of tagNames) {
+        const tag = await prisma.tag.upsert({
+          where: { name: tagName },
+          update: {},
+          create: { name: tagName },
+        });
+  
+        await prisma.productTag.create({
+          data: {
+            productId: product.id,
+            tagId: tag.id,
+          },
+        });
+      }
+  
+      return ({ results: product });
+  
+    } catch (error) {
+      console.error("❌ Error creating product with tags:", error.message);
+    }
+  };
 const products = [
     // i have a felling tha i can get chewed or sued for those descriptions?
     // short description and long one + *disclaimer
