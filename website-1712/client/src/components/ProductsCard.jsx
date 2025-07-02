@@ -7,7 +7,7 @@ const ProductsCard = ({ product }) => {
     const [isExpanded, setIsExpanded] = useState(false);
 
     // Limit description to 300 characters
-    const truncatedDescription = description.length > 300 ? description.slice(0, 300) + '...' : description;
+    const truncatedDescription = description.length > 200 ? description.slice(0, 200) + '...' : description;
 
     return (
         <Container>
@@ -33,8 +33,8 @@ const ProductsCard = ({ product }) => {
                         >
                             {isExpanded ? description : truncatedDescription}
                         </Typography>
-                        {description.length > 300 && (
-                            <Button
+                        {description.length > 200 && (
+                            <Button color="black" variant="contained"
                                 sx={{ marginTop: 1, padding: '5px', fontSize: 'small' }}
                                 onClick={() => setIsExpanded(!isExpanded)}
                             >
@@ -42,7 +42,7 @@ const ProductsCard = ({ product }) => {
                             </Button>
                         )}
                         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 2 }}>
-                            <Typography variant="h6" color="primary">
+                            <Typography variant="h6" color="black">
                                 {price} BGN
                             </Typography>
                         </Box>

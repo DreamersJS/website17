@@ -43,6 +43,7 @@ const CoachesPage = () => {
 
         (coaches.map((coach, index) => (
           <motion.div
+          key={index}
             variants={container}
             initial='hidden'
             animate='show'>

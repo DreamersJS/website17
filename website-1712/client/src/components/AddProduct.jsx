@@ -127,32 +127,54 @@ toggleModal()
   return(
     <ResponsiveComponent>
       {({width})=>(
-<div>
+<div className="flex flex-col sm:gap-2  md:items-center md:gap-4">
  {/* list all products  - to the side да ползвам css листа от таласъмите и sm:w-full for mobile */}
  {/* add products */}
  {/* update products - dim modal when i type id? to see current info  or maybe when i click on product to see modal with action buttons or dropdown? */}
  {/* delete products */}
  {/* mobile-  add,update,delete buttons up, list bellow-scroll*/}
- <button onClick={() => handleButtonAction('add')}>Add</button>
 
-<div className="m-2 p-2 shadow-lg border-black sm:w-full md:w-1/2">
-<ul>
- {allProducts && allProducts.map((p)=>(
-     <li key={p.id}>
-      <div className="flex items-center gap-3 shadow-sm">
- <div>{p.name}</div>
- <div>{p.price}</div>
- {/* <div>{p.id}</div> */}
- <button onClick={() => {
-  setProduct(p); // prefill product data
-  handleButtonAction('update');
-}}>Edit</button>
- <button onClick={() => { setProduct(p); handleButtonAction('delete')}}>Delete</button>
- </div>
- </li>
- ))}
- </ul>
- </div>
+ <button 
+  className="sm:w-full md:w-2/3 m-2 p-2 bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-md text-sm transition"
+ onClick={() => handleButtonAction('add')}>Add</button>
+
+ <div className="   m-4 p-4 sm:m-2 sm:p-2 shadow-lg border border-gray-300 rounded-lg sm:w-full bg-white">
+  <ul className="divide-y divide-gray-200">
+    {allProducts && allProducts.map((p) => (
+      <li key={p.id} className="py-3 flex flex-col sm:flex-row  items-center justify-between hover:bg-gray-50 rounded-md px-3 transition duration-150">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2 w-full  sm:w-4/5 overflow-hidden">
+          <div className="text-lg font-semibold text-gray-800 truncate max-w-xs sm:max-w-sm">{p.name}</div>
+          <div className="text-sm text-gray-600 font-mono max-w-xs sm:max-w-sm">{p.price.toFixed(2)} BGN</div>
+          {/* <div>{p.description}</div> */}
+          <div className="truncate max-w-xs sm:max-w-sm">ID:{p.id}</div>
+          <div className="truncate max-w-xs sm:max-w-sm">{p.category.name}</div>
+          {/* <div className="truncate flex flex-wrap gap-1">{p.tags.map(e=>(<span className="flex flex-col sm:flex-row sm:items-center truncate max-w-xs sm:max-w-sm">{e.tag.name}</span> ))}</div> */}
+        </div>
+        <div className="flex flex-col md:flex-row gap-2 m-2">
+          <button
+            className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-md text-sm transition whitespace-nowrap"
+            onClick={() => {
+              setProduct(p); // prefill product data
+              handleButtonAction('update');
+            }}
+          >
+            Edit
+          </button>
+          <button
+            className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-sm transition whitespace-nowrap"
+            onClick={() => {
+              setProduct(p);
+              handleButtonAction('delete');
+            }}
+          >
+            Delete
+          </button>
+        </div>
+      </li>
+    ))}
+  </ul>
+</div>
+
  
 
 

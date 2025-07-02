@@ -1,6 +1,7 @@
 import React from 'react';
 import { Container, Typography, Box, Grid, Button } from '@mui/material';
 import TestimonialCard from './TestimonialCard';
+import { Link } from 'react-router-dom';
 
 // Let ppl write & submit testimonials?
 const testimonials = [
@@ -50,6 +51,8 @@ const Testimonials = () => {
       {/* Call to Action Section */}
       <Box sx={{ textAlign: 'center', marginTop: 5 }}>
         <Button
+        component={Link}
+        to="/register"
           variant="contained"
           color="primary"
           size="large"

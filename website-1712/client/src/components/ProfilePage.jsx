@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Typography, Avatar, Divider, Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField } from '@mui/material';
 import ProfileSkeleton from './ProfileSkeleton';
-import ButtonUsage from "./Button";
+import ButtonHeader, { ButtonAction } from "./Button";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { userState } from '../recoil/userAtom';
 import { useNavigate } from 'react-router-dom';
@@ -57,8 +57,11 @@ const ProfilePage = () => {
                 <Typography variant="body1" sx={{ color: 'gray', marginTop: '5px' }}>{user.email}</Typography>
 
                 <Box sx={{ marginTop: '20px', display: 'flex', gap: 2 }}>
-                    <ButtonUsage onClick={handleOpen} content="Edit Profile" />
-                    <ButtonUsage onClick={() => { }} content="Change Password" />
+                    {/* <ButtonHeader onClick={handleOpen} content="Edit Profile" />
+                    <ButtonHeader onClick={() => { }} content="Change Password" /> */}
+                    <ButtonAction onClick={() => { }} content="Edit Profile"  />
+                    <ButtonAction onClick={() => { }} content="Change Password"  />
+
                 </Box>
             </Box>
 

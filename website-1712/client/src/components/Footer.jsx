@@ -26,6 +26,9 @@ const Footer = () => {
                         <Link href="/privacy" color="inherit" underline="hover" sx={{ fontSize: '0.875rem' }}>
                             Privacy Policy
                         </Link>
+                        <Link href="/terms" color="inherit" underline="hover" sx={{ fontSize: '0.875rem' }}>
+                            Terms of Use
+                        </Link>
                     </Box>
                 </Grid>
 
