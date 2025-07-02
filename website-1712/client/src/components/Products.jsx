@@ -16,7 +16,6 @@ const ProductsPage = () => {
 
   const handleFetchProducts = async () => {
     try {
-      // to service
       const response = await getAllProductsService();;
       setProducts(response);
     } catch (error) {
