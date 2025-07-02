@@ -2,7 +2,7 @@ import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { userState } from "../recoil/userAtom";
-import ButtonUsage from "./Button";
+import ButtonHeader from "./Button";
 import HomeIcon from '@mui/icons-material/Home';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
@@ -76,10 +76,10 @@ const Header = () => {
                             {!userId && (
                                 <>
                                     <NavLink to="/login" style={{ margin: width <= 805 ? '0 3px' : '0 10px' }}>
-                                        <ButtonUsage content="Login" />
+                                        <ButtonHeader content="Login" />
                                     </NavLink>
                                     <NavLink to="/register" style={{ margin: width <= 805 ? '0 3px' : '0 10px' }}>
-                                        <ButtonUsage content="Register" />
+                                        <ButtonHeader content="Register" />
                                     </NavLink>
                                 </>
                             )}
@@ -87,7 +87,7 @@ const Header = () => {
                                 <>
                                     {/* Profile with Logout submenu */}
                                     <Box display="flex" alignItems="center" sx={{ margin: width <= 805 ? '0 3px' : '0 10px' }}>
-                                        <ButtonUsage content="Profile" onClick={(e) => handleMenuOpen(e, 'profile')} aria-haspopup="menu" aria-expanded={menuType === 'profile' ? 'true' : 'false'} />
+                                        <ButtonHeader content="Profile" onClick={(e) => handleMenuOpen(e, 'profile')} aria-haspopup="menu" aria-expanded={menuType === 'profile' ? 'true' : 'false'} />
                                         <Menu
                                             anchorEl={anchorEl}
                                             open={menuType === 'profile'}
@@ -118,7 +118,7 @@ const Header = () => {
                             {/* Admin with submenu */}
                             {admin && (
                                 <Box display="flex" alignItems="center" sx={{ margin: width <= 805 ? '0 3px' : '0 10px' }}>
-                                    <ButtonUsage content="Admin" onClick={(e) => handleMenuOpen(e, 'admin')} aria-haspopup="menu" aria-expanded={menuType === 'admin' ? 'true' : 'false'} />
+                                    <ButtonHeader content="Admin" onClick={(e) => handleMenuOpen(e, 'admin')} aria-haspopup="menu" aria-expanded={menuType === 'admin' ? 'true' : 'false'} />
                                     <Menu
                                         anchorEl={anchorEl}
                                         open={menuType === 'admin'}
@@ -141,13 +141,13 @@ const Header = () => {
 
                             {/* Available to all users */}
                             <NavLink to="/coach" style={{ margin: width <= 805 ? '0 3px' : '0 10px' }}>
-                                <ButtonUsage content="Coaches" />
+                                <ButtonHeader content="Coaches" />
                             </NavLink>
                             <NavLink to="/testimonials" style={{ margin: width <= 805 ? '0 3px' : '0 10px' }}>
-                                <ButtonUsage content="Testimonials" />
+                                <ButtonHeader content="Testimonials" />
                             </NavLink>
                             <NavLink to="/products" style={{ margin: width <= 805 ? '0 3px' : '0 10px' }}>
-                                <ButtonUsage content="Products" />
+                                <ButtonHeader content="Products" />
                             </NavLink>
 
                             {/* Search Bar with Button */}
