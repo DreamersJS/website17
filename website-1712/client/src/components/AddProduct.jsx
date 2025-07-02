@@ -5,7 +5,6 @@ import { userState } from "../recoil/userAtom";
 import useScreenSize from "../hooks/useScreenSize";
 import ResponsiveComponent from "../components/ResponsiveComponent";
 import { useNavigate } from 'react-router-dom';
-import ButtonUsage from "./Button";
 
 // admin access only 
 const AddProduct = ()=>{
