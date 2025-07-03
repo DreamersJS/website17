@@ -25,8 +25,6 @@ const AddProduct = ()=>{
  const [action, setAction] = useState('add')// update, delete
  const user = useRecoilValue(userState);
  const isAdmin = user?.role === "ADMIN";
- const { width } = useScreenSize();
- const isMobile = width <= 600;
  const [modal, setModal] = useState(false)
  const navigate = useNavigate();
 
