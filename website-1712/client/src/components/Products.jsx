@@ -29,12 +29,22 @@ const ProductsPage = () => {
 
   useEffect(() => {
     if (!searchLocal) {
-        setFilterProducts(products);
-        return;
+      setFilterProducts(products);
+      return;
     }
-    setFilterProducts(products.filter(p => ((p.name).toLocaleLowerCase()).includes(searchLocal.toLocaleLowerCase()) ));
-}, [searchLocal, products]);
-
+  
+    const filtered = products.filter((p) => {
+      const search = searchLocal.toLocaleLowerCase();
+      const nameMatch = p.name.toLocaleLowerCase().includes(search);
+      const tagMatch = p.tags?.some((e) =>
+        e.tag.name.toLocaleLowerCase().includes(search)
+      );
+      return nameMatch || tagMatch;
+    });
+  
+    setFilterProducts(filtered);
+  }, [searchLocal, products]);
+  
   const handleSearchChange = async (e) => {
     setSearchLocal(e.target.value);
 };
