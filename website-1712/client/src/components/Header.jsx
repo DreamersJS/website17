@@ -17,7 +17,7 @@ const Header = () => {
     const [openSearch, setOpenSearch] = useState(false); // To handle the search input visibility
     const user = useRecoilValue(userState);
     const userId = user?.id;
-    const admin = user?.role;
+    const admin = user?.role === 'ADMIN';
     const navigate = useNavigate();
     const [searchQuery, setSearchQuery] = useState('');
 
