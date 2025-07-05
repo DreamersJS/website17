@@ -5,14 +5,15 @@ import ButtonHeader, { ButtonAction } from "./Button";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { userState } from '../recoil/userAtom';
 import { useNavigate } from 'react-router-dom';
+import { useFeedback } from './FeedbackContext';
 
 const ProfilePage = () => {
-    const setUser = useSetRecoilState(userState);
-    const user = useRecoilValue(userState);
+    const [user, setUser] = useRecoilState(userState);
     const [loading, setLoading] = useState(true);
     const [open, setOpen] = useState(false);
     const [formData, setFormData] = useState({ username: '', email: '', photo: '' });
     const navigate = useNavigate();
+    const { showFeedback } = useFeedback();
 
     useEffect(() => {
         if (user?.id) {
@@ -23,12 +24,10 @@ const ProfilePage = () => {
         }
     }, [user]);
 
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+    const handleToggleModal = () => setOpen(prev=>!prev);
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+    const handleChange = (prop) => (e) => {
+        setFormData({ ...formData, [prop]: e.target.value });
     };
 
     const handleSave = async() => {
@@ -42,7 +41,8 @@ const ProfilePage = () => {
 
         });
         setUser({ ...user, ...formData });
-        handleClose();
+        handleToggleModal();
+        showFeedback('Edit profile successful!', 'success');
     };
 
     if (loading) {
@@ -57,9 +57,7 @@ const ProfilePage = () => {
                 <Typography variant="body1" sx={{ color: 'gray', marginTop: '5px' }}>{user.email}</Typography>
 
                 <Box sx={{ marginTop: '20px', display: 'flex', gap: 2 }}>
-                    {/* <ButtonHeader onClick={handleOpen} content="Edit Profile" />
-                    <ButtonHeader onClick={() => { }} content="Change Password" /> */}
-                    <ButtonAction onClick={() => { }} content="Edit Profile"  />
+                    <ButtonAction onClick={handleToggleModal} content="Edit Profile"  />
                     <ButtonAction onClick={() => { }} content="Change Password"  />
 
                 </Box>
@@ -67,18 +65,19 @@ const ProfilePage = () => {
 
             <Divider sx={{ marginTop: '30px', marginBottom: '30px' }} />
 
-            <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
+           {open && ( <Dialog open={open} onClose={handleToggleModal} fullWidth maxWidth="sm">
                 <DialogTitle>Edit Profile</DialogTitle>
                 <DialogContent>
-                    <TextField fullWidth margin="dense" label="Username" name="username" value={formData.username} onChange={handleChange} />
-                    <TextField fullWidth margin="dense" label="Email" name="email" value={formData.email} onChange={handleChange} />
-                    <TextField fullWidth margin="dense" label="Photo URL" name="photo" value={formData.photo} onChange={handleChange} />
+                    <TextField fullWidth margin="dense" label="Username" value={formData?.username} onChange={handleChange('username')} />
+                    <TextField fullWidth margin="dense" label="Email" name="email" value={formData?.email} onChange={handleChange("email")} />
+                    <TextField fullWidth margin="dense" label="Photo URL" name="photo" value={formData?.photo} onChange={handleChange("photo")} />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose} color="secondary">Cancel</Button>
+                    <Button onClick={handleToggleModal} color="secondary">Cancel</Button>
                     <Button onClick={handleSave} color="primary">Save</Button>
                 </DialogActions>
             </Dialog>
+            )}
         </Box>
     );
 };

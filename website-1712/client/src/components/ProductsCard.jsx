@@ -6,7 +6,7 @@ const ProductsCard = ({ product }) => {
 
     const [isExpanded, setIsExpanded] = useState(false);
 
-    // Limit description to 300 characters
+    // Limit description
     const truncatedDescription = description.length > 200 ? description.slice(0, 200) + '...' : description;
 
     return (

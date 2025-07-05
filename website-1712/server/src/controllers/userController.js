@@ -35,11 +35,10 @@ export const createUser = async (req, res) => {
         email,
         coachId: sanitizedCoachId || null,
         password: hashedPassword,
-        // role: 'user', // Default role
       },
     });
 
-    const token = jwt.sign({ userId: newUser.id, email: newUser.email, role: newUser.role }, JWT_SECRET, {
+    const token = jwt.sign({ userId: newUser.id, email: newUser.email, role: newUser.role, isBlocked: newUser.isBlocked }, JWT_SECRET, {
       expiresIn: '1h',
     });
 
@@ -50,8 +49,11 @@ export const createUser = async (req, res) => {
       sameSite: 'Strict', // Prevents CSRF
       maxAge: 3600 * 1000, // 1 hour
     });
-
-    res.status(201).json({ message: 'User created successfully', user: { id: newUser.id, username, email } });
+    const { password, ...safeUser } = newUser;
+    res.status(201).json({
+      message: 'User created successfully',
+      user: safeUser, // just send the full object (excluding password)
+    });
   } catch (error) {
     console.error('Error creating user:', error);
     res.status(500).json({ error: 'Failed to create user' });
@@ -74,7 +76,7 @@ export const loginUser = async (req, res) => {
       return res.status(401).json({ error: 'Invalid credentials.' });
     }
 
-    const token = jwt.sign({ userId: user.id, email: user.email, role: user.role }, JWT_SECRET, {
+    const token = jwt.sign({ userId: user.id, username: user.username, email: user.email, role: user.role, isBlocked: user.isBlocked, coachId: user.coachId  }, JWT_SECRET, {
       expiresIn: '1h',
     });
 
@@ -87,7 +89,7 @@ export const loginUser = async (req, res) => {
 
     res.status(200).json({
       message: 'Login successful',
-      user: { id: user.id, username: user.username, email: user.email, role: user.role }
+      user: { id: user.id, username: user.username, email: user.email, role: user.role, isBlocked: user.isBlocked, coachId: user.coachId  }
     });
   } catch (error) {
     console.error('Error logging in:', error);
@@ -227,7 +229,7 @@ export const createDiary = async (req, res) => {
     });
 
     res.json(diaryEntry);
-    } catch (error) {
+  } catch (error) {
     console.error('Error creating diary entry:', error);
     res.status(500).json({ error: 'Failed to create diary entry' });
   }
