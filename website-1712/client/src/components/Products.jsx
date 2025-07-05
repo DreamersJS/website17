@@ -14,20 +14,38 @@ const ProductsPage = () => {
   const [sortOption, setSortOption] = useState('');
   const [searchParams, setSearchParams] = useSearchParams();
   const DEFAULT_VISIBLE_COUNT = 10;
-  const ITEM_STEP = 10;
-  
+
   const [visibleCount, setVisibleCount] = useState(DEFAULT_VISIBLE_COUNT);
-  const [itemsPerPage, setItemsPerPage] = useState(ITEM_STEP);
+  const [showScroll, setShowScroll] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 500) {
+        setShowScroll(true);
+      } else {
+        setShowScroll(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
 
   const handleLoadMore = () => {
-    setVisibleCount((prev) => prev + itemsPerPage);
+    setVisibleCount((prev) => prev + visibleCount);
   };
   const handleItemsPerPageChange = (e) => {
     const count = Number(e.target.value);
-    setItemsPerPage(count);
     setVisibleCount(count);
   };
-  
+
 
   const handleFetchProducts = async () => {
     try {
@@ -188,7 +206,7 @@ const ProductsPage = () => {
             <FormControl size="small" fullWidth>
               <InputLabel>Show</InputLabel>
               <Select
-                value={itemsPerPage}
+                value={visibleCount}
                 onChange={handleItemsPerPageChange}
                 label="Show"
                 sx={{
@@ -239,6 +257,31 @@ const ProductsPage = () => {
           >
             Load More Products
           </Button>
+        </Box>
+      )}
+
+      {/* scroll to top */}
+      {showScroll && (
+        <Box
+          onClick={scrollToTop}
+          sx={{
+            position: 'fixed',
+            bottom: 40,
+            right: 30,
+            zIndex: 1000,
+            cursor: 'pointer',
+            backgroundColor: '#177F2E',
+            color: '#fff',
+            padding: '10px 16px',
+            borderRadius: '50%',
+            boxShadow: '0px 4px 12px rgba(0,0,0,0.2)',
+            transition: 'opacity 0.3s ease-in-out',
+            '&:hover': {
+              backgroundColor: '#145c1d',
+            },
+          }}
+        >
+          ↑
         </Box>
       )}
 
