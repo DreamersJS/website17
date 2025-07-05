@@ -18,7 +18,11 @@ const ProductsPage = () => {
     console.log(products)
   },[products])
 
-
+  useEffect(() => {
+    const initialSearch = searchParams.get("search") || "";
+    setSearchLocal(initialSearch);
+  }, []);
+  
   const handleFetchProducts = async () => {
     try {
       const response = await getAllProductsService();;
@@ -78,6 +82,7 @@ if (selectedCategory) {
 
   const handleSearchChange = async (e) => {
     setSearchLocal(e.target.value);
+    setSearchParams({ search: e.target.value });
   };
 
   return (
