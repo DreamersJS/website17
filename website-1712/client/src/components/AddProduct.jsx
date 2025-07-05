@@ -146,7 +146,7 @@ toggleModal()
           {/* <div>{p.description}</div> */}
           <div className="truncate max-w-xs sm:max-w-sm">ID:{p.id}</div>
           <div className="truncate max-w-xs sm:max-w-sm">{p.category.name}</div>
-          {/* <div className="truncate flex flex-wrap gap-1">{p.tags.map(e=>(<span className="flex flex-col sm:flex-row sm:items-center truncate max-w-xs sm:max-w-sm">{e.tag.name}</span> ))}</div> */}
+          <div className="truncate flex flex-wrap gap-1">{p.tags.map(e=>(<span className="flex flex-col sm:flex-row sm:items-center truncate max-w-xs sm:max-w-sm">{e.tag.name}</span> ))}</div>
         </div>
         <div className="flex flex-col md:flex-row gap-2 m-2">
           <button

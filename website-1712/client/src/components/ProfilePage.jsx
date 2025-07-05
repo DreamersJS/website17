@@ -15,7 +15,6 @@ const ProfilePage = () => {
     const navigate = useNavigate();
     const { showFeedback } = useFeedback();
 
-    useEffect(()=>{console.log(open);},[open])
     useEffect(() => {
         if (user?.id) {
             setLoading(false);
