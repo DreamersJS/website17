@@ -13,6 +13,21 @@ const ProductsPage = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [sortOption, setSortOption] = useState('');
   const [searchParams, setSearchParams] = useSearchParams();
+  const DEFAULT_VISIBLE_COUNT = 10;
+  const ITEM_STEP = 10;
+  
+  const [visibleCount, setVisibleCount] = useState(DEFAULT_VISIBLE_COUNT);
+  const [itemsPerPage, setItemsPerPage] = useState(ITEM_STEP);
+
+  const handleLoadMore = () => {
+    setVisibleCount((prev) => prev + itemsPerPage);
+  };
+  const handleItemsPerPageChange = (e) => {
+    const count = Number(e.target.value);
+    setItemsPerPage(count);
+    setVisibleCount(count);
+  };
+  
 
   const handleFetchProducts = async () => {
     try {
@@ -35,13 +50,13 @@ const ProductsPage = () => {
 
   const filteredProducts = useMemo(() => {
     let filtered = [...products];
-  
+
     if (selectedCategory) {
       filtered = filtered.filter((p) =>
         p.category?.name?.toLowerCase() === selectedCategory.toLowerCase()
       );
     }
-  
+
     if (searchLocal) {
       const search = searchLocal.trim().toLowerCase();
       filtered = filtered.filter((p) => {
@@ -52,7 +67,7 @@ const ProductsPage = () => {
         return nameMatch || tagMatch;
       });
     }
-  
+
     switch (sortOption) {
       case 'name-asc':
         return filtered.sort((a, b) => a.name.localeCompare(b.name));
@@ -68,7 +83,7 @@ const ProductsPage = () => {
         return filtered;
     }
   }, [products, searchLocal, selectedCategory, sortOption]);
-  
+
 
 
   const handleSearchChange = async (e) => {
@@ -87,24 +102,18 @@ const ProductsPage = () => {
       </Box>
 
       {/* Search and Filter Section */}
-      <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: 'space-between', marginBottom: 4 }}>
-        <Grid
-          container
-          spacing={3}
-          direction={{
-            xs: "column",
-            sm: "row"
-          }}
-        >
+      <Box sx={{ marginBottom: 4 }}>
+        <Grid container spacing={2} alignItems="center">
 
-          <Box sx={{ flexGrow: 1, marginBottom: 4 }}>
+          {/* Search Field */}
+          <Grid item xs={12} sm={6} md={4}>
             <TextField
               label="Search Products"
               value={searchLocal}
               onChange={handleSearchChange}
               variant="outlined"
               size="small"
-              sx={{ width: '80%' }}
+              fullWidth
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -113,17 +122,11 @@ const ProductsPage = () => {
                 ),
               }}
             />
-          </Box>
+          </Grid>
 
-          <Box sx={{
-            display: 'flex', width: {
-              xs: "auto",
-              sm: "45%"
-            }, flexDirection: { xs: 'column', sm: 'row' }, gap: { xs: 1, sm: 2 }
-          }}>
-            {/* Add filter buttons or dropdowns */}
-
-            <FormControl size="small" sx={{ minWidth: 150 }}>
+          {/* Category Filter */}
+          <Grid item xs={12} sm={6} md={2.5}>
+            <FormControl size="small" fullWidth>
               <InputLabel>Category</InputLabel>
               <Select
                 value={selectedCategory}
@@ -139,7 +142,7 @@ const ProductsPage = () => {
                   '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
                     borderColor: '#177F2E',
                   },
-                  color: '#000', // text color
+                  color: '#000',
                 }}
               >
                 <MenuItem value="">All</MenuItem>
@@ -147,13 +150,16 @@ const ProductsPage = () => {
                 <MenuItem value="Cosmetics">Cosmetics</MenuItem>
               </Select>
             </FormControl>
+          </Grid>
 
-            <FormControl size="small" sx={{ minWidth: 150 }}>
+          {/* Sort Option */}
+          <Grid item xs={12} sm={6} md={2.5}>
+            <FormControl size="small" fullWidth>
+              <InputLabel>Sort By</InputLabel>
               <Select
                 value={sortOption}
                 onChange={(e) => setSortOption(e.target.value)}
-                displayEmpty
-                size="small"
+                label="Sort By"
                 sx={{
                   '& .MuiOutlinedInput-notchedOutline': {
                     borderColor: '#177F2E',
@@ -175,10 +181,34 @@ const ProductsPage = () => {
                 <MenuItem value="newest">Newest</MenuItem>
               </Select>
             </FormControl>
+          </Grid>
 
-          </Box>
+          {/* Show Count */}
+          <Grid item xs={12} sm={6} md={2}>
+            <FormControl size="small" fullWidth>
+              <InputLabel>Show</InputLabel>
+              <Select
+                value={itemsPerPage}
+                onChange={handleItemsPerPageChange}
+                label="Show"
+                sx={{
+                  '& .MuiOutlinedInput-notchedOutline': { borderColor: '#177F2E' },
+                  '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#145c1d' },
+                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#177F2E' },
+                  color: '#000',
+                }}
+              >
+                <MenuItem value={10}>10</MenuItem>
+                <MenuItem value={20}>20</MenuItem>
+                <MenuItem value={filteredProducts.length}>All</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+
         </Grid>
       </Box>
+
+
 
       {/* Product List */}
       {filteredProducts.length === 0 ? (
@@ -189,7 +219,7 @@ const ProductsPage = () => {
         </Box>
       ) : (
         <Grid container spacing={4}>
-          {filteredProducts.map((product, index) => (
+          {filteredProducts.slice(0, visibleCount).map((product, index) => (
             <Grid item xs={12} sm={6} md={4} key={product.id}>
               <ProductsCard product={product} />
             </Grid>
@@ -199,11 +229,19 @@ const ProductsPage = () => {
 
 
       {/* Pagination or Load More Button */}
-      <Box sx={{ textAlign: 'center', marginTop: 5 }}>
-        <Button variant="outlined" sx={{ borderColor: '#177F2E', color: '#000' }} size="large">
-          Load More Products
-        </Button>
-      </Box>
+      {visibleCount < filteredProducts.length && (
+        <Box sx={{ textAlign: 'center', marginTop: 5 }}>
+          <Button
+            variant="outlined"
+            sx={{ borderColor: '#177F2E', color: '#000' }}
+            size="large"
+            onClick={handleLoadMore}
+          >
+            Load More Products
+          </Button>
+        </Box>
+      )}
+
     </Container>
   );
 };
