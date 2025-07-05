@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Container, Typography, Box, Grid, Button, TextField, InputAdornment } from '@mui/material';
 import { Search } from '@mui/icons-material';
 import ProductsCard from './ProductsCard';
@@ -8,21 +8,12 @@ import { useSearchParams } from 'react-router-dom';
 
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
-  const [filterProducts, setFilterProducts] = useState([]);
+  // const [filterProducts, setFilterProducts] = useState([]);
   const [searchLocal, setSearchLocal] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [sortOption, setSortOption] = useState('');
   const [searchParams, setSearchParams] = useSearchParams();
-  // console.log({products});
-  useEffect(()=>{
-    console.log(products)
-  },[products])
 
-  useEffect(() => {
-    const initialSearch = searchParams.get("search") || "";
-    setSearchLocal(initialSearch);
-  }, []);
-  
   const handleFetchProducts = async () => {
     try {
       const response = await getAllProductsService();;
@@ -37,14 +28,20 @@ const ProductsPage = () => {
   }, []);
 
   useEffect(() => {
+    if (searchParams.has("search")) {
+      setSearchLocal(searchParams.get("search") || "");
+    }
+  }, [searchParams]);
+
+  const filteredProducts = useMemo(() => {
     let filtered = [...products];
-
-if (selectedCategory) {
-  filtered = filtered.filter((p) =>
-    p.category?.name?.toLowerCase() === selectedCategory.toLowerCase()
-  );
-}
-
+  
+    if (selectedCategory) {
+      filtered = filtered.filter((p) =>
+        p.category?.name?.toLowerCase() === selectedCategory.toLowerCase()
+      );
+    }
+  
     if (searchLocal) {
       const search = searchLocal.trim().toLowerCase();
       filtered = filtered.filter((p) => {
@@ -55,29 +52,23 @@ if (selectedCategory) {
         return nameMatch || tagMatch;
       });
     }
-
+  
     switch (sortOption) {
       case 'name-asc':
-        filtered = filtered.sort((a, b) => a.name.localeCompare(b.name));
-        break;
+        return filtered.sort((a, b) => a.name.localeCompare(b.name));
       case 'name-desc':
-        filtered = filtered.sort((a, b) => b.name.localeCompare(a.name));
-        break;
+        return filtered.sort((a, b) => b.name.localeCompare(a.name));
       case 'price-asc':
-        filtered = filtered.sort((a, b) => a.price - b.price);
-        break;
+        return filtered.sort((a, b) => a.price - b.price);
       case 'price-desc':
-        filtered = filtered.sort((a, b) => b.price - a.price);
-        break;
+        return filtered.sort((a, b) => b.price - a.price);
       case 'newest':
-        filtered = filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-        break;
+        return filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
       default:
-        break;
+        return filtered;
     }
-
-    setFilterProducts(filtered);
-  }, [searchLocal, selectedCategory, products, sortOption]);
+  }, [products, searchLocal, selectedCategory, sortOption]);
+  
 
 
   const handleSearchChange = async (e) => {
@@ -190,7 +181,7 @@ if (selectedCategory) {
       </Box>
 
       {/* Product List */}
-      {filterProducts.length === 0 ? (
+      {filteredProducts.length === 0 ? (
         <Box sx={{ textAlign: 'center', mt: 5 }}>
           <Typography variant="h6" color="textSecondary">
             No results found for "{searchLocal}"
@@ -198,7 +189,7 @@ if (selectedCategory) {
         </Box>
       ) : (
         <Grid container spacing={4}>
-          {filterProducts.map((product, index) => (
+          {filteredProducts.map((product, index) => (
             <Grid item xs={12} sm={6} md={4} key={product.id}>
               <ProductsCard product={product} />
             </Grid>
