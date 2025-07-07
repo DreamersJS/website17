@@ -41,11 +41,11 @@ const ProductsPage = () => {
   const handleLoadMore = () => {
     setVisibleCount((prev) => prev + visibleCount);
   };
+
   const handleItemsPerPageChange = (e) => {
     const count = Number(e.target.value);
     setVisibleCount(count);
   };
-
 
   const handleFetchProducts = async () => {
     try {
@@ -101,8 +101,6 @@ const ProductsPage = () => {
         return filtered;
     }
   }, [products, searchLocal, selectedCategory, sortOption]);
-
-
 
   const handleSearchChange = async (e) => {
     setSearchLocal(e.target.value);

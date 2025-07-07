@@ -43,17 +43,17 @@ export const addProductService = async (product) => {
     tagNames,
   } = product;
 
-  console.log('addProductService', {
-    name,
-    description,
-    photo,
-    price,
-    inStock,
-    quantity,
-    categoryId,
-    categoryName,
-    tagNames,
-  });
+  // console.log('addProductService', {
+  //   name,
+  //   description,
+  //   photo,
+  //   price,
+  //   inStock,
+  //   quantity,
+  //   categoryId,
+  //   categoryName,
+  //   tagNames,
+  // });
 
   const res = await fetch(`/api/product/`, {
     method: 'POST',
@@ -73,10 +73,10 @@ export const addProductService = async (product) => {
     }),
     credentials: 'include',
   });
-  console.log('addProductService response');
+  // console.log('addProductService response');
   if (!res.ok) throw new Error('service add product request failed');
   const data = await res.json();
-  console.log('addProductService data');
+  // console.log('addProductService data');
   return data.results;
 };
 // update product
@@ -88,8 +88,9 @@ export const updateProductService = async (id, product) => {
     price,
     inStock,
     quantity,
-    category,
-    tags
+    categoryId,
+    categoryName,
+    tagNames,
   } = product;
 
   const res = await fetch(`/api/product/${id}`, {
@@ -104,8 +105,9 @@ export const updateProductService = async (id, product) => {
       price,
       inStock,
       quantity,
-      categoryName: category || null,
-      tagNames: tags
+      categoryId,
+      categoryName,
+      tagNames,
     }),
     credentials: 'include',
   });
