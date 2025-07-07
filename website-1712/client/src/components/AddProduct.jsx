@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { addProductService, deleteProductService, getAllProductsService, updateProductService } from "../service/service";
+import { useFeedback } from './FeedbackContext';
 
 // admin access only 
 const AddProduct = () => {
@@ -19,6 +20,7 @@ const AddProduct = () => {
   });
   const [action, setAction] = useState('add')// update, delete 
   const [modal, setModal] = useState(false)
+  const { showFeedback } = useFeedback();
 
   useEffect(() => {
     getAllProducts()
@@ -42,13 +44,36 @@ const AddProduct = () => {
   };
 
   const validateProduct = (product) => {
-    if (!product.name || !product.description || !product.price || !product.categoryName) {
-      alert("Please fill all required fields");
+    const requiredFields = {
+      name: "Product name",
+      description: "Description",
+      price: "Price",
+      categoryName: "Category",
+    };
+  
+    const missingFields = Object.entries(requiredFields).filter(
+      ([key]) => {
+        const value = product[key];
+        return value === undefined || value === null || value.toString().trim() === "";
+      }
+    );
+  
+    if (missingFields.length > 0) {
+      const fieldNames = missingFields.map(([, label]) => label).join(", ");
+      showFeedback(`Please fill in the following field(s): ${fieldNames}`, "error");
+      console.log(`Please fill in the following field(s): ${fieldNames}`);
       return false;
     }
+  
+    // Additional check for price
+    if (isNaN(product.price) || Number(product.price) <= 0) {
+      showFeedback("Price must be a valid number greater than 0", "error");
+      return false;
+    }
+  
     return true;
   };
-
+  
   const updateProduct = (prop) => (e) => {
     setProduct({ ...product, [prop]: e.target.value });
   };
@@ -56,7 +81,9 @@ const AddProduct = () => {
   const handleAddProduct = async (data) => {
     console.log({ data });
     try {
-      // validateProduct(data)
+      if (!validateProduct(data)) {
+        return;
+      }
       const payload = {
         ...data,
         price: Number(data.price),
@@ -76,14 +103,13 @@ const AddProduct = () => {
     console.log({ id });
     console.log({ data });
     try {
-      // validateProduct()
+      if (!validateProduct(data)) {
+        return;
+      }
       const payload = {
         ...data,
         price: Number(data.price),
         quantity: Number(data.quantity),
-        // categoryId: Number(data.categoryId),
-        // category:{id: Number(data.categoryId), name: data.categoryName,},
-        // tags: [...data.tagNames],
       };
       await updateProductService(id, payload);
       await getAllProducts(); // refresh
@@ -212,20 +238,6 @@ const AddProduct = () => {
               <input
                 type="text"
                 value={product?.tagNames.join(', ')}
-                /**
-                 * 
-              category: Object { id: 2, name: "Supplements" }
-              categoryId: 2
-                 description: "A delicious and nutritious meal replacement shake designed to support a calorie-controlled diet. Packed with essential vitamins, minerals, high-quality protein, and fiber to help you feel satisfied and energized throughout your day."
-                 id: 9
-              inStock: true
-                 name: "Protein Shake Formula 1 Vanilla Cream - 550 g"
-                 photo: "..."
-                 price: 95
-                 quantity: 0
-                 tags: Array(5) [ {…}, {…}, {…}, … ]
-                ​
-                 */
                 onChange={(e) =>
                   setProduct({ ...product, tagNames: e.target.value.split(',').map(t => t.trim()) })
                 }

@@ -73,10 +73,10 @@ export const addProductService = async (product) => {
     }),
     credentials: 'include',
   });
-  console.log('addProductService response');
+  // console.log('addProductService response');
   if (!res.ok) throw new Error('service add product request failed');
   const data = await res.json();
-  console.log('addProductService data');
+  // console.log('addProductService data');
   return data.results;
 };
 // update product
