@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { addProductService, deleteProductService, getAllProductsService, updateProductService } from "../service/service";
 import { useFeedback } from './FeedbackContext';
+import { Box, Grid, InputAdornment, TextField } from "@mui/material";
+import { Search } from "@mui/icons-material";
 
 // admin access only 
 const AddProduct = () => {
@@ -20,17 +22,32 @@ const AddProduct = () => {
   });
   const [action, setAction] = useState('add')// update, delete 
   const [modal, setModal] = useState(false)
+  const [searchLocal, setSearchLocal] = useState("");
+
   const { showFeedback } = useFeedback();
+
+  const handleSearchChange = async (e) => {
+    setSearchLocal(e.target.value);
+  };
+
+  useEffect(() => {
+    let filtered = [...allProducts]
+
+    if (searchLocal) {
+      const search = searchLocal.trim().toLowerCase();
+      filtered = filtered.filter((p) => {
+        const nameMatch = p.name.toLowerCase().includes(search);
+        const tagMatch = p.tags?.some((e) =>
+          e.tag.name.toLowerCase().includes(search)
+        );
+        return nameMatch || tagMatch;
+      });
+    }
+    setAllProductsFiltered(filtered)
+  }, [searchLocal])
 
   useEffect(() => {
     getAllProducts()
-  }, [])
-
-  useEffect(() => {
-    console.log({ allProducts });
-  }, [allProducts])
-  useEffect(() => {
-    console.log({ product });
   }, [])
 
   const getAllProducts = async () => {
@@ -50,30 +67,30 @@ const AddProduct = () => {
       price: "Price",
       categoryName: "Category",
     };
-  
+
     const missingFields = Object.entries(requiredFields).filter(
       ([key]) => {
         const value = product[key];
         return value === undefined || value === null || value.toString().trim() === "";
       }
     );
-  
+
     if (missingFields.length > 0) {
       const fieldNames = missingFields.map(([, label]) => label).join(", ");
       showFeedback(`Please fill in the following field(s): ${fieldNames}`, "error");
       console.log(`Please fill in the following field(s): ${fieldNames}`);
       return false;
     }
-  
+
     // Additional check for price
     if (isNaN(product.price) || Number(product.price) <= 0) {
       showFeedback("Price must be a valid number greater than 0", "error");
       return false;
     }
-  
+
     return true;
   };
-  
+
   const updateProduct = (prop) => (e) => {
     setProduct({ ...product, [prop]: e.target.value });
   };
@@ -136,6 +153,30 @@ const AddProduct = () => {
 
   return (
     <div className="flex flex-col sm:gap-2  md:items-center md:gap-4">
+      {/* Search and Filter Section */}
+      <Box sx={{ marginTop: 4 }}>
+        <Grid container spacing={2} alignItems="center">
+
+          {/* Search Field */}
+          <Grid item xs={12} >
+            <TextField
+              label="Search Products"
+              value={searchLocal}
+              onChange={handleSearchChange}
+              variant="outlined"
+              size="small"
+              fullWidth
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Search />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Grid>
+        </Grid>
+      </Box>
 
       <button
         className="sm:w-full md:w-2/3 m-2 p-2 bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-md text-sm transition"
@@ -143,7 +184,7 @@ const AddProduct = () => {
 
       <div className="   m-4 p-4 sm:m-2 sm:p-2 shadow-lg border border-gray-300 rounded-lg sm:w-full bg-white">
         <ul className="divide-y divide-gray-200">
-          {allProducts && allProducts.map((p) => (
+          {allProductsFiltered && allProductsFiltered.map((p) => (
             <li key={p.id} className="py-3 flex flex-col sm:flex-row  items-center justify-between hover:bg-gray-50 rounded-md px-3 transition duration-150">
               <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2 w-full  sm:w-4/5 overflow-hidden">
                 <div className="text-lg font-semibold text-gray-800 truncate max-w-xs sm:max-w-sm">{p.name}</div>
