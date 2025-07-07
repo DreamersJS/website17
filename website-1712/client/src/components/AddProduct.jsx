@@ -1,17 +1,12 @@
 import React,{ useState,useEffect } from "react";
 import { addProductService, deleteProductService, getAllProductsService, updateProductService } from "../service/service";
-import { useRecoilValue } from "recoil";
-import { userState } from "../recoil/userAtom";
-import useScreenSize from "../hooks/useScreenSize";
-import ResponsiveComponent from "../components/ResponsiveComponent";
-import { useNavigate } from 'react-router-dom';
 
 // admin access only 
 const AddProduct = ()=>{
  const [allProducts, setAllProducts] = useState([]);
  const [allProductsFiltered, setAllProductsFiltered] = useState([]);
  const [product, setProduct] = useState({
-    id:'', // this value will be given in db
+    id:'', 
     name:'',
     description:'',
     photo:'',
@@ -22,29 +17,12 @@ const AddProduct = ()=>{
     categoryName : '',
     tagNames :[]
  });
- const [action, setAction] = useState('add')// update, delete
- const user = useRecoilValue(userState);
- const isAdmin = user?.role === "ADMIN";
+ const [action, setAction] = useState('add')// update, delete 
  const [modal, setModal] = useState(false)
- const navigate = useNavigate();
-
-
- useEffect(() => {
-  if (!user?.id) {
-    navigate('/login');
-  }
-  if (!isAdmin) {
-    navigate('/');
-  }
-}, [user]);
 
  useEffect(()=>{
     getAllProducts() 
  },[])
-
- useEffect(()=>{
-    console.log(allProducts)
- },[allProducts])
 
  const getAllProducts = async () => {
   try {
@@ -55,7 +33,6 @@ const AddProduct = ()=>{
     console.error(error);
   }
 };
-
 
 const validateProduct = (product) => {
   if (!product.name || !product.description || !product.price || !product.categoryName ) {
@@ -90,7 +67,7 @@ console.log({data});
 }
 }
 
-const handleUpdateProduct = async (id,newData) => {
+const handleUpdateProduct = async (id,data) => {
   try {
     // validateProduct()
     const payload = {
@@ -123,18 +100,11 @@ toggleModal()
 }
 
   return(
-    <ResponsiveComponent>
-      {({width})=>(
 <div className="flex flex-col sm:gap-2  md:items-center md:gap-4">
- {/* list all products  - to the side да ползвам css листа от таласъмите и sm:w-full for mobile */}
- {/* add products */}
- {/* update products - dim modal when i type id? to see current info  or maybe when i click on product to see modal with action buttons or dropdown? */}
- {/* delete products */}
- {/* mobile-  add,update,delete buttons up, list bellow-scroll*/}
 
  <button 
   className="sm:w-full md:w-2/3 m-2 p-2 bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-md text-sm transition"
- onClick={() => handleButtonAction('add')}>Add</button>
+ onClick={() => handleButtonAction('add')}>Add new product</button>
 
  <div className="   m-4 p-4 sm:m-2 sm:p-2 shadow-lg border border-gray-300 rounded-lg sm:w-full bg-white">
   <ul className="divide-y divide-gray-200">
@@ -174,9 +144,7 @@ toggleModal()
 </div>
 
  
-
-
- {/* example modal */}
+ {/* modal */}
  {
   modal && (
     <div className="fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
@@ -209,7 +177,6 @@ toggleModal()
   <option value="Other">Other</option>
 </select>
 
-
 <label>Tags (comma separated):</label>
 <input
   type="text"
@@ -231,7 +198,6 @@ toggleModal()
 </label>
 
     <div >
-       {/* {action&& action==='add'?( <button onClick={() => handleAddProduct(product)}>add</button>):action==='update'?( <button>update</button>):( <button>delete</button>)} */}
    {action === 'add' && <button className="m-4 p-4" onClick={() => handleAddProduct(product)}>Add</button>}
    {action === 'update' && <button className="m-4 p-4" onClick={() => handleUpdateProduct(product.id,product)}>Update</button>}
    {action === 'delete' && <button className="m-4 p-4" onClick={() => handleDeleteProduct(product.id)}>Delete</button>}
@@ -241,14 +207,7 @@ toggleModal()
     </div>
   )
  }
-
- 
- 
 </div>
-
-      )}
-   
-    </ResponsiveComponent>
   )
 }
 export default AddProduct;

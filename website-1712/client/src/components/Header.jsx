@@ -7,8 +7,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import { AppBar, Toolbar, IconButton, Typography, Box, Drawer, Menu, MenuItem, Divider, List, ListItem, ListItemText } from '@mui/material';
-import ResponsiveComponent from './ResponsiveComponent'; // Import your responsive component
-import { searchService } from '../service/service';
+import ResponsiveComponent from './ResponsiveComponent';
 
 const Header = () => {
     const [openMenu, setOpenMenu] = useState(false); // Handles mobile menu
@@ -21,13 +20,13 @@ const Header = () => {
     const navigate = useNavigate();
     const [searchQuery, setSearchQuery] = useState('');
 
-    // Open Menu
+    // Open Menu (submenu Profile/Admin)
     const handleMenuOpen = (event, type) => {
         setAnchorEl(event.currentTarget);
         setMenuType(type); // Set the menu type (either 'profile' or 'admin')
     };
 
-    // Close Menu
+    // Close Menu (submenu Profile/Admin)
     const handleClose = () => {
         setAnchorEl(null);
         setMenuType(''); // Reset menu type when closing
@@ -36,7 +35,7 @@ const Header = () => {
     const toggleSearch = () => {
         setOpenSearch(!openSearch);
     };
-
+    //mobile drawer
     const toggleDrawer = (open) => () => {
         setOpenMenu(open);
     };
@@ -45,7 +44,7 @@ const Header = () => {
         if (!searchTerm) return;
         console.log({ searchTerm });
         try {
-            navigate(`/search?q=${encodeURIComponent(searchTerm)}`);
+            navigate(`/search?q=${encodeURIComponent(searchTerm)}`);// navigate to page endpoint '/search'
         } catch (error) {
             console.error('Navigation failed', error);
         }
