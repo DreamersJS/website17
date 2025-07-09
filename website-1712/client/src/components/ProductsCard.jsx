@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Container, Typography, Box, Card, CardContent, CardMedia, Button } from '@mui/material';
+import { Link, useNavigate } from 'react-router-dom';
 
 const ProductsCard = ({ product }) => {
     const { id, name, description, price, image } = product;
-
+    const navigate = useNavigate();
     const [isExpanded, setIsExpanded] = useState(false);
 
     // Limit description
@@ -11,10 +12,6 @@ const ProductsCard = ({ product }) => {
 
     return (
         <Container>
-            {/* <Link
-                to={`/product/${id}`}
-                style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}
-            > */}
                 <Card sx={{ borderRadius: 2, boxShadow: 3 }}>
                     <CardMedia
                         component="img"
@@ -59,10 +56,22 @@ const ProductsCard = ({ product }) => {
                             >
                                 Add to Cart
                             </Button>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                fullWidth
+                                onClick={() => navigate(`/products/${id}`)}
+                                sx={{
+                                    padding: '10px',
+                                    backgroundColor: '#177F2E',
+                                    '&:hover': { backgroundColor: '#0b4017' },
+                                }}
+                            >
+                                Details
+                            </Button>
                         </Box>
                     </CardContent>
                 </Card>
-            {/* </Link> */}
         </Container>
     )
 };

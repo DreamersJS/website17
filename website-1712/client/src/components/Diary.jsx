@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Container, Grid, Card, CardContent, Typography, TextField, Button, MenuItem, Slider, IconButton, Snackbar, Alert} from "@mui/material";
 import { Delete } from "@mui/icons-material";
 import useScreenSize from "../hooks/useScreenSize";
-import ResponsiveComponent from "../components/ResponsiveComponent";
+import ResponsiveComponent from "./hoc/ResponsiveComponent";
 import { saveDiary } from "../service/service-user";
 import { useRecoilValue } from "recoil";
 import { userState } from "../recoil/userAtom";

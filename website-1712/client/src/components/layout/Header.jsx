@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { userState } from "../recoil/userAtom";
-import ButtonHeader from "./Button";
+import { userState } from "../../recoil/userAtom";
+import ButtonHeader from "../Button";
 import HomeIcon from '@mui/icons-material/Home';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import { AppBar, Toolbar, IconButton, Typography, Box, Drawer, Menu, MenuItem, Divider, List, ListItem, ListItemText } from '@mui/material';
-import ResponsiveComponent from './ResponsiveComponent';
+import ResponsiveComponent from '../hoc/ResponsiveComponent';
 
 const Header = () => {
     const [openMenu, setOpenMenu] = useState(false); // Handles mobile menu

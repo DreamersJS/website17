@@ -16,7 +16,7 @@ import { useRecoilValue } from "recoil";
 import { userState } from "../recoil/userAtom";
 import { fetchUsers, updateUserRole, updateIsBlocked } from "../service/service-user";
 import useScreenSize from "../hooks/useScreenSize";
-import ResponsiveComponent from "../components/ResponsiveComponent";
+import ResponsiveComponent from "./hoc/ResponsiveComponent";
 
 const Admin = () => {
   const user = useRecoilValue(userState);

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { addProductService, deleteProductService, getAllProductsService, updateProductService } from "../service/service";
-import { useFeedback } from './FeedbackContext';
+import { addProductService, deleteProductService, getAllProductsService, updateProductService } from "../service/service-product";
+import { useFeedback } from './hoc/FeedbackContext';
 import { Box, Grid, InputAdornment, TextField } from "@mui/material";
 import { Search } from "@mui/icons-material";
 

@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Container, Typography, Box, Grid, Button, TextField, InputAdornment } from '@mui/material';
 import { Search } from '@mui/icons-material';
 import ProductsCard from './ProductsCard';
-import { getAllProductsService } from '../service/service';
+import { getAllProductsService } from '../service/service-product';
 import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import { useSearchParams } from 'react-router-dom';
 

@@ -1,4 +1,4 @@
-import useScreenSize from "../hooks/useScreenSize";
+import useScreenSize from "../../hooks/useScreenSize";
 
 const ResponsiveComponent = ({children}) => {
     const { width, height } = useScreenSize();
