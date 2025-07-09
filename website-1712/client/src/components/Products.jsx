@@ -76,15 +76,18 @@ const ProductsPage = () => {
     }
 
     if (searchLocal) {
-      const search = searchLocal.trim().toLowerCase();
+      const searchWords = searchLocal.trim().toLowerCase().split(/\s+/);
       filtered = filtered.filter((p) => {
-        const nameMatch = p.name.toLowerCase().includes(search);
-        const tagMatch = p.tags?.some((e) =>
-          e.tag.name.toLowerCase().includes(search)
+        const name = p.name.toLowerCase();
+        const tags = p.tags?.map((e) => e.tag.name.toLowerCase()) || [];
+    
+        // Check if every word is in either name or any tag
+        return searchWords.some((word) =>
+        name.includes(word) || tags.some((tag) => tag.includes(word))
         );
-        return nameMatch || tagMatch;
       });
     }
+    
 
     switch (sortOption) {
       case 'name-asc':
