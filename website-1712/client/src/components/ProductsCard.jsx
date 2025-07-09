@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Container, Typography, Box, Card, CardContent, CardMedia, Button } from '@mui/material';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const ProductsCard = ({ product }) => {
     const { id, name, description, price, image } = product;
@@ -13,103 +13,85 @@ const ProductsCard = ({ product }) => {
 
     return (
         <Container>
-                <Card
-  sx={{
-    height: 400, // fixed height for all cards; adjust as needed
-    display: 'flex',
-    flexDirection: 'column',
-    borderRadius: 2,
-    boxShadow: 3,
-  }}
->
-  {image ? (
-    <CardMedia
-      component="img"
-      alt={name + ' image'}
-      height="200"
-      image={image}
-      sx={{ objectFit: 'cover' }}
-    />
-  ) : (
-    // Placeholder box if no image
-    <Box
-      sx={{
-        height: 200,
-        backgroundColor: '#eee',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        color: '#999',
-        fontSize: '1.5rem',
-      }}
-    >
-      No Image
-    </Box>
-  )}
+            <Card
+                onClick={() => navigate(`/products/${product.id}`)}
+                sx={{
+                    height: 400, // fixed height for all cards; adjust as needed
+                    display: 'flex',
+                    flexDirection: 'column',
+                    borderRadius: 2,
+                    boxShadow: 3,
+                    cursor: 'pointer',
+                }}
+            >
+                {image ? (
+                    <CardMedia
+                        component="img"
+                        alt={name + ' image'}
+                        height="200"
+                        image={image}
+                        sx={{ objectFit: 'cover' }}
+                    />
+                ) : (
+                    // Placeholder box if no image
+                    <Box
+                        sx={{
+                            height: 200,
+                            backgroundColor: '#eee',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            color: '#999',
+                            fontSize: '1.5rem',
+                        }}
+                    >
+                        No Image
+                    </Box>
+                )}
 
-  <CardContent
-    sx={{
-      flexGrow: 1, // takes remaining space
-      display: 'flex',
-      flexDirection: 'column',
-    }}
-  >
-    <Typography variant="h6" fontWeight="bold" noWrap>
-      {name}
-    </Typography>
+                <CardContent
+                    sx={{
+                        flexGrow: 1, // takes remaining space
+                        display: 'flex',
+                        flexDirection: 'column',
+                    }}
+                >
+                    <Typography variant="h6" fontWeight="bold" noWrap>
+                        {name}
+                    </Typography>
 
-    <Typography
-      variant="body2"
-      color="textSecondary"
-      sx={{ mt: 1, flexGrow: 1, overflow: 'hidden' }}
-    >
-      {isExpanded ? description : truncatedDescription}
-    </Typography>
+                    <Typography
+                        variant="body2"
+                        color="textSecondary"
+                        sx={{ mt: 1, flexGrow: 1, overflow: 'hidden' }}
+                    >
+                        {isExpanded ? description : truncatedDescription}
+                    </Typography>
 
-    {description.length > limit && (
-      <Button
-        color="black"
-        variant="contained"
-        sx={{ mt: 1, p: '5px', fontSize: 'small' }}
-        onClick={() => setIsExpanded(!isExpanded)}
-      >
-        {isExpanded ? 'Read Less' : 'Read More'}
-      </Button>
-    )}
-
-    <Box sx={{ mt: 2 }}>
-      <Typography variant="h6" color="black">
-        {price} BGN
-      </Typography>
-      <Button
-        variant="contained"
-        color="primary"
-        fullWidth
-        sx={{
-          mt: 1,
-          backgroundColor: '#177F2E',
-          '&:hover': { backgroundColor: '#0b4017' },
-        }}
-      >
-        Add to Cart
-      </Button>
-      <Button
-        variant="contained"
-        color="primary"
-        fullWidth
-        onClick={() => navigate(`/products/${id}`)}
-        sx={{
-          mt: 1,
-          backgroundColor: '#177F2E',
-          '&:hover': { backgroundColor: '#0b4017' },
-        }}
-      >
-        Details
-      </Button>
-    </Box>
-  </CardContent>
-</Card>
-
+                    <Box sx={{ mt: 2 }}>
+                        <Typography variant="h6" color="black">
+                            {price} BGN
+                        </Typography>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            fullWidth
+                            sx={{
+                                mt: 1,
+                                backgroundColor: '#177F2E',
+                                '&:hover': { backgroundColor: '#0b4017' },
+                            }}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                console.log('hey');
+                                return;
+                            }}
+                        >
+                            Add to Cart
+                        </Button>
+                    </Box>
+                </CardContent>
+            </Card>
         </Container>
     )
 };
