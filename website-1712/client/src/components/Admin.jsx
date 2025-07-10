@@ -24,16 +24,10 @@ const Admin = () => {
   const user = useRecoilValue(userState);
   const isAdmin = user?.role === "ADMIN";
   const { width } = useScreenSize();
-
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(0);
-  // const [rowsPerPage, setRowsPerPage] = useState(10);
-  // const [order, setOrder] = useState("asc");
-  // const [orderBy, setOrderBy] = useState("username");
   const isMobile = width <= 600;
-
-  // const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedRole, setSelectedRole] = useState('');
   const [sortOption, setSortOption] = useState('');
   const DEFAULT_VISIBLE_COUNT = 10;
@@ -54,10 +48,6 @@ const Admin = () => {
   const rowsPerPageOptions = [10, 20];
 
   useEffect(() => {
-    console.log({ users });
-  }, [users]);
-
-  useEffect(() => {
     if (!user?.id) {
       navigate('/login');
     }
@@ -69,7 +59,6 @@ const Admin = () => {
 
   const handleFetchUsers = async () => {
     try {
-
       const data = await fetchUsers();
       setUsers(data);
     } catch (error) {
@@ -78,7 +67,6 @@ const Admin = () => {
   };
 
   const handleRoleChange = async (userId, newRole) => {
-
     try {
       await updateUserRole(userId, newRole);
       handleFetchUsers();
@@ -88,7 +76,6 @@ const Admin = () => {
   };
 
   const toggleIsBlocked = async (userId) => {
-
     try {
       await updateIsBlocked(userId);
       handleFetchUsers();
@@ -97,20 +84,12 @@ const Admin = () => {
     }
   };
 
-
-  // const handleSort = (property) => {
-  //   const isAscending = orderBy === property && order === "asc";
-  //   setOrder(isAscending ? "desc" : "asc");
-  //   setOrderBy(property);
-  // };
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
   const handleChangeRowsPerPage = (event) => {
     const value = parseInt(event.target.value, 10);
-    // setRowsPerPage(value);
     setVisibleCount(value);
     setPage(0);
   };
@@ -124,7 +103,7 @@ const Admin = () => {
         onSearchChange={setSearch}
         selectedCategory={selectedRole}
         onCategoryChange={setSelectedRole}
-        categoryOptions={['admin', 'user', 'coach']} // role options
+        categoryOptions={['admin', 'user', 'coach']}
         sortOption={sortOption}
         onSortChange={setSortOption}
         sortOptions={[
@@ -152,23 +131,9 @@ const Admin = () => {
                       <TableHead>
                         <TableRow>
                           <TableCell>
-                            {/* <TableSortLabel
-                              active={orderBy === "username"}
-                              direction={order}
-                              onClick={() => handleSort("username")}
-                            >
-                              Username
-                            </TableSortLabel> */}
                             Username
                           </TableCell>
                           <TableCell>
-                            {/* <TableSortLabel
-                              active={orderBy === "email"}
-                              direction={order}
-                              onClick={() => handleSort("email")}
-                            >
-                              Email
-                            </TableSortLabel> */}
                             Email
                           </TableCell>
                           <TableCell>Role</TableCell>
