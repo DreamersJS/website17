@@ -64,10 +64,15 @@ const ProductsPage = () => {
   }, []);
 
   useEffect(() => {
+    console.log('Products fetched:', products);
+  }, [products]);
+
+  useEffect(() => {
     if (searchParams.has("search")) {
       setSearchLocal(searchParams.get("search") || "");
     }
   }, [searchParams]);
+
 
   const filteredProducts = useFilterSearchSort({
     items: products,
@@ -84,10 +89,11 @@ const ProductsPage = () => {
     ].filter(Boolean),
   });
 
-  const handleSearchChange = async (e) => {
-    setSearchLocal(e.target.value);
-    setSearchParams({ search: e.target.value });
+  const handleSearchChange = async (value) => {
+    setSearchLocal(value);
+    setSearchParams({ search: value });
   };
+  
 
   return (
     <Container maxWidth="lg" sx={{ marginTop: 8 }}>
@@ -103,7 +109,7 @@ const ProductsPage = () => {
       <SearchToolBar
         entityName="Products"
         searchTerm={searchLocal}
-        onSearchChange={setSearchLocal}
+        onSearchChange={handleSearchChange}
         selectedCategory={selectedCategory}
         onCategoryChange={setSelectedCategory}
         categoryOptions={['Supplements', 'Cosmetics']}
