@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { searchService } from '../service/service';
+import { searchService } from '../service/service-search';
 
 const useSearchQuery = () => {
     const { search } = useLocation();

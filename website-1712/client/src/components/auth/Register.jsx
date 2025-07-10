@@ -12,7 +12,7 @@ import {
   Container,
   Grid,
 } from '@mui/material';
-import { useFeedback } from '../FeedbackContext.jsx';
+import { useFeedback } from '../hoc/FeedbackContext.jsx';
 
 const Register = () => {
   const [username, setUsername] = useState('');

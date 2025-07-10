@@ -5,7 +5,7 @@ import ButtonHeader, { ButtonAction } from "./Button";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { userState } from '../recoil/userAtom';
 import { useNavigate } from 'react-router-dom';
-import { useFeedback } from './FeedbackContext';
+import { useFeedback } from './hoc/FeedbackContext';
 
 const ProfilePage = () => {
     const [user, setUser] = useRecoilState(userState);
