@@ -5,11 +5,14 @@ import ProductsCard from './ProductsCard';
 import { getAllProductsService } from '../service/service-product';
 import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import { useSearchParams } from 'react-router-dom';
+import { useFilterSearchSort } from '../hooks/useFilterSearchSort';
+import SearchToolBar from './SearchToolbar';
 
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
   // const [filterProducts, setFilterProducts] = useState([]);
   const [searchLocal, setSearchLocal] = useState("");
+  // const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState("");
   const [sortOption, setSortOption] = useState('');
   const [searchParams, setSearchParams] = useSearchParams();
@@ -66,44 +69,20 @@ const ProductsPage = () => {
     }
   }, [searchParams]);
 
-  const filteredProducts = useMemo(() => {
-    let filtered = [...products];
-
-    if (selectedCategory) {
-      filtered = filtered.filter((p) =>
-        p.category?.name?.toLowerCase() === selectedCategory.toLowerCase()
-      );
-    }
-
-    if (searchLocal) {
-      const searchWords = searchLocal.trim().toLowerCase().split(/\s+/);
-      filtered = filtered.filter((p) => {
-        const name = p.name.toLowerCase();
-        const tags = p.tags?.map((e) => e.tag.name.toLowerCase()) || [];
-    
-        // Check if every word is in either name or any tag
-        return searchWords.some((word) =>
-        name.includes(word) || tags.some((tag) => tag.includes(word))
-        );
-      });
-    }
-    
-
-    switch (sortOption) {
-      case 'name-asc':
-        return filtered.sort((a, b) => a.name.localeCompare(b.name));
-      case 'name-desc':
-        return filtered.sort((a, b) => b.name.localeCompare(a.name));
-      case 'price-asc':
-        return filtered.sort((a, b) => a.price - b.price);
-      case 'price-desc':
-        return filtered.sort((a, b) => b.price - a.price);
-      case 'newest':
-        return filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-      default:
-        return filtered;
-    }
-  }, [products, searchLocal, selectedCategory, sortOption]);
+  const filteredProducts = useFilterSearchSort({
+    items: products,
+    searchQuery: searchLocal,
+    searchKeys: ['name', 'tags.tag.name'],
+    categoryKey: 'category.name',
+    selectedCategory,
+    sortKeys: [
+      sortOption === 'name-asc' && { key: 'name', order: 'asc' },
+      sortOption === 'name-desc' && { key: 'name', order: 'desc' },
+      sortOption === 'price-asc' && { key: 'price', order: 'asc' },
+      sortOption === 'price-desc' && { key: 'price', order: 'desc' },
+      sortOption === 'newest' && { key: 'createdAt', order: 'desc' },
+    ].filter(Boolean),
+  });
 
   const handleSearchChange = async (e) => {
     setSearchLocal(e.target.value);
@@ -121,113 +100,27 @@ const ProductsPage = () => {
       </Box>
 
       {/* Search and Filter Section */}
-      <Box sx={{ marginBottom: 4 }}>
-        <Grid container spacing={2} alignItems="center">
-
-          {/* Search Field */}
-          <Grid item xs={12} sm={6} md={4}>
-            <TextField
-              label="Search Products"
-              value={searchLocal}
-              onChange={handleSearchChange}
-              variant="outlined"
-              size="small"
-              fullWidth
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Search />
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </Grid>
-
-          {/* Category Filter */}
-          <Grid item xs={12} sm={6} md={2.5}>
-            <FormControl size="small" fullWidth>
-              <InputLabel>Category</InputLabel>
-              <Select
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                label="Category"
-                sx={{
-                  '& .MuiOutlinedInput-notchedOutline': {
-                    borderColor: '#177F2E',
-                  },
-                  '&:hover .MuiOutlinedInput-notchedOutline': {
-                    borderColor: '#145c1d',
-                  },
-                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                    borderColor: '#177F2E',
-                  },
-                  color: '#000',
-                }}
-              >
-                <MenuItem value="">All</MenuItem>
-                <MenuItem value="Supplements">Supplements</MenuItem>
-                <MenuItem value="Cosmetics">Cosmetics</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-
-          {/* Sort Option */}
-          <Grid item xs={12} sm={6} md={2.5}>
-            <FormControl size="small" fullWidth>
-              <InputLabel>Sort By</InputLabel>
-              <Select
-                value={sortOption}
-                onChange={(e) => setSortOption(e.target.value)}
-                label="Sort By"
-                sx={{
-                  '& .MuiOutlinedInput-notchedOutline': {
-                    borderColor: '#177F2E',
-                  },
-                  '&:hover .MuiOutlinedInput-notchedOutline': {
-                    borderColor: '#145c1d',
-                  },
-                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                    borderColor: '#177F2E',
-                  },
-                  color: '#000',
-                }}
-              >
-                <MenuItem value="">Sort By</MenuItem>
-                <MenuItem value="name-asc">Name (A-Z)</MenuItem>
-                <MenuItem value="name-desc">Name (Z-A)</MenuItem>
-                <MenuItem value="price-asc">Price (Low to High)</MenuItem>
-                <MenuItem value="price-desc">Price (High to Low)</MenuItem>
-                <MenuItem value="newest">Newest</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-
-          {/* Show Count */}
-          <Grid item xs={12} sm={6} md={2}>
-            <FormControl size="small" fullWidth>
-              <InputLabel>Show</InputLabel>
-              <Select
-                value={visibleCount}
-                onChange={handleItemsPerPageChange}
-                label="Show"
-                sx={{
-                  '& .MuiOutlinedInput-notchedOutline': { borderColor: '#177F2E' },
-                  '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#145c1d' },
-                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#177F2E' },
-                  color: '#000',
-                }}
-              >
-                <MenuItem value={10}>10</MenuItem>
-                <MenuItem value={20}>20</MenuItem>
-                <MenuItem value={filteredProducts.length}>All</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-
-        </Grid>
-      </Box>
-
-
+      <SearchToolBar
+        entityName="Products"
+        searchTerm={searchLocal}
+        onSearchChange={setSearchLocal}
+        selectedCategory={selectedCategory}
+        onCategoryChange={setSelectedCategory}
+        categoryOptions={['Supplements', 'Cosmetics']}
+        sortOption={sortOption}
+        onSortChange={setSortOption}
+        sortOptions={[
+          { label: 'Name (A-Z)', value: 'name-asc' },
+          { label: 'Name (Z-A)', value: 'name-desc' },
+          { label: 'Price (Low to High)', value: 'price-asc' },
+          { label: 'Price (High to Low)', value: 'price-desc' },
+          { label: 'Newest', value: 'newest' },
+        ]}
+        visibleCount={visibleCount}
+        onVisibleCountChange={setVisibleCount}
+        showCountOptions={[10, 20]}
+        totalCount={filteredProducts.length}
+      />
 
       {/* Product List */}
       {filteredProducts.length === 0 ? (
@@ -245,7 +138,6 @@ const ProductsPage = () => {
           ))}
         </Grid>
       )}
-
 
       {/* Pagination or Load More Button */}
       {visibleCount < filteredProducts.length && (
