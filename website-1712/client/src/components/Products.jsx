@@ -1,18 +1,14 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { Container, Typography, Box, Grid, Button, TextField, InputAdornment } from '@mui/material';
-import { Search } from '@mui/icons-material';
+import React, { useEffect, useState } from 'react';
+import { Container, Typography, Box, Grid, Button } from '@mui/material';
 import ProductsCard from './ProductsCard';
 import { getAllProductsService } from '../service/service-product';
-import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import { useSearchParams } from 'react-router-dom';
 import { useFilterSearchSort } from '../hooks/useFilterSearchSort';
 import SearchToolBar from './SearchToolbar';
 
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
-  // const [filterProducts, setFilterProducts] = useState([]);
   const [searchLocal, setSearchLocal] = useState("");
-  // const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState("");
   const [sortOption, setSortOption] = useState('');
   const [searchParams, setSearchParams] = useSearchParams();
@@ -43,11 +39,6 @@ const ProductsPage = () => {
 
   const handleLoadMore = () => {
     setVisibleCount((prev) => prev + visibleCount);
-  };
-
-  const handleItemsPerPageChange = (e) => {
-    const count = Number(e.target.value);
-    setVisibleCount(count);
   };
 
   const handleFetchProducts = async () => {
@@ -94,7 +85,6 @@ const ProductsPage = () => {
     setSearchParams({ search: value });
   };
   
-
   return (
     <Container maxWidth="lg" sx={{ marginTop: 8 }}>
       {/* Header Section */}
