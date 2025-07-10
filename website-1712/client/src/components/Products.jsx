@@ -13,7 +13,6 @@ const ProductsPage = () => {
   const [sortOption, setSortOption] = useState('');
   const [searchParams, setSearchParams] = useSearchParams();
   const DEFAULT_VISIBLE_COUNT = 10;
-
   const [visibleCount, setVisibleCount] = useState(DEFAULT_VISIBLE_COUNT);
   const [showScroll, setShowScroll] = useState(false);
 
@@ -55,15 +54,10 @@ const ProductsPage = () => {
   }, []);
 
   useEffect(() => {
-    console.log('Products fetched:', products);
-  }, [products]);
-
-  useEffect(() => {
     if (searchParams.has("search")) {
       setSearchLocal(searchParams.get("search") || "");
     }
   }, [searchParams]);
-
 
   const filteredProducts = useFilterSearchSort({
     items: products,
@@ -84,7 +78,7 @@ const ProductsPage = () => {
     setSearchLocal(value);
     setSearchParams({ search: value });
   };
-  
+
   return (
     <Container maxWidth="lg" sx={{ marginTop: 8 }}>
       {/* Header Section */}
@@ -177,5 +171,4 @@ const ProductsPage = () => {
     </Container>
   );
 };
-
 export default ProductsPage;
