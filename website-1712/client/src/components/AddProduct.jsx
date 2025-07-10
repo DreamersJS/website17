@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { addProductService, deleteProductService, getAllProductsService, updateProductService } from "../service/service-product";
 import { useFeedback } from './hoc/FeedbackContext';
 import { Box, Grid, InputAdornment, TextField } from "@mui/material";
 import { Search } from "@mui/icons-material";
+import SearchToolBar from "./SearchToolbar";
+import { useFilterSearchSort } from "../hooks/useFilterSearchSort";
 
 // admin access only 
 const AddProduct = () => {
   const [allProducts, setAllProducts] = useState([]);
-  const [allProductsFiltered, setAllProductsFiltered] = useState([]);
+  // const [allProductsFiltered, setAllProductsFiltered] = useState([]);
   const [product, setProduct] = useState({
     id: '',
     name: '',
@@ -23,28 +25,28 @@ const AddProduct = () => {
   const [action, setAction] = useState('add')// update, delete 
   const [modal, setModal] = useState(false)
   const [searchLocal, setSearchLocal] = useState("");
-
   const { showFeedback } = useFeedback();
 
-  const handleSearchChange = async (e) => {
-    setSearchLocal(e.target.value);
-  };
-
-  useEffect(() => {
-    let filtered = [...allProducts]
-
-    if (searchLocal) {
-      const search = searchLocal.trim().toLowerCase();
-      filtered = filtered.filter((p) => {
-        const nameMatch = p.name.toLowerCase().includes(search);
-        const tagMatch = p.tags?.some((e) =>
-          e.tag.name.toLowerCase().includes(search)
-        );
-        return nameMatch || tagMatch;
-      });
-    }
-    setAllProductsFiltered(filtered)
-  }, [searchLocal])
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [sortOption, setSortOption] = useState('');
+  const DEFAULT_VISIBLE_COUNT = 10;
+  const [visibleCount, setVisibleCount] = useState(DEFAULT_VISIBLE_COUNT);
+  
+  const allProductsFiltered = useFilterSearchSort({
+    items: allProducts,
+    searchQuery: searchLocal,
+    searchKeys: ['name', 'tags.tag.name'], 
+    categoryKey: 'category.name',
+    selectedCategory,
+    sortKeys: [
+      sortOption === 'name-asc' && { key: 'name', order: 'asc' },
+      sortOption === 'name-desc' && { key: 'name', order: 'desc' },
+      sortOption === 'price-asc' && { key: 'price', order: 'asc' },
+      sortOption === 'price-desc' && { key: 'price', order: 'desc' },
+      sortOption === 'newest' && { key: 'createdAt', order: 'desc' },
+    ].filter(Boolean),
+  });
+  
 
   useEffect(() => {
     getAllProducts()
@@ -54,7 +56,7 @@ const AddProduct = () => {
     try {
       const data = await getAllProductsService();
       setAllProducts(data);
-      setAllProductsFiltered(data);
+      // setAllProductsFiltered(data);
     } catch (error) {
       console.error(error);
     }
@@ -152,31 +154,29 @@ const AddProduct = () => {
   }
 
   return (
-    <div className="flex flex-col sm:gap-2  md:items-center md:gap-4">
+    <div className="flex flex-col sm:gap-2  md:items-center md:gap-4 mb-4">
       {/* Search and Filter Section */}
-      <Box sx={{ marginTop: 4 }}>
-        <Grid container spacing={2} alignItems="center">
-
-          {/* Search Field */}
-          <Grid item xs={12} >
-            <TextField
-              label="Search Products"
-              value={searchLocal}
-              onChange={handleSearchChange}
-              variant="outlined"
-              size="small"
-              fullWidth
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Search />
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </Grid>
-        </Grid>
-      </Box>
+      <SearchToolBar
+        entityName="Products"
+        searchTerm={searchLocal}
+        onSearchChange={setSearchLocal}
+        selectedCategory={selectedCategory}
+        onCategoryChange={setSelectedCategory}
+        categoryOptions={['Supplements', 'Cosmetics']}
+        sortOption={sortOption}
+        onSortChange={setSortOption}
+        sortOptions={[
+          { label: 'Name (A-Z)', value: 'name-asc' },
+          { label: 'Name (Z-A)', value: 'name-desc' },
+          { label: 'Price (Low to High)', value: 'price-asc' },
+          { label: 'Price (High to Low)', value: 'price-desc' },
+          { label: 'Newest', value: 'newest' },
+        ]}
+        visibleCount={visibleCount}
+        onVisibleCountChange={setVisibleCount}
+        showCountOptions={[10, 20]}
+        totalCount={allProductsFiltered.length}
+      />
 
       <button
         className="sm:w-full md:w-2/3 m-2 p-2 bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-md text-sm transition"

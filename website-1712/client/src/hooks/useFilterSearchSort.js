@@ -1,5 +1,9 @@
 import { useMemo } from 'react';
 
+const getValue = (obj, path) => {
+    return path.split('.').reduce((acc, part) => acc?.[part], obj);
+  };
+  
 function getNestedValue(obj, path) {
     const parts = path.split('.');
     let current = obj;

@@ -18,7 +18,7 @@ const SearchToolBar = ({
     totalCount = 0, // for "All"
 }) => {
     return (
-        <Box sx={{ marginBottom: 4 }}>
+        <Box sx={{ marginBottom: 4, marginTop: 4 }}>
             <Grid container spacing={2} alignItems="center">
 
                 {/* Search Field */}
