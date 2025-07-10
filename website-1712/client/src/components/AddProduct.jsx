@@ -154,7 +154,7 @@ const AddProduct = () => {
   }
 
   return (
-    <div className="flex flex-col sm:gap-2  md:items-center md:gap-4 mb-4">
+    <div className="flex flex-col sm:gap-2  md:items-center md:gap-4 ">
       {/* Search and Filter Section */}
       <Container maxWidth="lg" >
         <SearchToolBar
@@ -179,7 +179,7 @@ const AddProduct = () => {
           totalCount={allProductsFiltered.length}
         />
       </Container>
-      
+
       <button
         className="sm:w-full md:w-2/3 m-2 p-2 bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-md text-sm transition"
         onClick={() => handleButtonAction('add')}>Add new product</button>

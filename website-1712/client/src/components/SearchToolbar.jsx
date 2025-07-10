@@ -41,7 +41,7 @@ const SearchToolBar = ({
                 </Grid>
 
                 {/* Category Filter */}
-                <Grid item xs={12} sm={6} md={2.5}>
+                <Grid item xs={12} sm={6} md={3}>
                     <FormControl size="small" fullWidth>
                         <InputLabel>Category</InputLabel>
                         <Select
@@ -59,7 +59,7 @@ const SearchToolBar = ({
                 </Grid>
 
                 {/* Sort Option */}
-                <Grid item xs={12} sm={6} md={2.5}>
+                <Grid item xs={12} sm={6} md={3}>
                     <FormControl size="small" fullWidth>
                         <InputLabel>Sort By</InputLabel>
                         <Select
