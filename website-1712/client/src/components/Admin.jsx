@@ -17,6 +17,8 @@ import { userState } from "../recoil/userAtom";
 import { fetchUsers, updateUserRole, updateIsBlocked } from "../service/service-user";
 import useScreenSize from "../hooks/useScreenSize";
 import ResponsiveComponent from "./hoc/ResponsiveComponent";
+import { useFilterSearchSort } from "../hooks/useFilterSearchSort";
+import SearchToolBar from "./SearchToolbar";
 
 const Admin = () => {
   const user = useRecoilValue(userState);
@@ -26,10 +28,34 @@ const Admin = () => {
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [order, setOrder] = useState("asc");
-  const [orderBy, setOrderBy] = useState("username");
+  // const [rowsPerPage, setRowsPerPage] = useState(10);
+  // const [order, setOrder] = useState("asc");
+  // const [orderBy, setOrderBy] = useState("username");
   const isMobile = width <= 600;
+
+  // const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedRole, setSelectedRole] = useState('');
+  const [sortOption, setSortOption] = useState('');
+  const DEFAULT_VISIBLE_COUNT = 10;
+  const [visibleCount, setVisibleCount] = useState(DEFAULT_VISIBLE_COUNT);
+
+  const filteredUsers = useFilterSearchSort({
+    items: users,
+    searchQuery: search,
+    searchKeys: ['username', 'email'],
+    categoryKey: 'role', // works as category here
+    selectedCategory: selectedRole,
+    sortKeys: [
+      sortOption === 'name-asc' && { key: 'username', order: 'asc' },
+      sortOption === 'name-desc' && { key: 'username', order: 'desc' },
+      sortOption === 'created-desc' && { key: 'createdAt', order: 'desc' },
+    ].filter(Boolean),
+  });
+  const rowsPerPageOptions = [10, 20];
+
+  useEffect(() => {
+    console.log({ users });
+  }, [users]);
 
   useEffect(() => {
     if (!user?.id) {
@@ -71,41 +97,47 @@ const Admin = () => {
     }
   };
 
-  const handleSearchChange = (e) => {
-    setSearch(e.target.value.toLowerCase());
-  };
 
-  const handleSort = (property) => {
-    const isAscending = orderBy === property && order === "asc";
-    setOrder(isAscending ? "desc" : "asc");
-    setOrderBy(property);
-  };
+  // const handleSort = (property) => {
+  //   const isAscending = orderBy === property && order === "asc";
+  //   setOrder(isAscending ? "desc" : "asc");
+  //   setOrderBy(property);
+  // };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
   const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
+    const value = parseInt(event.target.value, 10);
+    // setRowsPerPage(value);
+    setVisibleCount(value);
     setPage(0);
   };
 
-  const filteredUsers = users
-    .filter(
-      (user) =>
-        user.username.toLowerCase().includes(search) ||
-        user.email.toLowerCase().includes(search)
-    )
-    .sort((a, b) => {
-      const valueA = a[orderBy];
-      const valueB = b[orderBy];
-      if (valueA < valueB) return order === "asc" ? -1 : 1;
-      if (valueA > valueB) return order === "asc" ? 1 : -1;
-      return 0;
-    });
 
   return (
     <>
+      <SearchToolBar
+        entityName="Users"
+        searchTerm={search}
+        onSearchChange={setSearch}
+        selectedCategory={selectedRole}
+        onCategoryChange={setSelectedRole}
+        categoryOptions={['admin', 'user', 'coach']} // role options
+        sortOption={sortOption}
+        onSortChange={setSortOption}
+        sortOptions={[
+          { label: 'Name (A-Z)', value: 'name-asc' },
+          { label: 'Name (Z-A)', value: 'name-desc' },
+          { label: 'Newest', value: 'created-desc' },
+        ]}
+        visibleCount={visibleCount}
+        onVisibleCountChange={setVisibleCount}
+        showCountOptions={rowsPerPageOptions}
+        totalCount={filteredUsers.length}
+      />
+
       {!isMobile ? (
         <div className="flex flex-col items-center justify-center w-full h-full my-2">
           {isAdmin ? (
@@ -113,35 +145,31 @@ const Admin = () => {
               {({ width }) => (
                 <Paper sx={{ width: '100%', padding: width > 600 ? 3 : 1 }}>
                   <h2>Welcome, Admin {user.username}</h2>
-                  <TextField
-                    label="Search"
-                    variant="outlined"
-                    value={search}
-                    onChange={handleSearchChange}
-                    fullWidth
-                    margin="normal"
-                  />
+
+                  {/* table */}
                   <TableContainer>
                     <Table size={width > 600 ? "medium" : "small"}>
                       <TableHead>
                         <TableRow>
                           <TableCell>
-                            <TableSortLabel
+                            {/* <TableSortLabel
                               active={orderBy === "username"}
                               direction={order}
                               onClick={() => handleSort("username")}
                             >
                               Username
-                            </TableSortLabel>
+                            </TableSortLabel> */}
+                            Username
                           </TableCell>
                           <TableCell>
-                            <TableSortLabel
+                            {/* <TableSortLabel
                               active={orderBy === "email"}
                               direction={order}
                               onClick={() => handleSort("email")}
                             >
                               Email
-                            </TableSortLabel>
+                            </TableSortLabel> */}
+                            Email
                           </TableCell>
                           <TableCell>Role</TableCell>
                           <TableCell>Status</TableCell>
@@ -150,7 +178,7 @@ const Admin = () => {
                       </TableHead>
                       <TableBody>
                         {filteredUsers
-                          .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                          .slice(page * visibleCount, page * visibleCount + visibleCount)
                           .map((user) => (
                             <TableRow key={user.id}>
                               <TableCell>{user.username}</TableCell>
@@ -181,10 +209,10 @@ const Admin = () => {
                     </Table>
                   </TableContainer>
                   <TablePagination
-                    rowsPerPageOptions={[5, 10, 15]}
+                    rowsPerPageOptions={rowsPerPageOptions}
                     component="div"
                     count={filteredUsers.length}
-                    rowsPerPage={rowsPerPage}
+                    rowsPerPage={visibleCount}
                     page={page}
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage}
@@ -199,7 +227,7 @@ const Admin = () => {
         :
         (<div className="mt-2">
           {filteredUsers
-            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            .slice(page * visibleCount, page * visibleCount + visibleCount)
             .map((user) => (
               <Paper key={user.id} sx={{ p: 2, mb: 2 }}>
                 <p><strong>Username:</strong> {user.username}</p>

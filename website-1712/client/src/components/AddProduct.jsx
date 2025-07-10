@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { addProductService, deleteProductService, getAllProductsService, updateProductService } from "../service/service-product";
 import { useFeedback } from './hoc/FeedbackContext';
-import { Box, Grid, InputAdornment, TextField } from "@mui/material";
+import { Box, Grid, InputAdornment, TextField, Container } from "@mui/material";
 import { Search } from "@mui/icons-material";
 import SearchToolBar from "./SearchToolbar";
 import { useFilterSearchSort } from "../hooks/useFilterSearchSort";
@@ -31,11 +31,11 @@ const AddProduct = () => {
   const [sortOption, setSortOption] = useState('');
   const DEFAULT_VISIBLE_COUNT = 10;
   const [visibleCount, setVisibleCount] = useState(DEFAULT_VISIBLE_COUNT);
-  
+
   const allProductsFiltered = useFilterSearchSort({
     items: allProducts,
     searchQuery: searchLocal,
-    searchKeys: ['name', 'tags.tag.name'], 
+    searchKeys: ['name', 'tags.tag.name'],
     categoryKey: 'category.name',
     selectedCategory,
     sortKeys: [
@@ -46,7 +46,7 @@ const AddProduct = () => {
       sortOption === 'newest' && { key: 'createdAt', order: 'desc' },
     ].filter(Boolean),
   });
-  
+
 
   useEffect(() => {
     getAllProducts()
@@ -156,28 +156,30 @@ const AddProduct = () => {
   return (
     <div className="flex flex-col sm:gap-2  md:items-center md:gap-4 mb-4">
       {/* Search and Filter Section */}
-      <SearchToolBar
-        entityName="Products"
-        searchTerm={searchLocal}
-        onSearchChange={setSearchLocal}
-        selectedCategory={selectedCategory}
-        onCategoryChange={setSelectedCategory}
-        categoryOptions={['Supplements', 'Cosmetics']}
-        sortOption={sortOption}
-        onSortChange={setSortOption}
-        sortOptions={[
-          { label: 'Name (A-Z)', value: 'name-asc' },
-          { label: 'Name (Z-A)', value: 'name-desc' },
-          { label: 'Price (Low to High)', value: 'price-asc' },
-          { label: 'Price (High to Low)', value: 'price-desc' },
-          { label: 'Newest', value: 'newest' },
-        ]}
-        visibleCount={visibleCount}
-        onVisibleCountChange={setVisibleCount}
-        showCountOptions={[10, 20]}
-        totalCount={allProductsFiltered.length}
-      />
-
+      <Container maxWidth="lg" >
+        <SearchToolBar
+          entityName="Products"
+          searchTerm={searchLocal}
+          onSearchChange={setSearchLocal}
+          selectedCategory={selectedCategory}
+          onCategoryChange={setSelectedCategory}
+          categoryOptions={['Supplements', 'Cosmetics']}
+          sortOption={sortOption}
+          onSortChange={setSortOption}
+          sortOptions={[
+            { label: 'Name (A-Z)', value: 'name-asc' },
+            { label: 'Name (Z-A)', value: 'name-desc' },
+            { label: 'Price (Low to High)', value: 'price-asc' },
+            { label: 'Price (High to Low)', value: 'price-desc' },
+            { label: 'Newest', value: 'newest' },
+          ]}
+          visibleCount={visibleCount}
+          onVisibleCountChange={setVisibleCount}
+          showCountOptions={[10, 20]}
+          totalCount={allProductsFiltered.length}
+        />
+      </Container>
+      
       <button
         className="sm:w-full md:w-2/3 m-2 p-2 bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-md text-sm transition"
         onClick={() => handleButtonAction('add')}>Add new product</button>

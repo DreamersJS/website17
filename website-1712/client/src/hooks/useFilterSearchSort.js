@@ -2,8 +2,8 @@ import { useMemo } from 'react';
 
 const getValue = (obj, path) => {
     return path.split('.').reduce((acc, part) => acc?.[part], obj);
-  };
-  
+};
+
 function getNestedValue(obj, path) {
     const parts = path.split('.');
     let current = obj;
@@ -47,6 +47,13 @@ export const useFilterSearchSort = ({
                 searchWords.some((word) =>
                     searchKeys.some((key) => {
                         const value = getNestedValue(item, key);
+                        if (
+                            value != null &&
+                            (typeof value === 'string' || typeof value === 'number')
+                        ) {
+                            return value.toString().toLowerCase().includes(word);
+                        }
+
                         if (Array.isArray(value)) {
                             return value
                                 .map((v) => v?.toString().toLowerCase())
