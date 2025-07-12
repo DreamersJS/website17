@@ -63,7 +63,16 @@ const ProductsPage = () => {
     if (searchParams.has("search")) {
       setSearchLocal(searchParams.get("search") || "");
     }
+  
+    if (searchParams.has("category")) {
+      setSelectedCategory(searchParams.get("category") || "");
+    }
+  
+    if (searchParams.has("sort")) {
+      setSortOption(searchParams.get("sort") || "");
+    }
   }, [searchParams]);
+  
 
   const filteredProducts = useFilterSearchSort({
     items: products,
@@ -80,10 +89,35 @@ const ProductsPage = () => {
     ].filter(Boolean),
   });
 
-  const handleSearchChange = async (value) => {
+  const handleSearchChange = (value) => {
     setSearchLocal(value);
-    setSearchParams({ search: value });
+    setSearchParams((prev) => {
+      const newParams = new URLSearchParams(prev);
+      newParams.set("search", value);
+      return newParams;
+    });
   };
+  
+  const handleCategoryChange = (value) => {
+    setSelectedCategory(value);
+    setSearchParams((prev) => {
+      const newParams = new URLSearchParams(prev);
+      if (value) newParams.set("category", value);
+      else newParams.delete("category");
+      return newParams;
+    });
+  };
+  
+  const handleSortChange = (value) => {
+    setSortOption(value);
+    setSearchParams((prev) => {
+      const newParams = new URLSearchParams(prev);
+      if (value) newParams.set("sort", value);
+      else newParams.delete("sort");
+      return newParams;
+    });
+  };
+  
 
   if (loading) {
     return ( <Grid container spacing={4}>
@@ -114,10 +148,10 @@ const ProductsPage = () => {
         searchTerm={searchLocal}
         onSearchChange={handleSearchChange}
         selectedCategory={selectedCategory}
-        onCategoryChange={setSelectedCategory}
+        onCategoryChange={handleCategoryChange}
         categoryOptions={['Supplements', 'Cosmetics']}
         sortOption={sortOption}
-        onSortChange={setSortOption}
+        onSortChange={handleSortChange}
         sortOptions={[
           { label: 'Name (A-Z)', value: 'name-asc' },
           { label: 'Name (Z-A)', value: 'name-desc' },
