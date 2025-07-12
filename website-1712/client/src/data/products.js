@@ -70,7 +70,7 @@ const products = [
         price: 95,
         quantity: 0,
         inStock: true,
-        photo: "...",
+        photo: "/products/f1-vanilla.webp",
         categoryName: "Supplements",
         tagNames: ["Protein", "Meal Replacement", "Weight Loss", "Vitamins", "Fiber"]
     },
@@ -80,7 +80,7 @@ const products = [
         price: 127,
         quantity: 0,
         inStock: true,
-        photo: "...",
+        photo: "/products/f1-vanilla.webp",
         categoryName: "Supplements",
         tagNames: ["Protein", "Meal Replacement", "Weight Loss", "Vitamins", "Fiber"]
     },
@@ -91,7 +91,7 @@ const products = [
         price: 41,
         quantity: 50,
         inStock: true,
-        photo: "...",
+        photo: "/products/ca.webp",
         categoryName: "Supplements",
         tagNames: ["Vitamins", "Minerals", "Calcium", "Bone Health"]
     },
@@ -101,7 +101,7 @@ const products = [
         price: 114,
         quantity: 0,
         inStock: true,
-        photo: "...",
+        photo: "/products/nightMode.webp",
         categoryName: "Supplements",
         tagNames: ["Sleep Support", "Wellness", "Vitamins"]
     },
@@ -111,7 +111,7 @@ const products = [
         price: 75,
         quantity: 0,
         inStock: true,
-        photo: "...",
+        photo: "/products/immune.webp",
         categoryName: "Supplements",
         tagNames: ["Immunity", "Vitamins", "Detox"]
     },
@@ -121,7 +121,7 @@ const products = [
         price: 96,
         quantity: 0,
         inStock: true,
-        photo: "...",
+        photo: "/products/microbioticMax.webp",
         categoryName: "Supplements",
         tagNames: ["Probiotics", "Fiber", "Gut Health"]
     },
@@ -131,7 +131,7 @@ const products = [
         price: 42,
         quantity: 0,
         inStock: true,
-        photo: "...",
+        photo: "/products/achieveBars.webp",
         categoryName: "Supplements",
         tagNames: ["Protein", "Post-Workout", "Fitness"]
     },
@@ -141,7 +141,7 @@ const products = [
         price: 54,
         quantity: 0,
         inStock: true,
-        photo: "...",
+        photo: "/products/vit-women.webp",
         categoryName: "Supplements",
         tagNames: ["Vitamins", "Minerals", "Immunity", "Wellness"]
     },
@@ -151,7 +151,7 @@ const products = [
         price: 54,
         quantity: 0,
         inStock: true,
-        photo: "...",
+        photo: "/products/vit-men.webp",
         categoryName: "Supplements",
         tagNames: ["Vitamins", "Minerals", "Immunity", "Energy Boost"]
     },
@@ -161,7 +161,7 @@ const products = [
         price: 109,
         quantity: 0,
         inStock: true,
-        photo: "...",
+        photo: "/products/pdmVegan.webp",
         categoryName: "Supplements",
         tagNames: ["Protein", "Vegan"]
     },
@@ -181,7 +181,7 @@ const products = [
         price: 114,
         quantity: 0,
         inStock: true,
-        photo: "...",
+        photo: "/products/pdm.webp",
         categoryName: "Supplements",
         tagNames: ["Protein", "Energy Boost"]
     },
@@ -191,7 +191,7 @@ const products = [
         price: 48,
         quantity: 0,
         inStock: true,
-        photo: "...",
+        photo: "/products/expressBars7.webp",
         categoryName: "Supplements",
         tagNames: ["Protein", "Meal Replacement", "Weight Loss"]
     },
@@ -208,7 +208,7 @@ const products = [
         price: 76,
         quantity: 0,
         inStock: true,
-        photo: "...",
+        photo: "/products/ppp.webp",
         categoryName: "Supplements",
         tagNames: ["Protein", "Muscle Building", "Fitness"]
     },
@@ -218,7 +218,7 @@ const products = [
         price: 81,
         quantity: 0,
         inStock: true,
-        photo: "...",
+        photo: "/products/aloe.webp",
         categoryName: "Supplements",
         tagNames: ["Detox", "Digestion", "Hydration"]
     },
@@ -228,7 +228,7 @@ const products = [
         price: 118,
         quantity: 0,
         inStock: true,
-        photo: "...",
+        photo: "/products/tea100.webp",
         categoryName: "Supplements",
         tagNames: ["Energy Boost", "Hydration", "Wellness"]
     },
@@ -238,7 +238,7 @@ const products = [
         price: 82,
         quantity: 0,
         inStock: true,
-        photo: "...",
+        photo: "/products/tea.webp",
         categoryName: "Supplements",
         tagNames: ["Energy Boost", "Hydration", "Wellness"]
     },
@@ -248,7 +248,7 @@ const products = [
         price: 76,
         quantity: 0,
         inStock: true,
-        photo: "...",
+        photo: "/products/oat.png",
         categoryName: "Supplements",
         tagNames: ["Fiber", "Digestion", "Gut Health"]
     },
@@ -258,7 +258,7 @@ const products = [
         price: 130,
         quantity: 0,
         inStock: true,
-        photo: "...",
+        photo: "/products/phyto.webp",
         categoryName: "Supplements",
         tagNames: ["Detox", "Metabolism", "Energy Boost", "Vitamins"]
     },
@@ -268,7 +268,7 @@ const products = [
         price: 62,
         quantity: 0,
         inStock: true,
-        photo: "...",
+        photo: "/products/herbalifelineMax.webp",
         categoryName: "Supplements",
         tagNames: ["Omega-3", "Heart Health", "Brain Support"]
     },
@@ -278,7 +278,7 @@ const products = [
         price: 100,
         quantity: 0,
         inStock: true,
-        photo: "...",
+        photo: "/products/beta.jpg",
         categoryName: "Supplements",
         tagNames: ["Heart Health", "Fiber", "Cholesterol Support"]
     },
@@ -288,7 +288,7 @@ const products = [
         price: 81,
         quantity: 0,
         inStock: true,
-        photo: "...",
+        photo: "/products/liftOff.webp",
         categoryName: "Supplements",
         tagNames: ["Energy Boost", "Focus", "Vitamins"]
     },
@@ -298,7 +298,7 @@ const products = [
         price: 48,
         quantity: 0,
         inStock: true,
-        photo: "...",
+        photo: "/products/CR7.webp",
         categoryName: "Supplements",
         tagNames: ["Hydration", "Fitness", "Exercise", "Energy Boost"]
     },
@@ -308,7 +308,7 @@ const products = [
         price: 58,
         quantity: 0,
         inStock: true,
-        photo: "...",
+        photo: "/products/bars14.webp",
         categoryName: "Supplements",
         tagNames: ["Protein", "Snack", "Fitness", "Muscle Building"]
     },
@@ -321,7 +321,7 @@ const products = [
         price: 124,
         quantity: 0,
         inStock: true,
-        photo: "...",
+        photo: "/products/collagen.webp",
         categoryName: "Supplements",
         tagNames: ["Protein", "Meal Replacement", "Healthy"]
     },
@@ -438,7 +438,7 @@ const products = [
         price: 28,
         quantity: 0,
         inStock: true,
-        photo: "...",
+        photo: "/products/gel.webp",
         categoryName: "Cosmetics",
         tagNames: ["Protein", "Meal Replacement", "Healthy"]
     },
