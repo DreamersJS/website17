@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Typography, Box, Grid, Button } from '@mui/material';
+import { Container, Typography, Box, Grid, Button, Skeleton } from '@mui/material';
 import ProductsCard from './ProductsCard';
 import { getAllProductsService } from '../service/service-product';
 import { useSearchParams } from 'react-router-dom';
@@ -87,6 +87,9 @@ const ProductsPage = () => {
 
   if (loading) {
     return ( <Grid container spacing={4}>
+      <Skeleton variant="rectangular" width="100%" height={80} sx={{ marginTop: '50px' }} />
+      <Skeleton variant="text" width="100%" height={80} sx={{ marginBottom: '50px' }} />  
+               
       {Array.from({ length: visibleCount }).map((_, index) => (
         <Grid item xs={12} sm={6} md={4} key={index}>
           <ProductCardSkeleton />
