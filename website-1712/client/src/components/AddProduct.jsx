@@ -112,7 +112,7 @@ const AddProduct = () => {
       console.log("Payload:", payload);
       await addProductService(payload)
       getAllProducts(); // refresh list
-
+      toggleModal();
     } catch (error) {
       console.log(error)
     }
@@ -132,6 +132,7 @@ const AddProduct = () => {
       };
       await updateProductService(id, payload);
       await getAllProducts(); // refresh
+      toggleModal()
     } catch (error) {
       console.error(error);
     }
@@ -141,6 +142,7 @@ const AddProduct = () => {
     try {
       await deleteProductService(id);
       await getAllProducts();
+      toggleModal();
     } catch (error) {
       console.error(error);
     }
