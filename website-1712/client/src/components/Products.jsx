@@ -5,6 +5,7 @@ import { getAllProductsService } from '../service/service-product';
 import { useSearchParams } from 'react-router-dom';
 import { useFilterSearchSort } from '../hooks/useFilterSearchSort';
 import SearchToolBar from './SearchToolbar';
+import ProductCardSkeleton from './ProductCardSkeleton'; 
 
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
@@ -15,6 +16,7 @@ const ProductsPage = () => {
   const DEFAULT_VISIBLE_COUNT = 10;
   const [visibleCount, setVisibleCount] = useState(DEFAULT_VISIBLE_COUNT);
   const [showScroll, setShowScroll] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -42,12 +44,16 @@ const ProductsPage = () => {
 
   const handleFetchProducts = async () => {
     try {
-      const response = await getAllProductsService();;
+      setLoading(true);
+      const response = await getAllProductsService();
       setProducts(response);
     } catch (error) {
       console.error('Error fetching products:', error);
+    } finally {
+      setLoading(false);
     }
-  }
+  };
+
 
   useEffect(() => {
     handleFetchProducts();
@@ -78,6 +84,16 @@ const ProductsPage = () => {
     setSearchLocal(value);
     setSearchParams({ search: value });
   };
+
+  if (loading) {
+    return ( <Grid container spacing={4}>
+      {Array.from({ length: visibleCount }).map((_, index) => (
+        <Grid item xs={12} sm={6} md={4} key={index}>
+          <ProductCardSkeleton />
+        </Grid>
+      ))}
+    </Grid>);
+}
 
   return (
     <Container maxWidth="lg" sx={{ marginTop: 8 }}>
