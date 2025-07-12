@@ -16,7 +16,7 @@ const ProductsCard = ({ product }) => {
             <Card
                 onClick={() => navigate(`/products/${product.id}`)}
                 sx={{
-                    height: 400, // fixed height for all cards; adjust as needed
+                    height: 400, // fixed height for all cards; 
                     display: 'flex',
                     flexDirection: 'column',
                     borderRadius: 2,
@@ -30,7 +30,8 @@ const ProductsCard = ({ product }) => {
                         alt={name + ' photo'}
                         height="200"
                         image={photo}
-                        sx={{ objectFit: 'cover' }}
+                        sx={{ objectFit: 'scale-down',  overflow: 'hidden', }} // cover or scale-down
+                        
                     />
                 ) : (
                     // Placeholder box if no image
