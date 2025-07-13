@@ -60,6 +60,10 @@ const ProductsPage = () => {
   }, []);
 
   useEffect(() => {
+    console.log({products});
+  }, [products]);
+
+  useEffect(() => {
     if (searchParams.has("search")) {
       setSearchLocal(searchParams.get("search") || "");
     }

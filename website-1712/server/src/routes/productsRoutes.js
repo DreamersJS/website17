@@ -4,11 +4,17 @@ import {
 } from '../controllers/productsController.js';
 import { verifyAdmin } from '../middleware/authorizationAdmin.js';
 import { authenticateUser } from '../middleware/authentication.js';
+// import {  } from '../../../docs';
 
 const router = express.Router();
 
 router.use(express.json());
-
+/**
+ * @desc Get all products
+ * @route GET /api/product/all
+ * @access Public
+ * @docs    See: docs/api-doc.md#get-apiproductall
+ */
 router.get('/all', getAllProducts); 
 router.get('/:id', getProductById);
 router.post('/',authenticateUser,verifyAdmin, createProduct);  
