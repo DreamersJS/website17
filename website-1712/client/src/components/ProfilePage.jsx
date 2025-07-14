@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Typography, Avatar, Divider, Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField } from '@mui/material';
 import ProfileSkeleton from './ProfileSkeleton';
-import ButtonHeader, { ButtonAction } from "./Button";
+import { ButtonAction } from "./Button";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { userState } from '../recoil/userAtom';
 import { useNavigate } from 'react-router-dom';
@@ -19,31 +19,40 @@ const ProfilePage = () => {
         if (user?.id) {
             setLoading(false);
             setFormData({ username: user.username, email: user.email, photo: user.photo });
-        }else{
+        } else {
             navigate('/login');
         }
     }, [user]);
 
-    const handleToggleModal = () => setOpen(prev=>!prev);
+    const handleToggleModal = () => setOpen(prev => !prev);
 
     const handleChange = (prop) => (e) => {
         setFormData({ ...formData, [prop]: e.target.value });
     };
 
-    const handleSave = async() => {
-        const response = await fetch(`/api/users/${user.id}/update`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            credentials: 'include',
-            body: JSON.stringify(formData)
+    const handleSave = async () => {
+        try {
+            const response = await fetch(`/api/users/${user.id}/update`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify(formData),
+            });
 
-        });
-        setUser({ ...user, ...formData });
-        handleToggleModal();
-        showFeedback('Edit profile successful!', 'success');
+            if (!response.ok) {
+                throw new Error('Failed to update profile');
+            }
+
+            const updatedUser = await response.json();
+            setUser({ ...user, ...updatedUser });
+            showFeedback('Edit profile successful!', 'success');
+            handleToggleModal();
+        } catch (err) {
+            console.error(err);
+            showFeedback('Profile update failed. Please try again.', 'error');
+        }
     };
+
 
     if (loading) {
         return <ProfileSkeleton />;
@@ -57,15 +66,15 @@ const ProfilePage = () => {
                 <Typography variant="body1" sx={{ color: 'gray', marginTop: '5px' }}>{user.email}</Typography>
 
                 <Box sx={{ marginTop: '20px', display: 'flex', gap: 2 }}>
-                    <ButtonAction onClick={handleToggleModal} content="Edit Profile"  />
-                    <ButtonAction onClick={() => { }} content="Change Password"  />
+                    <ButtonAction onClick={handleToggleModal} content="Edit Profile" />
+                    <ButtonAction onClick={() => { }} content="Change Password" />
 
                 </Box>
             </Box>
 
             <Divider sx={{ marginTop: '30px', marginBottom: '30px' }} />
 
-           {open && ( <Dialog open={open} onClose={handleToggleModal} fullWidth maxWidth="sm">
+            {open && (<Dialog open={open} onClose={handleToggleModal} fullWidth maxWidth="sm">
                 <DialogTitle>Edit Profile</DialogTitle>
                 <DialogContent>
                     <TextField fullWidth margin="dense" label="Username" value={formData?.username} onChange={handleChange('username')} />

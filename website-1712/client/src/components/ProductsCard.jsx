@@ -3,7 +3,7 @@ import { Container, Typography, Box, Card, CardContent, CardMedia, Button } from
 import { useNavigate } from 'react-router-dom';
 
 const ProductsCard = ({ product }) => {
-    const { id, name, description, price, image } = product;
+    const { id, name, description, price, photo } = product;
     const navigate = useNavigate();
     const [isExpanded, setIsExpanded] = useState(false);
 
@@ -16,7 +16,7 @@ const ProductsCard = ({ product }) => {
             <Card
                 onClick={() => navigate(`/products/${product.id}`)}
                 sx={{
-                    height: 400, // fixed height for all cards; adjust as needed
+                    height: 400, // fixed height for all cards; 
                     display: 'flex',
                     flexDirection: 'column',
                     borderRadius: 2,
@@ -24,13 +24,14 @@ const ProductsCard = ({ product }) => {
                     cursor: 'pointer',
                 }}
             >
-                {image ? (
+                {photo && photo !== "..." && photo.trim() ? (
                     <CardMedia
                         component="img"
-                        alt={name + ' image'}
+                        alt={name + ' photo'}
                         height="200"
-                        image={image}
-                        sx={{ objectFit: 'cover' }}
+                        image={photo}
+                        sx={{ objectFit: 'scale-down',  overflow: 'hidden', }} // cover or scale-down
+                        
                     />
                 ) : (
                     // Placeholder box if no image

@@ -48,14 +48,14 @@ const ProductDetailsPage = () => {
     );
   }
 
-  const { name, description, price, image, category, tags } = product;
+  const { name, description, price, photo, category, tags } = product;
 
   return (
     <Container maxWidth="md" sx={{ mt: 8 }}>
       <Card sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, boxShadow: 4, borderRadius: 3 }}>
         <CardMedia
           component="img"
-          image={image}
+          image={photo}
           alt={name}
           sx={{ width: { xs: '100%', md: 400 }, height: 'auto' }}
         />

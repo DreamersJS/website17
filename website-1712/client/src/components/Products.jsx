@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Typography, Box, Grid, Button } from '@mui/material';
+import { Container, Typography, Box, Grid, Button, Skeleton } from '@mui/material';
 import ProductsCard from './ProductsCard';
 import { getAllProductsService } from '../service/service-product';
 import { useSearchParams } from 'react-router-dom';
 import { useFilterSearchSort } from '../hooks/useFilterSearchSort';
 import SearchToolBar from './SearchToolbar';
+import ProductCardSkeleton from './ProductCardSkeleton';
 
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
@@ -15,6 +16,7 @@ const ProductsPage = () => {
   const DEFAULT_VISIBLE_COUNT = 10;
   const [visibleCount, setVisibleCount] = useState(DEFAULT_VISIBLE_COUNT);
   const [showScroll, setShowScroll] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -42,22 +44,32 @@ const ProductsPage = () => {
 
   const handleFetchProducts = async () => {
     try {
-      const response = await getAllProductsService();;
+      setLoading(true);
+      const response = await getAllProductsService();
       setProducts(response);
     } catch (error) {
       console.error('Error fetching products:', error);
+    } finally {
+      setLoading(false);
     }
-  }
+  };
+
 
   useEffect(() => {
     handleFetchProducts();
   }, []);
 
+
   useEffect(() => {
-    if (searchParams.has("search")) {
-      setSearchLocal(searchParams.get("search") || "");
-    }
+    const search = searchParams.get("search") || "";
+    const category = searchParams.get("category") || "";
+    const sort = searchParams.get("sort") || "";
+
+    if (search !== searchLocal) setSearchLocal(search);
+    if (category !== selectedCategory) setSelectedCategory(category);
+    if (sort !== sortOption) setSortOption(sort);
   }, [searchParams]);
+
 
   const filteredProducts = useFilterSearchSort({
     items: products,
@@ -74,10 +86,48 @@ const ProductsPage = () => {
     ].filter(Boolean),
   });
 
-  const handleSearchChange = async (value) => {
+  const handleSearchChange = (value) => {
     setSearchLocal(value);
-    setSearchParams({ search: value });
+    setSearchParams((prev) => {
+      const newParams = new URLSearchParams(prev);
+      newParams.set("search", value);
+      return newParams;
+    });
   };
+
+  const handleCategoryChange = (value) => {
+    setSelectedCategory(value);
+    setSearchParams((prev) => {
+      const newParams = new URLSearchParams(prev);
+      if (value) newParams.set("category", value);
+      else newParams.delete("category");
+      return newParams;
+    });
+  };
+
+  const handleSortChange = (value) => {
+    setSortOption(value);
+    setSearchParams((prev) => {
+      const newParams = new URLSearchParams(prev);
+      if (value) newParams.set("sort", value);
+      else newParams.delete("sort");
+      return newParams;
+    });
+  };
+
+
+  if (loading) {
+    return (<Grid container spacing={4}>
+      <Skeleton variant="rectangular" width="100%" height={80} sx={{ marginTop: '50px' }} />
+      <Skeleton variant="text" width="100%" height={80} sx={{ marginBottom: '50px' }} />
+
+      {Array.from({ length: visibleCount }).map((_, index) => (
+        <Grid item xs={12} sm={6} md={4} key={index}>
+          <ProductCardSkeleton />
+        </Grid>
+      ))}
+    </Grid>);
+  }
 
   return (
     <Container maxWidth="lg" sx={{ marginTop: 8 }}>
@@ -95,10 +145,10 @@ const ProductsPage = () => {
         searchTerm={searchLocal}
         onSearchChange={handleSearchChange}
         selectedCategory={selectedCategory}
-        onCategoryChange={setSelectedCategory}
+        onCategoryChange={handleCategoryChange}
         categoryOptions={['Supplements', 'Cosmetics']}
         sortOption={sortOption}
-        onSortChange={setSortOption}
+        onSortChange={handleSortChange}
         sortOptions={[
           { label: 'Name (A-Z)', value: 'name-asc' },
           { label: 'Name (Z-A)', value: 'name-desc' },
