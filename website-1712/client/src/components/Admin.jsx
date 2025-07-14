@@ -19,6 +19,7 @@ import useScreenSize from "../hooks/useScreenSize";
 import ResponsiveComponent from "./hoc/ResponsiveComponent";
 import { useFilterSearchSort } from "../hooks/useFilterSearchSort";
 import SearchToolBar from "./SearchToolbar";
+import { useNavigate } from "react-router-dom";
 
 const Admin = () => {
   const user = useRecoilValue(userState);
@@ -32,6 +33,7 @@ const Admin = () => {
   const [sortOption, setSortOption] = useState('');
   const DEFAULT_VISIBLE_COUNT = 10;
   const [visibleCount, setVisibleCount] = useState(DEFAULT_VISIBLE_COUNT);
+  const navigate = useNavigate();
 
   const filteredUsers = useFilterSearchSort({
     items: users,

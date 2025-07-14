@@ -5,7 +5,7 @@ import { getAllProductsService } from '../service/service-product';
 import { useSearchParams } from 'react-router-dom';
 import { useFilterSearchSort } from '../hooks/useFilterSearchSort';
 import SearchToolBar from './SearchToolbar';
-import ProductCardSkeleton from './ProductCardSkeleton'; 
+import ProductCardSkeleton from './ProductCardSkeleton';
 
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
@@ -59,24 +59,17 @@ const ProductsPage = () => {
     handleFetchProducts();
   }, []);
 
-  useEffect(() => {
-    console.log({products});
-  }, [products]);
 
   useEffect(() => {
-    if (searchParams.has("search")) {
-      setSearchLocal(searchParams.get("search") || "");
-    }
-  
-    if (searchParams.has("category")) {
-      setSelectedCategory(searchParams.get("category") || "");
-    }
-  
-    if (searchParams.has("sort")) {
-      setSortOption(searchParams.get("sort") || "");
-    }
+    const search = searchParams.get("search") || "";
+    const category = searchParams.get("category") || "";
+    const sort = searchParams.get("sort") || "";
+
+    if (search !== searchLocal) setSearchLocal(search);
+    if (category !== selectedCategory) setSelectedCategory(category);
+    if (sort !== sortOption) setSortOption(sort);
   }, [searchParams]);
-  
+
 
   const filteredProducts = useFilterSearchSort({
     items: products,
@@ -101,7 +94,7 @@ const ProductsPage = () => {
       return newParams;
     });
   };
-  
+
   const handleCategoryChange = (value) => {
     setSelectedCategory(value);
     setSearchParams((prev) => {
@@ -111,7 +104,7 @@ const ProductsPage = () => {
       return newParams;
     });
   };
-  
+
   const handleSortChange = (value) => {
     setSortOption(value);
     setSearchParams((prev) => {
@@ -121,20 +114,20 @@ const ProductsPage = () => {
       return newParams;
     });
   };
-  
+
 
   if (loading) {
-    return ( <Grid container spacing={4}>
+    return (<Grid container spacing={4}>
       <Skeleton variant="rectangular" width="100%" height={80} sx={{ marginTop: '50px' }} />
-      <Skeleton variant="text" width="100%" height={80} sx={{ marginBottom: '50px' }} />  
-               
+      <Skeleton variant="text" width="100%" height={80} sx={{ marginBottom: '50px' }} />
+
       {Array.from({ length: visibleCount }).map((_, index) => (
         <Grid item xs={12} sm={6} md={4} key={index}>
           <ProductCardSkeleton />
         </Grid>
       ))}
     </Grid>);
-}
+  }
 
   return (
     <Container maxWidth="lg" sx={{ marginTop: 8 }}>

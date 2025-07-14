@@ -123,13 +123,13 @@ Create a new product with category and tags.
 ```json
 {
   "name": "Shake",
-  "description": "Supports muscle recovery",
-  "photo": "...",
+  "description": "Supports muscle recovery",//optional
+  "photo": "...",//optional
   "price": 95,
   "quantity": 0,
   "inStock": true,
-  "categoryName": "Supplements",
-  "tagNames": ["Recovery", "Muscle"]
+  "categoryName": "Supplements",//optional
+  "tagNames": ["Recovery", "Muscle"]//optional
 }
 ```
 
@@ -181,7 +181,6 @@ curl -X POST http://localhost:3000/api/product \
     "categoryName": "Supplements",
     "tagNames": ["Recovery", "Muscle"]
   }'
-
 ```
 
 ## PUT /api/product/:id
