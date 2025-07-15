@@ -38,7 +38,7 @@ const Contact = () => {
         }
     }, [name, email, phone, message]);
 
-    
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -76,14 +76,16 @@ const Contact = () => {
                 <Typography variant="h4" component="h1" fontWeight="bold">
                     Contact
                 </Typography>
-                <Typography variant="body1" color="textSecondary" sx={{ marginBottom: 2 }}>
+                <Typography variant="body1" color="textSecondary" >
                     To contact us please use the following options:
-
-                    Name Name – Independent Herbalife Member
-                    Phone: +359111111111
-                    Email: @gmail.com
-                    Address: Sofia, Bulgaria
-
+                </Typography>
+                <Typography variant="body1" color="textSecondary" align="left" sx={{ marginBottom: 2 }}>
+                    <br />Name Name – Independent Herbalife Member
+                    <br />Phone: +359111111111
+                    <br />Email: @gmail.com
+                    <br />Address: Sofia, Bulgaria
+                </Typography>
+                <Typography variant="body1" color="textSecondary" sx={{ marginBottom: 2 }}>
                     If you have any questions or need assistance, please fill out the form below.
                 </Typography>
             </Box>
