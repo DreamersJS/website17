@@ -17,6 +17,8 @@ import PrivacyPolicy from './components/quick links/PrivacyPolicy';
 import TermsOfUse from './components/quick links/TermsOfUse';
 import Auth from './components/auth/Auth';
 import ProductDetailsPage from './components/ProductDetailsPage';
+import Contact from './components/quick links/Contacts';
+import ConfirmEmail from './components/ConfirmEmail';
 
 // protected components
 const CoachesPage = lazy(() => import('./components/CoachesPage'));
@@ -69,6 +71,8 @@ function App() {
                       <Route path="/about" element={<Layout main={<About />} />} />
                       <Route path="/privacy" element={<Layout main={<PrivacyPolicy />} />} />
                       <Route path="/terms" element={<Layout main={<TermsOfUse />} />} />
+                      <Route path="/contact" element={<Layout main={<Contact />} />} />
+                      <Route path="/confirm" element={<ConfirmEmail />} />
 
                       <Route path="/admin" element={<Layout main={<Auth><Admin /></Auth>} />} />
                       <Route path="/manage-products" element={<Auth><Layout main={<AddProduct />} /></Auth>} />
