@@ -36,6 +36,18 @@ const ConfirmEmail = () => {
         confirmEmail();
     }, [searchParams]);
 
+    useEffect(() => {
+        if (success) {
+            const stored = localStorage.getItem('unsentMessage');
+            if (stored) {
+                const data = JSON.parse(stored);
+                localStorage.removeItem('unsentMessage');
+                const query = new URLSearchParams(data).toString();
+                window.location.href = `/contact?${query}`;
+            }
+        }
+    }, [success]);
+    
     return (
         <Container maxWidth="sm" sx={{ marginTop: 8, textAlign: 'center' }}>
             {loading ? (

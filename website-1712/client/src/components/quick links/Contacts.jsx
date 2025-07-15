@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Typography, TextField, Button, CircularProgress, Container } from '@mui/material';
 import { useFeedback } from '../hoc/FeedbackContext.jsx';
 import { checkDomain, emailSendConfirmationEmail, emailSendMsg, checkEmailConfirmed } from '../../service/service-email.js';
@@ -11,19 +11,48 @@ const Contact = () => {
     const [loading, setLoading] = useState(false);
     const { showFeedback } = useFeedback();
 
+
+    // Prefill form from query params
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const name = params.get('name');
+        const email = params.get('email');
+        const phone = params.get('phone');
+        const message = params.get('message');
+        if (name) setName(name);
+        if (email) setEmail(email);
+        if (phone) setPhone(phone);
+        if (message) setMessage(message);
+    }, []);
+
+    // Auto-resubmit once fields are filled and user returns after confirming
+    useEffect(() => {
+        if (
+            name && email && phone && message &&
+            !sessionStorage.getItem('autoSubmitted')
+        ) {
+            sessionStorage.setItem('autoSubmitted', 'true');
+            setTimeout(() => {
+                handleSubmit(new Event('submit'));
+            }, 2000); // Wait a sec for UI to settle
+        }
+    }, [name, email, phone, message]);
+
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         try {
             const verifyDomain = await checkDomain(email)
-            const verifyEmail = await emailSendConfirmationEmail(email)
-            if (verifyEmail.ok) showFeedback(`Confirmation email sent. Please confirm before messaging.`, 'info');
-            // STOP here - let user confirm, then enable form again or redirect them.
+            // const verifyEmail = await emailSendConfirmationEmail(email)
+            // if (verifyEmail.ok) showFeedback(`Confirmation email sent. Please confirm before messaging.`, 'info');
+            // STOP here - let user confirm.
             // const isConfirmed = await checkEmailConfirmed(email);
             // if (!isConfirmed) {
             //     showFeedback("Email not confirmed yet. Please check your inbox.", 'error');
             //     return;
             // }
+            localStorage.setItem('unsentMessage', JSON.stringify({ name, email, phone, message }));
             const emailConfirmedResp = await checkEmailConfirmed(email);
             const isConfirmed = emailConfirmedResp?.confirmed;
 
