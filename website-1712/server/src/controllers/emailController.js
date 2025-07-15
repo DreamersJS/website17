@@ -72,8 +72,8 @@ export const sendConfirmationEmailController = async (req, res) => {
         const storedToken = await redisClient.get(`confirm_tokens:${token}`);
         console.log('Token stored in Redis:', storedToken);
 
-        const confirmationLink = `${process.env.APP_URL}/api/confirmEmail?token=${token}&email=${email}`;
-        // const confirmationLink = `${process.env.FRONTEND_URL}/confirm?token=${token}&email=${email}`;
+        // const confirmationLink = `${process.env.APP_URL}/api/confirmEmail?token=${token}&email=${email}`;
+        const confirmationLink = `${process.env.FRONTEND_URL}/confirm?token=${token}&email=${email}`;
         console.log(`Confirmation link: ${confirmationLink}`);
 
         const subject = 'Confirm your email address';
@@ -88,6 +88,58 @@ export const sendConfirmationEmailController = async (req, res) => {
         return res.status(500).json({ message: 'Failed to send confirmation email.' });
     }
 };
+
+export const confirmEmail = async (req, res) => {
+    await connectRedis();
+
+    const { token, email } = req.query;
+
+    if (!token || !email) {
+        return res.status(400).json({ message: 'Missing token or email' });
+    }
+
+    try {
+        const storedStrToken = await redisClient.get(`confirm_tokens:${token}`);
+        if (!storedStrToken) {
+            return res.status(400).json({ message: 'Invalid or expired token' });
+        }
+
+        const { expiresAt } = JSON.parse(storedStrToken);
+        if (Date.now() > expiresAt) {
+            return res.status(400).json({ message: 'Token expired' });
+        }
+
+        // Confirm email
+        await redisClient.set(`confirmed:${email}`, 'true', { EX: 86400 });
+        await redisClient.del(`confirm_tokens:${token}`);
+
+        return res.status(200).json({
+            message: 'Email confirmed successfully. You may now send your message.',
+            confirmed: true,
+            email
+        });
+
+    } catch (err) {
+        console.error('Confirmation error:', err);
+        return res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
+
+export const isConfirmed = async (req, res) => {
+    await connectRedis();
+
+    const { email } = req.query;
+    if (!email) {
+        return res.status(400).json({ message: 'Missing email' });
+    }
+    try {
+        const isConfirmed = await redisClient.get(`confirmed:${email}`);
+        return res.status(200).json({ confirmed: Boolean(isConfirmed) });
+    } catch (error) {
+        console.error('isConfirmed error:', error);
+        return res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
 
 export const sendMsgController = async (req, res) => {
     try {
@@ -136,56 +188,4 @@ export async function sendEmail({ to, subject = 'Email Confirmation', text }) {
 
     console.log('Email sent. Preview URL:', nodemailer.getTestMessageUrl(info));
     return info;
-}
-
-export const confirmEmail = async (req, res) => {
-    await connectRedis();
-
-    const { token, email } = req.query;
-
-    if (!token || !email) {
-        return res.status(400).json({ message: 'Missing token or email' });
-    }
-
-    try {
-        const storedStrToken = await redisClient.get(`confirm_tokens:${token}`);
-        if (!storedStrToken) {
-            return res.status(400).json({ message: 'Invalid or expired token' });
-        }
-
-        const { expiresAt } = JSON.parse(storedStrToken);
-        if (Date.now() > expiresAt) {
-            return res.status(400).json({ message: 'Token expired' });
-        }
-
-        // Confirm email
-        await redisClient.set(`confirmed:${email}`, 'true', { EX: 86400 });
-        await redisClient.del(`confirm_tokens:${token}`);
-
-        return res.status(200).json({
-            message: 'Email confirmed successfully. You may now send your message.',
-            confirmed: true,
-            email
-        });
-        
-    } catch (err) {
-        console.error('Confirmation error:', err);
-        return res.status(500).json({ message: 'Internal Server Error' });
-    }
-};
-
-export const isConfirmed = async(req,res)=>{
-    await connectRedis();
-
-    const {  email } = req.query;
-    if (!email) {
-        return res.status(400).json({ message: 'Missing email' });
-    }
-    try {
-        const isConfirmed = await redisClient.get(`confirmed:${email}`);
-        return res.status(200).json({ confirmed: Boolean(isConfirmed) });
-    } catch (error) {
-        console.error('isConfirmed error:', err);
-        return res.status(500).json({ message: 'Internal Server Error' });
-    }
 }
