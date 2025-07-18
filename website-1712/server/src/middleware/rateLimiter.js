@@ -1,3 +1,5 @@
+import redisClient from "../config/redisClient.js";
+
 export async function rateLimiter(ip) {
     const redisKey = `rate_limit:${ip}`;
     const maxRequests = 10;
