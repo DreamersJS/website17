@@ -104,7 +104,14 @@ export const confirmEmail = async (req, res) => {
             return res.status(400).json({ message: 'Invalid or expired token' });
         }
 
-        const { expiresAt } = JSON.parse(storedStrToken);
+        const { email: storedEmail, expiresAt } = JSON.parse(storedStrToken);
+
+        // Check if token is tied to this email
+        if (email !== storedEmail) {
+            return res.status(400).json({ message: 'Email does not match token' });
+        }
+
+        // Check if token is expired
         if (Date.now() > expiresAt) {
             return res.status(400).json({ message: 'Token expired' });
         }

@@ -10,7 +10,22 @@ const Contact = () => {
     const [message, setMessage] = useState('');
     const [loading, setLoading] = useState(false);
     const { showFeedback } = useFeedback();
+    const [isConfirmed, setIsConfirmed] = useState(false);
 
+    useEffect(() => {
+        if (!email) return;
+      
+        const verifyConfirmed = async () => {
+          try {
+            const resp = await checkEmailConfirmed(email);
+            setIsConfirmed(resp?.confirmed || false);
+          } catch {
+            setIsConfirmed(false);
+          }
+        };
+      
+        verifyConfirmed();
+      }, [email]);      
 
     // Prefill form from query params
     useEffect(() => {
@@ -28,6 +43,7 @@ const Contact = () => {
     // Auto-resubmit once fields are filled and user returns after confirming
     useEffect(() => {
         if (
+            isConfirmed &&
             name && email && phone && message &&
             !sessionStorage.getItem('autoSubmitted')
         ) {
@@ -36,7 +52,7 @@ const Contact = () => {
                 handleSubmit(new Event('submit'));
             }, 2000); // Wait a sec for UI to settle
         }
-    }, [name, email, phone, message]);
+    }, [isConfirmed, name, email, phone, message]);
 
 
     const handleSubmit = async (e) => {
