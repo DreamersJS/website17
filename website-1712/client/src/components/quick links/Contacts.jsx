@@ -60,6 +60,11 @@ const Contact = () => {
         setLoading(true);
         try {
             const verifyDomain = await checkDomain(email)
+            if (!verifyDomain.valid) {
+                showFeedback(`Invalid domain: ${verifyDomain.reason}`, 'error');
+                setLoading(false);
+                return;
+            }
             // const verifyEmail = await emailSendConfirmationEmail(email)
             // if (verifyEmail.ok) showFeedback(`Confirmation email sent. Please confirm before messaging.`, 'info');
             // STOP here - let user confirm.
