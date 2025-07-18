@@ -1,31 +1,26 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 export const useAsync = (asyncFunction, deps = []) => {
   const [loading, setLoading] = useState(true);
   const [value, setValue] = useState(undefined);
   const [error, setError] = useState(undefined);
 
-  useEffect(() => {
-    let isMounted = true;
+  const execute = async () => {
     setLoading(true);
-    setError(undefined);
-    setValue(undefined);
+    try {
+      const data = await asyncFunction();
+      setValue(data);
+      setError(null);
+    } catch (err) {
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    asyncFunction()
-      .then((result) => {
-        if (isMounted) setValue(result);
-      })
-      .catch((err) => {
-        if (isMounted) setError(err);
-      })
-      .finally(() => {
-        if (isMounted) setLoading(false);
-      });
-
-    return () => {
-      isMounted = false;
-    };
+  useEffect(() => {
+    execute();
   }, deps);
 
-  return { loading, value, error };
+  return { loading, value, error, refetch: execute };
 };

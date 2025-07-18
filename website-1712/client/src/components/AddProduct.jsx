@@ -5,10 +5,11 @@ import { Box, Grid, InputAdornment, TextField, Container } from "@mui/material";
 import { Search } from "@mui/icons-material";
 import SearchToolBar from "./SearchToolbar";
 import { useFilterSearchSort } from "../hooks/useFilterSearchSort";
+import { useAsync } from "../hooks/useAsync";
 
 // admin access only 
 const AddProduct = () => {
-  const [allProducts, setAllProducts] = useState([]);
+  // const [allProducts, setAllProducts] = useState([]);
   // const [allProductsFiltered, setAllProductsFiltered] = useState([]);
   const [product, setProduct] = useState({
     id: '',
@@ -32,6 +33,15 @@ const AddProduct = () => {
   const DEFAULT_VISIBLE_COUNT = 10;
   const [visibleCount, setVisibleCount] = useState(DEFAULT_VISIBLE_COUNT);
 
+  const {
+    loading,
+    value: allProducts = [],
+    error,
+    refetch: getAllProducts, // renamed for semantic clarity
+  } = useAsync(getAllProductsService, []);
+  
+  
+
   const allProductsFiltered = useFilterSearchSort({
     items: allProducts,
     searchQuery: searchLocal,
@@ -47,20 +57,19 @@ const AddProduct = () => {
     ].filter(Boolean),
   });
 
+  // useEffect(() => {
+  //   getAllProducts()
+  // }, [])
 
-  useEffect(() => {
-    getAllProducts()
-  }, [])
-
-  const getAllProducts = async () => {
-    try {
-      const data = await getAllProductsService();
-      setAllProducts(data);
-      // setAllProductsFiltered(data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  // const getAllProducts = async () => {
+  //   try {
+  //     const data = await getAllProductsService();
+  //     setAllProducts(data);
+  //     // setAllProductsFiltered(data);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   const validateProduct = (product) => {
     const requiredFields = {
