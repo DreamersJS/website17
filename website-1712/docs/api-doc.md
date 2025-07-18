@@ -9,6 +9,10 @@
   - [POST api/product](#post-apiproduct)
   - [PUT /api/product/:id](#put-apiproductid)
   - [DELETE /api/product/:id](#delete-apiproductid)
+  - [POST api/email/checkDomain](#post-apiemailcheckdomain)
+  - [POST api/email/sendConfirmationEmail](#post-apiemailsendconfirmationemail)
+  - [GET api/email/confirmEmail](#get-apiemailconfirmemail)
+  - [GET api/email/isConfirmed](#get-apiemailisconfirmed)
 
 ---
 
@@ -21,10 +25,9 @@ Fetch all products, including category and tags.
 **Access:** Public
 
 
-
 **Response:**
 
-- ```json
+```json
 {
   "results": [
     {
@@ -40,11 +43,11 @@ Fetch all products, including category and tags.
       "quantity": 0,
       "tags": [
         { 
-            productId: 32, 
-            tagId: 3,
-            tag: {
-                id: 3,
-​​                name: "Protein"
+            "productId": 32, 
+            "tagId": 3,
+            "tag": {
+                "id": 3,
+​​                "name": "Protein"
             }
          },
           {
@@ -77,10 +80,9 @@ Fetch a single product by its ID.
 **Access:** Public
 
 
-
 **Response:**
 
-- ```json
+```json
 {
       "id": "32",
       "name": "Protein Bar",
@@ -94,11 +96,11 @@ Fetch a single product by its ID.
       "quantity": 0,
       "tags": [
         { 
-            productId: 32, 
-            tagId: 3,
-            tag: {
-                id: 3,
-​​                name: "Protein"
+            "productId": 32, 
+            "tagId": 3,
+            "tag": {
+                "id": 3,
+​​                "name": "Protein"
             }
          }
       ],
@@ -135,7 +137,7 @@ Create a new product with category and tags.
 
 **Response:**
 
-- ```json
+ ```json
 {
   "results": [
     {
@@ -151,11 +153,11 @@ Create a new product with category and tags.
       "quantity": 0,
       "tags": [
         { 
-            productId: 32, 
-            tagId: 3,
-            tag: {
-                id: 3,
-​​                name: "Protein"
+            "productId": 32, 
+            "tagId": 3,
+            "tag": {
+                "id": 3,
+​​                "name": "Protein"
             }
          }
       ],
@@ -207,7 +209,7 @@ Update an existing product and its tag list.
 
 **Response:**
 
-- ```json
+ ```json
 {
   "results": [
     {
@@ -223,11 +225,11 @@ Update an existing product and its tag list.
       "quantity": 0,
       "tags": [
         { 
-            productId: 32, 
-            tagId: 3,
-            tag: {
-                id: 3,
-​​                name: "Protein"
+            "productId": 32, 
+            "tagId": 3,
+            "tag": {
+                "id": 3,
+​​                "name": "Protein"
             }
          }
       ],
@@ -289,3 +291,109 @@ curl -X DELETE http://localhost:3000/api/product/7 \
   -H "Authorization: Bearer <your_token>"
 ```
 
+---
+
+## POST api/email/checkDomain
+
+**Description:**  
+Checks if the provided email domain is valid and known (based on MX DNS records).
+
+**Access:** Public
+
+
+**Request Body:**
+```json
+{
+  "email": "user@gmail.com"
+}
+```
+
+**Response:**
+```json
+{
+  "valid": true
+}
+```
+or
+```json
+{
+  "valid": false,
+  "reason": "Unknown or uncommon domain"
+}
+```
+
+curl
+```bash
+curl -X POST http://localhost:3000/api/checkDomain \
+  -H "Content-Type: application/json" \
+  -d '{
+  "email": "user@gmail.com"
+}'
+```
+
+
+## POST api/email/sendConfirmationEmail
+
+**Description:**  
+Sends a confirmation email to the user's email with a link containing token.
+
+**Access:** Public
+
+
+**Request Body:**
+```json
+{
+  "email": "user@gmail.com"
+}
+```
+
+**Response:**
+```json
+{
+  "message": "Confirmation email sent!"
+}
+```
+
+curl
+```bash
+curl -X POST http://localhost:3000/api/sendConfirmationEmail \
+  -H "Content-Type: application/json" \
+  -d '{
+  "email": "user@gmail.com"
+}'
+```
+
+## GET api/email/confirmEmail
+
+**Description:**  
+Upon user click in confirmation email:
+User is redirected to FE - ConfirmEmail.jsx
+Then user is redirected to `/api/email/confirmEmail?token=${token}&email=${email}`
+Where the controller:
+Confirms the user’s email by req.query(Sending small bits of data in the URL) 
+Check if token is tied to this email
+Confirm email with redisClient.set(`confirmed:${email}`, 'true', { EX: 86400 });
+
+**Access:** Public
+
+**Query Parameters:**
+- token: string
+- email: string
+
+**Response:**
+```json
+{
+  "message": "Email confirmed successfully. You may now send your message.",
+  "confirmed": true,
+  "email": "user@example.com"
+}
+```
+
+**curl:**
+```bash
+curl -X GET "http://localhost:3000/api/confirmEmail?token=abc123def456&email=user@example.com"
+```
+
+## GET api/email/isConfirmed
+
+**Description:**  
