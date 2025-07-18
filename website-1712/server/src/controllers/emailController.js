@@ -19,19 +19,16 @@ export async function checkDomainMxRecords(req, res) {
     const { email } = req.body;
 
     if (typeof email !== 'string' || !email.includes('@')) {
-        console.log('Invalid email format');
         return res.status(400).json({ valid: false, reason: 'Invalid email format' });
     }
 
     const domain = email.split('@')[1];
 
     if (!domain) {
-        console.log('Email does not contain domain');
         return res.status(400).json({ valid: false, reason: 'Missing domain' });
     }
 
     if (!knownDomains.has(domain)) {
-        console.log(`Unknown or uncommon domain: ${domain}`);
         return res.status(200).json({ valid: false, reason: 'Unknown or uncommon domain' });
     }
 
@@ -39,27 +36,29 @@ export async function checkDomainMxRecords(req, res) {
         const addresses = await dns.promises.resolveMx(domain);
 
         if (addresses.length > 0) {
-            console.log('Valid domain with MX records');
             return res.status(200).json({ valid: true });
         } else {
-            console.log('No MX records found');
             return res.status(200).json({ valid: false, reason: 'No MX records' });
         }
     } catch (error) {
-        console.log(`DNS lookup failed for ${domain}: ${error.message}`);
-        return res.status(500).json({ valid: false, reason: 'DNS lookup failed' });
+        return res.status(500).json({ valid: false, reason: `DNS lookup failed for ${domain}: ${error.message}` });
     }
 }
 
 export const sendConfirmationEmailController = async (req, res) => {
     try {
+        const ip = req.ip || req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+
+        const isAllowed = await rateLimiter(ip);
+        if (!isAllowed) {
+            return res.status(429).json({ message: 'Too many requests. Please try again later.' });
+        }
+
         const { email } = req.body;
-        console.log(`Received email for confirmation: ${email}`);
 
         await connectRedis();
 
         const token = generateToken();
-        console.log(`Generated token for email confirmation: ${token}`);
 
         const expiresAt = Date.now() + 3600 * 1000;
 
@@ -74,7 +73,6 @@ export const sendConfirmationEmailController = async (req, res) => {
 
         // const confirmationLink = `${process.env.APP_URL}/api/confirmEmail?token=${token}&email=${email}`;
         const confirmationLink = `${process.env.FRONTEND_URL}/confirm?token=${token}&email=${email}`;
-        console.log(`Confirmation link: ${confirmationLink}`);
 
         const subject = 'Confirm your email address';
         const text = `Please confirm your email by clicking the link: ${confirmationLink}`;

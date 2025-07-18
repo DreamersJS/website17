@@ -6,9 +6,10 @@ import { useSearchParams } from 'react-router-dom';
 import { useFilterSearchSort } from '../hooks/useFilterSearchSort';
 import SearchToolBar from './SearchToolbar';
 import ProductCardSkeleton from './ProductCardSkeleton';
+import { useAsync } from '../hooks/useAsync'
 
 const ProductsPage = () => {
-  const [products, setProducts] = useState([]);
+  // const [products, setProducts] = useState([]);
   const [searchLocal, setSearchLocal] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [sortOption, setSortOption] = useState('');
@@ -16,7 +17,21 @@ const ProductsPage = () => {
   const DEFAULT_VISIBLE_COUNT = 10;
   const [visibleCount, setVisibleCount] = useState(DEFAULT_VISIBLE_COUNT);
   const [showScroll, setShowScroll] = useState(false);
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
+
+  const {
+    loading,
+    value: products = [],
+    error,
+  } = useAsync(() => getAllProductsService(), []);
+
+  if (error) {
+    return (
+      <Box sx={{ textAlign: 'center', mt: 10 }}>
+        <Typography variant="h6" color="error">Error loading products.</Typography>
+      </Box>
+    );
+  }
 
   useEffect(() => {
     const handleScroll = () => {
@@ -42,22 +57,22 @@ const ProductsPage = () => {
     setVisibleCount((prev) => prev + visibleCount);
   };
 
-  const handleFetchProducts = async () => {
-    try {
-      setLoading(true);
-      const response = await getAllProductsService();
-      setProducts(response);
-    } catch (error) {
-      console.error('Error fetching products:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const handleFetchProducts = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const response = await getAllProductsService();
+  //     setProducts(response);
+  //   } catch (error) {
+  //     console.error('Error fetching products:', error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
 
-  useEffect(() => {
-    handleFetchProducts();
-  }, []);
+  // useEffect(() => {
+  //   handleFetchProducts();
+  // }, []);
 
 
   useEffect(() => {

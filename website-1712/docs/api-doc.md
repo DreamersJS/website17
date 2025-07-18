@@ -13,6 +13,7 @@
   - [POST api/email/sendConfirmationEmail](#post-apiemailsendconfirmationemail)
   - [GET api/email/confirmEmail](#get-apiemailconfirmemail)
   - [GET api/email/isConfirmed](#get-apiemailisconfirmed)
+  - [POST api/email/sendMsg](#post-apiemailsendmsg)
 
 ---
 
@@ -23,7 +24,6 @@
 Fetch all products, including category and tags.
 
 **Access:** Public
-
 
 **Response:**
 
@@ -73,12 +73,10 @@ http://localhost:3000/api/product/all
 
 ## GET api/product/:id
 
-
 **Description:**  
 Fetch a single product by its ID.
 
 **Access:** Public
-
 
 **Response:**
 
@@ -114,7 +112,6 @@ curl http://localhost:3000/api/product/1
 ```
 
 ## POST api/product
-
 
 **Description:**  
 Create a new product with category and tags.
@@ -186,7 +183,6 @@ curl -X POST http://localhost:3000/api/product \
 ```
 
 ## PUT /api/product/:id
-
 
 **Description:**  
 Update an existing product and its tag list.
@@ -265,7 +261,6 @@ Delete a product and unlink tags.
 
 **Access:** Admin
 
-
 **Response:**
 ```
 {
@@ -300,7 +295,6 @@ Checks if the provided email domain is valid and known (based on MX DNS records)
 
 **Access:** Public
 
-
 **Request Body:**
 ```json
 {
@@ -324,7 +318,7 @@ or
 
 curl
 ```bash
-curl -X POST http://localhost:3000/api/checkDomain \
+curl -X POST http://localhost:3000/api/email/checkDomain \
   -H "Content-Type: application/json" \
   -d '{
   "email": "user@gmail.com"
@@ -338,7 +332,6 @@ curl -X POST http://localhost:3000/api/checkDomain \
 Sends a confirmation email to the user's email with a link containing token.
 
 **Access:** Public
-
 
 **Request Body:**
 ```json
@@ -356,7 +349,7 @@ Sends a confirmation email to the user's email with a link containing token.
 
 curl
 ```bash
-curl -X POST http://localhost:3000/api/sendConfirmationEmail \
+curl -X POST http://localhost:3000/api/email/sendConfirmationEmail \
   -H "Content-Type: application/json" \
   -d '{
   "email": "user@gmail.com"
@@ -391,9 +384,66 @@ Confirm email with redisClient.set(`confirmed:${email}`, 'true', { EX: 86400 });
 
 **curl:**
 ```bash
-curl -X GET "http://localhost:3000/api/confirmEmail?token=abc123def456&email=user@example.com"
+curl -X GET "http://localhost:3000/api/email/confirmEmail?token=abc123def456&email=user@example.com"
 ```
 
 ## GET api/email/isConfirmed
 
 **Description:**  
+Confirm if email(extracted by req.query) is verified in Redis and sends boolean
+
+**Access:** Public
+
+**Query Parameters:**
+- email: string
+
+**Response:**
+```json
+{
+"confirmed": "true"
+}
+```
+
+**curl:**
+```bash
+curl -X GET "http://localhost:3000/api/email/isConfirmed?email=user@example.com"
+```
+
+## POST api/email/sendMsg
+
+**Description:** 
+Send message from the contact form if email is verified
+
+**Access:** Public
+
+**Request Body:**
+```json
+{
+  "name": "Name",
+  "email": "user@gmail.com",
+  "phone": "+1234567890",
+  "message": "I would like to get in touch."
+}
+```
+
+**Response:**
+```json
+{
+ "message": "Message sent successfully!"
+}
+```
+
+**curl**
+```bash
+curl -X POST http://localhost:3000/api/email/sendMsg \
+  -H "Content-Type: application/json" \
+  -d '{
+  "name": "Name",
+  "email": "user@gmail.com",
+  "phone": "+1234567890",
+  "message": "Hey!",
+}'
+```
+
+---
+
