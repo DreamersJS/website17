@@ -10,7 +10,7 @@ import {
   logoutUser,
   createDiary,
 } from '../controllers/userController.js';
-import { verifyAdmin, authorizeRole } from '../middleware/authorizationAdmin.js';
+import { authorizeRole } from '../middleware/authorizationAdmin.js';
 import { authenticateUser } from '../middleware/authentication.js';
 
 const router = express.Router();

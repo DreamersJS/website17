@@ -12,7 +12,6 @@ const JWT_SECRET = process.env.JWT_SECRET_KEY
  */
 export const createUser = async (req, res) => {
   const { username, email, password, coachId } = req.body;
-  console.log("coachId being passed:", coachId);
 
   try {
     if (!username || !email || !password) {
@@ -140,7 +139,6 @@ export const fetchUser = async (req, res) => {
   }
 
   try {
-    debugger;
     const user = await prisma.user.findFirst({
       where: {
         id: id,  // Fetch by ID

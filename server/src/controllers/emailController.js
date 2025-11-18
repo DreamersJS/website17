@@ -1,6 +1,6 @@
 import redisClient, { connectRedis } from '../config/redisClient.js';
 import { rateLimiter } from '../middleware/rateLimiter.js';
-import { generateToken, hashToken } from '../middleware/tokenService.js';
+import { generateToken} from '../middleware/tokenService.js';
 import dns from 'dns';
 import nodemailer from 'nodemailer';
 
