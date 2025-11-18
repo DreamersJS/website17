@@ -1,9 +1,9 @@
 import nodemailer from 'nodemailer';
 
 async function createEtherealAccount() {
-    const testAccount = await nodemailer.createTestAccount();
-    console.log('Ethereal account created:', testAccount);
-    return testAccount;
+  const testAccount = await nodemailer.createTestAccount();
+  console.log('Ethereal account created:', testAccount);
+  return testAccount;
 }
 
 createEtherealAccount();

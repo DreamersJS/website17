@@ -1,14 +1,17 @@
 {
-    "name": "website-1712-root",
-    "private": true,
-    "version": "0.0.0",
-    "type": "module",
-    "scripts": {
-        "dev": "concurrently \"npm run dev --prefix client\" \"npm run dev --prefix server\"",
-        "build": "npm run build --prefix client",
-        "start": "npm run start --prefix server"
-    },
-    "devDependencies": {
-        "concurrently": "^9.1.0"
-    }
+  "name": "website-1712-root",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix client\" \"npm run dev --prefix server\"",
+    "build": "npm run build --prefix client",
+    "start": "npm run start --prefix server",
+    "format": "prettier --write \"**/*.{js,ts,json,css,md}\" --ignore-path .gitignore"
+  },
+  "devDependencies": {
+    "@types/prettier": "^3.0.0",
+    "concurrently": "^9.1.0",
+    "prettier": "^3.6.2"
+  }
 }

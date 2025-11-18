@@ -1,7 +1,6 @@
-import prisma from '../config/prisma.js'
+import prisma from '../config/prisma.js';
 
 export const searchProducts = async (req, res) => {
-
   const query = req.query.q?.trim().toLowerCase();
 
   if (!query) {
@@ -19,23 +18,23 @@ export const searchProducts = async (req, res) => {
               some: {
                 tag: {
                   name: { contains: query, mode: 'insensitive' },
-                }
-              }
-            }
+                },
+              },
+            },
           },
           {
             category: {
-              name: { contains: query, mode: 'insensitive' }
-            }
-          }
-        ]
+              name: { contains: query, mode: 'insensitive' },
+            },
+          },
+        ],
       },
       include: {
         category: true,
         tags: {
-          include: { tag: true }
-        }
-      }
+          include: { tag: true },
+        },
+      },
     });
 
     res.json({ results });
@@ -43,4 +42,4 @@ export const searchProducts = async (req, res) => {
     console.error('Search error:', err);
     res.status(500).json({ error: 'Search failed' });
   }
-}
+};
