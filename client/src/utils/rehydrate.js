@@ -1,6 +1,7 @@
 import { useSetRecoilState } from "recoil";
 import Cookies from "js-cookie";
 import { userState } from "./state";
+import { useEffect } from "react";
 
 export const useHydrateUserState = () => {
   const setUser = useSetRecoilState(userState);

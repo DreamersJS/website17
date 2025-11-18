@@ -1,17 +1,17 @@
 
 export const validateForm = ({ username, email, password }) => {
-    if (!username || username.length < 3) {
-      return 'Username must be at least 3 characters long.';
-    }
-    if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
-      return 'Please enter a valid email address.';
-    }
-    if (!password || password.length < 6) {
-      return 'Password must be at least 6 characters long.';
-    }
-    return null; 
-  };
-  
+  if (!username || username.length < 3) {
+    return 'Username must be at least 3 characters long.';
+  }
+  if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
+    return 'Please enter a valid email address.';
+  }
+  if (!password || password.length < 6) {
+    return 'Password must be at least 6 characters long.';
+  }
+  return null;
+};
+
 /**
  * 
  * @param {*} param0 { username, password, email }
@@ -46,13 +46,13 @@ export const registerUser = async ({ username, password, email }) => {
     const data = await response.json();
     console.log('User registered successfully:', data);
 
-    return data; 
+    return data;
   } catch (error) {
     console.error('Error registering user:', error);
     throw error;
   }
 };
-  
+
 export const loginUser = async ({ email, password }) => {
   try {
     const response = await fetch('/api/users/login', {
@@ -91,7 +91,7 @@ export const logoutUser = async () => {
     if (!response.ok) {
       throw new Error('Failed to log out');
     }
-    
+
   } catch (error) {
     console.error('Error logging out:', error);
     throw error;
@@ -160,8 +160,9 @@ export const updateIsBlocked = async (userId) => {
   }
 }
 
-export const fetchDiary = async () => {};
-export const saveDiary = async () => {
+export const fetchDiary = async () => { };
+export const saveDiary = async (userId, data) => {
+  const { meals, waterIntake, energyLevel, sleepQuality, mood } = data;
   const response = await fetch(`/api/users/${userId}/diary`, {
     method: 'POST',
     headers: {

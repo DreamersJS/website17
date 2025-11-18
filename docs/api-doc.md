@@ -47,7 +47,7 @@ Fetch all products, including category and tags.
             "tagId": 3,
             "tag": {
                 "id": 3,
-​​                "name": "Protein"
+​​                "name": "Protein",
             }
          },
           {
@@ -98,7 +98,7 @@ Fetch a single product by its ID.
             "tagId": 3,
             "tag": {
                 "id": 3,
-​​                "name": "Protein"
+​​                "name": "Protein",
             }
          }
       ],
@@ -154,7 +154,7 @@ Create a new product with category and tags.
             "tagId": 3,
             "tag": {
                 "id": 3,
-​​                "name": "Protein"
+​​                "name": "Protein",
             }
          }
       ],
@@ -225,7 +225,7 @@ Update an existing product and its tag list.
             "tagId": 3,
             "tag": {
                 "id": 3,
-​​                "name": "Protein"
+​​                "name": "Protein",
             }
          }
       ],

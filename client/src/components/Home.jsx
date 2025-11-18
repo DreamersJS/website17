@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography, Grid, Button, Container } from '@mui/material';
 import { NavLink } from 'react-router-dom';
-import WellnessImage from '../assets/wellness-image.jpg'; 
+import WellnessImage from '../../public/wellness-image.jpg'; 
 
 // "vegan diets", "beginner workouts", "boost your energy", "boost your mood", "improve your sleep", "improve your digestion", "improve your skin", "improve your posture", "boost your immunity", "improve your microbiome health", 
 // Story Highlights: Feature personal stories with clickable links to read more.

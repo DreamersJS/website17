@@ -128,5 +128,5 @@ npm run dev
 
 
 ## Homepage
-<img src="./client/public/home.png"/>
+<img src="./client/public/readme/home.png"/>
 

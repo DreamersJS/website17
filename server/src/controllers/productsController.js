@@ -1,4 +1,3 @@
-import db from "../config/db.js";
 import prisma from "../config/prisma.js";
 
 /**
@@ -65,7 +64,7 @@ export const createProduct = async (req, res) => {
     return res.status(201).json({ results: product });
 
   } catch (error) {
-    console.error("❌ Error creating product with tags:", error.message);
+    console.error("Error creating product with tags:", error.message);
     return res.status(500).json({ error: error.message });
   }
 };
@@ -93,7 +92,7 @@ export const getAllProducts = async (req, res) => {
 
   } catch (error) {
     // next(error); if I wanna pass the err to the error handler
-    console.error("❌ Error fetching products:", error.message); 
+    console.error("Error fetching products:", error.message); 
     return res.status(500).json({ error: error.message });
   }
 };
@@ -127,7 +126,7 @@ export const getProductById = async (req, res) => {
     return res.status(200).json(product);
 
   } catch (error) {
-    console.error("❌ Error fetching product:", error.message);
+    console.error("Error fetching product:", error.message);
     return res.status(500).json({ error: error.message });
   }
 };
@@ -199,7 +198,7 @@ export const updateProduct = async (req, res) => {
     return res.status(200).json({ results: updatedProduct });
 
   } catch (error) {
-    console.error("❌ Error updating product:", error.message);
+    console.error("Error updating product:", error.message);
     return res.status(500).json({ error: error.message });
   }
 };
@@ -227,8 +226,7 @@ export const deleteProduct = async (req, res) => {
     return res.status(200).json({ results: deletedProduct });
 
   } catch (error) {
-    console.error("❌ Error deleting product:", error.message);
+    console.error("Error deleting product:", error.message);
     return res.status(500).json({ error: error.message });
   }
 };
-
