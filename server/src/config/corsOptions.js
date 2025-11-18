@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 const PORT = process.env.PORT;
-const DOMAIN = process.env.DOMAIN;
+const CLIENT = process.env.CLIENT;
 const NODE_ENV = process.env.NODE_ENV;
 
 const corsOptions = {
