@@ -1,4 +1,3 @@
-
 export const validateForm = ({ username, email, password }) => {
   if (!username || username.length < 3) {
     return 'Username must be at least 3 characters long.';
@@ -13,7 +12,7 @@ export const validateForm = ({ username, email, password }) => {
 };
 
 /**
- * 
+ *
  * @param {*} param0 { username, password, email }
  * @returns response.json() containing user details
  */
@@ -91,7 +90,6 @@ export const logoutUser = async () => {
     if (!response.ok) {
       throw new Error('Failed to log out');
     }
-
   } catch (error) {
     console.error('Error logging out:', error);
     throw error;
@@ -99,37 +97,37 @@ export const logoutUser = async () => {
 };
 
 /**
- * 
+ *
  * Since your auth token is HTTP-only, it is not accessible in JavaScript, meaning you cannot directly reference authToken in the frontend. This means your frontend should not manually send the token in the headers. Instead, just ensure that requests include credentials so the cookie is automatically sent.
  */
 export const fetchUsers = async () => {
   try {
-    const response = await fetch("/api/users/all", {
-      method: "GET",
+    const response = await fetch('/api/users/all', {
+      method: 'GET',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      credentials: 'include'
+      credentials: 'include',
     });
     if (!response.ok) {
-      throw new Error("Failed to fetch users");
+      throw new Error('Failed to fetch users');
     }
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("Error fetching users:", error);
+    console.error('Error fetching users:', error);
   }
 };
 
 export const updateUserRole = async (userId, newRole) => {
   try {
     const response = await fetch(`/api/coaches/${userId}/role`, {
-      method: "PUT",
+      method: 'PUT',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({ role: newRole }),
-      credentials: 'include'
+      credentials: 'include',
     });
     if (!response.ok) {
       const errorData = await response.json();
@@ -137,18 +135,18 @@ export const updateUserRole = async (userId, newRole) => {
     }
     console.log('Role updated');
   } catch (error) {
-    console.error("Error updating role:", error);
+    console.error('Error updating role:', error);
   }
-}
+};
 
 export const updateIsBlocked = async (userId) => {
   try {
     const response = await fetch(`/api/coaches/${userId}/block`, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      credentials: 'include'
+      credentials: 'include',
     });
     if (!response.ok) {
       const errorData = await response.json();
@@ -156,11 +154,11 @@ export const updateIsBlocked = async (userId) => {
     }
     console.log('Block status updated');
   } catch (error) {
-    console.error("Error updating block status:", error);
+    console.error('Error updating block status:', error);
   }
-}
+};
 
-export const fetchDiary = async () => { };
+export const fetchDiary = async () => {};
 export const saveDiary = async (userId, data) => {
   const { meals, waterIntake, energyLevel, sleepQuality, mood } = data;
   const response = await fetch(`/api/users/${userId}/diary`, {
@@ -168,12 +166,19 @@ export const saveDiary = async (userId, data) => {
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ meals, waterIntake, energyLevel, sleepQuality, mood, userId }),
+    body: JSON.stringify({
+      meals,
+      waterIntake,
+      energyLevel,
+      sleepQuality,
+      mood,
+      userId,
+    }),
     credentials: 'include',
   });
 
   if (!response.ok) {
-    throw new Error("Failed to save diary");
+    throw new Error('Failed to save diary');
   }
   return response.json();
 };

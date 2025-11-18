@@ -1,0 +1,33 @@
+# Ignore node modules
+node_modules
+client/node_modules
+server/node_modules
+
+# Ignore build/output folders
+dist
+build
+.coverage
+.next
+
+# Ignore VS Code config
+.vscode
+
+# Ignore static assets
+public/assets
+
+# Ignore test snapshots and coverage
+**/__tests__/**
+**/*.snap
+coverage
+
+# Ignore markdown and docs
+# *.md
+# docs/**/*.md
+
+# Ignore lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Ignore environment files
+*.env

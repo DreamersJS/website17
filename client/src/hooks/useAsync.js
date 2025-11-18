@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 export const useAsync = (asyncFunction, deps = []) => {
   const [loading, setLoading] = useState(true);

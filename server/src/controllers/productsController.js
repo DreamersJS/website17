@@ -1,4 +1,4 @@
-import prisma from "../config/prisma.js";
+import prisma from '../config/prisma.js';
 
 /**
  * @desc    Create a new product (with tags and category)
@@ -8,21 +8,13 @@ import prisma from "../config/prisma.js";
  */
 export const createProduct = async (req, res) => {
   console.log('createProduct!!!');
-  const {
-    name,
-    description,
-    photo,
-    price,
-    quantity,
-    inStock,
-    categoryName,
-    tagNames = []
-  } = req.body;
-  console.log("categoryName being passed:", categoryName);
+  const { name, description, photo, price, quantity, inStock, categoryName, tagNames = [] } = req.body;
 
   try {
     // 1. Find or create category
-    let category = await prisma.category.findUnique({ where: { name: categoryName } });
+    let category = await prisma.category.findUnique({
+      where: { name: categoryName },
+    });
 
     if (!category) {
       console.log(`Category '${categoryName}' not found in DB. Creating it...`);
@@ -62,9 +54,8 @@ export const createProduct = async (req, res) => {
     }
 
     return res.status(201).json({ results: product });
-
   } catch (error) {
-    console.error("Error creating product with tags:", error.message);
+    console.error('Error creating product with tags:', error.message);
     return res.status(500).json({ error: error.message });
   }
 };
@@ -89,10 +80,9 @@ export const getAllProducts = async (req, res) => {
     });
 
     return res.status(200).json({ results: products });
-
   } catch (error) {
     // next(error); if I wanna pass the err to the error handler
-    console.error("Error fetching products:", error.message); 
+    console.error('Error fetching products:', error.message);
     return res.status(500).json({ error: error.message });
   }
 };
@@ -120,13 +110,12 @@ export const getProductById = async (req, res) => {
     });
 
     if (!product) {
-      return res.status(404).json({ error: "Product not found" });
+      return res.status(404).json({ error: 'Product not found' });
     }
 
     return res.status(200).json(product);
-
   } catch (error) {
-    console.error("Error fetching product:", error.message);
+    console.error('Error fetching product:', error.message);
     return res.status(500).json({ error: error.message });
   }
 };
@@ -139,20 +128,13 @@ export const getProductById = async (req, res) => {
  */
 export const updateProduct = async (req, res) => {
   const { id } = req.params;
-  const {
-    name,
-    description,
-    photo,
-    price,
-    quantity,
-    inStock,
-    categoryName,
-    tagNames = []
-  } = req.body;
+  const { name, description, photo, price, quantity, inStock, categoryName, tagNames = [] } = req.body;
 
   try {
     // 1. Find or create category
-    let category = await prisma.category.findUnique({ where: { name: categoryName } });
+    let category = await prisma.category.findUnique({
+      where: { name: categoryName },
+    });
 
     if (!category) {
       category = await prisma.category.create({
@@ -196,9 +178,8 @@ export const updateProduct = async (req, res) => {
     }
 
     return res.status(200).json({ results: updatedProduct });
-
   } catch (error) {
-    console.error("Error updating product:", error.message);
+    console.error('Error updating product:', error.message);
     return res.status(500).json({ error: error.message });
   }
 };
@@ -224,9 +205,8 @@ export const deleteProduct = async (req, res) => {
     });
 
     return res.status(200).json({ results: deletedProduct });
-
   } catch (error) {
-    console.error("Error deleting product:", error.message);
+    console.error('Error deleting product:', error.message);
     return res.status(500).json({ error: error.message });
   }
 };

@@ -6,7 +6,7 @@ import { DATABASE_URL } from './env.js';
 
 // Create a new pool of connections
 const pool = new Pool({
-  connectionString: DATABASE_URL, 
+  connectionString: DATABASE_URL,
 });
 
 export const connectDB = async () => {
@@ -20,4 +20,4 @@ export const connectDB = async () => {
   }
 };
 
-export default pool; 
+export default pool;

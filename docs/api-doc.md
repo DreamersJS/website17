@@ -17,7 +17,6 @@
 
 ---
 
-
 ## GET /api/product/all
 
 **Description:**  
@@ -42,8 +41,8 @@ Fetch all products, including category and tags.
       "price": 58,
       "quantity": 0,
       "tags": [
-        { 
-            "productId": 32, 
+        {
+            "productId": 32,
             "tagId": 3,
             "tag": {
                 "id": 3,
@@ -60,13 +59,14 @@ Fetch all products, including category and tags.
         },
       ],
       "updatedAt":""
-    }, 
+    },
 
   ]
 }
 ```
 
-curl 
+curl
+
 ```bash
 http://localhost:3000/api/product/all
 ```
@@ -93,8 +93,8 @@ Fetch a single product by its ID.
       "price": 58,
       "quantity": 0,
       "tags": [
-        { 
-            "productId": 32, 
+        {
+            "productId": 32,
             "tagId": 3,
             "tag": {
                 "id": 3,
@@ -106,7 +106,8 @@ Fetch a single product by its ID.
     }
 ```
 
-curl 
+curl
+
 ```bash
 curl http://localhost:3000/api/product/1
 ```
@@ -119,53 +120,55 @@ Create a new product with category and tags.
 **Access:** Admin
 
 **Request Body:**
+
 ```json
 {
   "name": "Shake",
-  "description": "Supports muscle recovery",//optional
-  "photo": "...",//optional
+  "description": "Supports muscle recovery", //optional
+  "photo": "...", //optional
   "price": 95,
   "quantity": 0,
   "inStock": true,
-  "categoryName": "Supplements",//optional
-  "tagNames": ["Recovery", "Muscle"]//optional
+  "categoryName": "Supplements", //optional
+  "tagNames": ["Recovery", "Muscle"] //optional
 }
 ```
 
 **Response:**
 
- ```json
+```json
 {
-  "results": [
-    {
-      "id": "32",
-      "name": "Protein Bar",
-      "description": "...",
-      "category": { "id": "2", "name": "Supplements" },
-      "categoryId": 2,
-      "createdAt":"",
-      "inStock":true,
-      "photo": "...",
-      "price": 58,
-      "quantity": 0,
-      "tags": [
-        { 
-            "productId": 32, 
-            "tagId": 3,
-            "tag": {
-                "id": 3,
+ "results": [
+   {
+     "id": "32",
+     "name": "Protein Bar",
+     "description": "...",
+     "category": { "id": "2", "name": "Supplements" },
+     "categoryId": 2,
+     "createdAt":"",
+     "inStock":true,
+     "photo": "...",
+     "price": 58,
+     "quantity": 0,
+     "tags": [
+       {
+           "productId": 32,
+           "tagId": 3,
+           "tag": {
+               "id": 3,
 ​​                "name": "Protein",
-            }
-         }
-      ],
-      "updatedAt":""
-    }, 
+           }
+        }
+     ],
+     "updatedAt":""
+   },
 
-  ]
+ ]
 }
 ```
 
-curl 
+curl
+
 ```bash
 curl -X POST http://localhost:3000/api/product \
   -H "Authorization: Bearer <your_token>" \
@@ -190,6 +193,7 @@ Update an existing product and its tag list.
 **Access:** Admin
 
 **Request Body:**
+
 ```json
 {
   "name": "Shake",
@@ -205,38 +209,39 @@ Update an existing product and its tag list.
 
 **Response:**
 
- ```json
+```json
 {
-  "results": [
-    {
-      "id": "32",
-      "name": "Protein Bar",
-      "description": "...",
-      "category": { "id": "2", "name": "Supplements" },
-      "categoryId": 2,
-      "createdAt":"",
-      "inStock":true,
-      "photo": "...",
-      "price": 58,
-      "quantity": 0,
-      "tags": [
-        { 
-            "productId": 32, 
-            "tagId": 3,
-            "tag": {
-                "id": 3,
+ "results": [
+   {
+     "id": "32",
+     "name": "Protein Bar",
+     "description": "...",
+     "category": { "id": "2", "name": "Supplements" },
+     "categoryId": 2,
+     "createdAt":"",
+     "inStock":true,
+     "photo": "...",
+     "price": 58,
+     "quantity": 0,
+     "tags": [
+       {
+           "productId": 32,
+           "tagId": 3,
+           "tag": {
+               "id": 3,
 ​​                "name": "Protein",
-            }
-         }
-      ],
-      "updatedAt":""
-    }, 
+           }
+        }
+     ],
+     "updatedAt":""
+   },
 
-  ]
+ ]
 }
 ```
 
-curl 
+curl
+
 ```bash
 curl -X PUT http://localhost:3000/api/product/7 \
   -H "Authorization: Bearer <your_token>" \
@@ -262,6 +267,7 @@ Delete a product and unlink tags.
 **Access:** Admin
 
 **Response:**
+
 ```
 {
   "results": {
@@ -281,6 +287,7 @@ Delete a product and unlink tags.
 ```
 
 curl
+
 ```bash
 curl -X DELETE http://localhost:3000/api/product/7 \
   -H "Authorization: Bearer <your_token>"
@@ -296,6 +303,7 @@ Checks if the provided email domain is valid and known (based on MX DNS records)
 **Access:** Public
 
 **Request Body:**
+
 ```json
 {
   "email": "user@gmail.com"
@@ -303,12 +311,15 @@ Checks if the provided email domain is valid and known (based on MX DNS records)
 ```
 
 **Response:**
+
 ```json
 {
   "valid": true
 }
 ```
+
 or
+
 ```json
 {
   "valid": false,
@@ -317,6 +328,7 @@ or
 ```
 
 curl
+
 ```bash
 curl -X POST http://localhost:3000/api/email/checkDomain \
   -H "Content-Type: application/json" \
@@ -324,7 +336,6 @@ curl -X POST http://localhost:3000/api/email/checkDomain \
   "email": "user@gmail.com"
 }'
 ```
-
 
 ## POST api/email/sendConfirmationEmail
 
@@ -334,6 +345,7 @@ Sends a confirmation email to the user's email with a link containing token.
 **Access:** Public
 
 **Request Body:**
+
 ```json
 {
   "email": "user@gmail.com"
@@ -341,6 +353,7 @@ Sends a confirmation email to the user's email with a link containing token.
 ```
 
 **Response:**
+
 ```json
 {
   "message": "Confirmation email sent!"
@@ -348,6 +361,7 @@ Sends a confirmation email to the user's email with a link containing token.
 ```
 
 curl
+
 ```bash
 curl -X POST http://localhost:3000/api/email/sendConfirmationEmail \
   -H "Content-Type: application/json" \
@@ -363,17 +377,19 @@ Upon user click in confirmation email:
 User is redirected to FE - ConfirmEmail.jsx
 Then user is redirected to `/api/email/confirmEmail?token=${token}&email=${email}`
 Where the controller:
-Confirms the user’s email by req.query(Sending small bits of data in the URL) 
+Confirms the user’s email by req.query(Sending small bits of data in the URL)
 Check if token is tied to this email
 Confirm email with redisClient.set(`confirmed:${email}`, 'true', { EX: 86400 });
 
 **Access:** Public
 
 **Query Parameters:**
+
 - token: string
 - email: string
 
 **Response:**
+
 ```json
 {
   "message": "Email confirmed successfully. You may now send your message.",
@@ -383,6 +399,7 @@ Confirm email with redisClient.set(`confirmed:${email}`, 'true', { EX: 86400 });
 ```
 
 **curl:**
+
 ```bash
 curl -X GET "http://localhost:3000/api/email/confirmEmail?token=abc123def456&email=user@example.com"
 ```
@@ -395,28 +412,32 @@ Confirm if email(extracted by req.query) is verified in Redis and sends boolean
 **Access:** Public
 
 **Query Parameters:**
+
 - email: string
 
 **Response:**
+
 ```json
 {
-"confirmed": "true"
+  "confirmed": "true"
 }
 ```
 
 **curl:**
+
 ```bash
 curl -X GET "http://localhost:3000/api/email/isConfirmed?email=user@example.com"
 ```
 
 ## POST api/email/sendMsg
 
-**Description:** 
+**Description:**
 Send message from the contact form if email is verified
 
 **Access:** Public
 
 **Request Body:**
+
 ```json
 {
   "name": "Name",
@@ -427,13 +448,15 @@ Send message from the contact form if email is verified
 ```
 
 **Response:**
+
 ```json
 {
- "message": "Message sent successfully!"
+  "message": "Message sent successfully!"
 }
 ```
 
 **curl**
+
 ```bash
 curl -X POST http://localhost:3000/api/email/sendMsg \
   -H "Content-Type: application/json" \
@@ -446,4 +469,3 @@ curl -X POST http://localhost:3000/api/email/sendMsg \
 ```
 
 ---
-

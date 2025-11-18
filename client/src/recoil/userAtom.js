@@ -1,4 +1,4 @@
-import { atom } from "recoil";
+import { atom } from 'recoil';
 import { useResetRecoilState } from 'recoil';
 
 const initialState = {
@@ -12,7 +12,7 @@ const initialState = {
 };
 
 export const userState = atom({
-  key: "userState", 
+  key: 'userState',
   default: initialState,
 });
 

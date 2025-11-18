@@ -20,16 +20,14 @@ app.use(errorHandler);
 
 // Connect to DB
 async function connectToDatabase() {
-    try {
-      await prisma.$connect(); // Establish the database connection
-      console.log('Connected to the database successfully.');
-    } catch (error) {
-      console.error('Failed to connect to the database:', error);
-    }
+  try {
+    await prisma.$connect(); // Establish the database connection
+    console.log('Connected to the database successfully.');
+  } catch (error) {
+    console.error('Failed to connect to the database:', error);
   }
-  
-  connectToDatabase(); // Call the database connection
-  
+}
 
+connectToDatabase(); // Call the database connection
 
 export default app;

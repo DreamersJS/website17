@@ -5,9 +5,8 @@ import { blockUser, changeUserRole, verifyAdminDB } from '../controllers/coachCo
 
 const router = express.Router();
 
-
-router.post("/:userId/block", authenticateUser, verifyAdmin, blockUser);
-router.put("/:userId/role", authenticateUser, verifyAdmin, changeUserRole);
-router.get("/admin/:userId", authenticateUser, verifyAdminDB);
+router.post('/:userId/block', authenticateUser, verifyAdmin, blockUser);
+router.put('/:userId/role', authenticateUser, verifyAdmin, changeUserRole);
+router.get('/admin/:userId', authenticateUser, verifyAdminDB);
 
 export default router;

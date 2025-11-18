@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { validate as isUUID } from 'uuid';
 
-const JWT_SECRET = process.env.JWT_SECRET_KEY
+const JWT_SECRET = process.env.JWT_SECRET_KEY;
 
 /**
  * Create a new user(Register)
@@ -24,10 +24,10 @@ export const createUser = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const isValidUUID = (id) => /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(id);
+    const isValidUUID = (id) =>
+      /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(id);
 
     const sanitizedCoachId = coachId && isValidUUID(coachId) ? coachId : null;
-    console.log("Sanitized coachId:", sanitizedCoachId);
     const newUser = await prisma.user.create({
       data: {
         username,
@@ -37,14 +37,23 @@ export const createUser = async (req, res) => {
       },
     });
 
-    const token = jwt.sign({ userId: newUser.id, email: newUser.email, role: newUser.role, isBlocked: newUser.isBlocked }, JWT_SECRET, {
-      expiresIn: '1h',
-    });
+    const token = jwt.sign(
+      {
+        userId: newUser.id,
+        email: newUser.email,
+        role: newUser.role,
+        isBlocked: newUser.isBlocked,
+      },
+      JWT_SECRET,
+      {
+        expiresIn: '1h',
+      },
+    );
 
     // Store token in HTTP-only cookie
     res.cookie('authToken', token, {
       httpOnly: true, // Prevents JavaScript access
-      secure: process.env.NODE_ENV === 'production', // Use HTTPS in production 
+      secure: process.env.NODE_ENV === 'production', // Use HTTPS in production
       sameSite: 'Strict', // Prevents CSRF
       maxAge: 3600 * 1000, // 1 hour
     });
@@ -75,9 +84,20 @@ export const loginUser = async (req, res) => {
       return res.status(401).json({ error: 'Invalid credentials.' });
     }
 
-    const token = jwt.sign({ userId: user.id, username: user.username, email: user.email, role: user.role, isBlocked: user.isBlocked, coachId: user.coachId  }, JWT_SECRET, {
-      expiresIn: '1h',
-    });
+    const token = jwt.sign(
+      {
+        userId: user.id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+        isBlocked: user.isBlocked,
+        coachId: user.coachId,
+      },
+      JWT_SECRET,
+      {
+        expiresIn: '1h',
+      },
+    );
 
     res.cookie('authToken', token, {
       httpOnly: true,
@@ -88,7 +108,14 @@ export const loginUser = async (req, res) => {
 
     res.status(200).json({
       message: 'Login successful',
-      user: { id: user.id, username: user.username, email: user.email, role: user.role, isBlocked: user.isBlocked, coachId: user.coachId  }
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+        isBlocked: user.isBlocked,
+        coachId: user.coachId,
+      },
     });
   } catch (error) {
     console.error('Error logging in:', error);
@@ -110,7 +137,6 @@ export const logoutUser = (req, res) => {
 export const updateUser = async (req, res) => {
   const { id } = req.params;
   const { username, email, photo, coachId } = req.body;
-  console.log("Received data:", req.body);
 
   try {
     const updatedUser = await prisma.user.update({
@@ -133,7 +159,6 @@ export const updateUser = async (req, res) => {
 export const fetchUser = async (req, res) => {
   const { id } = req.params;
 
-  console.log("id being passed:", id);
   if (!isUUID(id)) {
     return res.status(400).json({ error: 'Invalid UUID format' });
   }
@@ -141,8 +166,8 @@ export const fetchUser = async (req, res) => {
   try {
     const user = await prisma.user.findFirst({
       where: {
-        id: id,  // Fetch by ID
-      }
+        id: id, // Fetch by ID
+      },
     });
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
@@ -185,7 +210,6 @@ export const fetchAllUsers = async (req, res) => {
           { coachId: { not: null } }, // Valid UUID coachId
         ],
       },
-
     });
     console.log(users);
     res.status(200).json(users);
