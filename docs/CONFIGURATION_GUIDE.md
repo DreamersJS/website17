@@ -12,7 +12,6 @@ The following environment variables need to be set up to configure the applicati
 
 ### Variables
 
-
 - **PORT**:
   - **Description**: The port on which the backend server will run.
   - **Default**: `3000`
@@ -28,8 +27,8 @@ The following environment variables need to be set up to configure the applicati
   - **Description**: Domain name of the backend server (e.g., https://api.yourdomain.com).
 
 - **DATABASE_URL**:
-  - **Description**: 
-  PostgreSQL connection string. Created by prisma init.
+  - **Description**:
+    PostgreSQL connection string. Created by prisma init.
 
 - **FRONTEND_URL**:
   - **Description**:URL of the frontend app for email confirmations
@@ -39,7 +38,7 @@ The following environment variables need to be set up to configure the applicati
 
 - **ETHEREAL_USER**:
   - **Description**: Ethereal email username (for dev email testing).
-  -  check: server/scripts/createEtherealAccount.js
+  - check: server/scripts/createEtherealAccount.js
 
 - **ETHEREAL_PASS**:
   - **Description**:Ethereal email password.
@@ -50,13 +49,12 @@ The following environment variables need to be set up to configure the applicati
 - **ETHEREAL_HOST**:
   - **Description**: SMTP host for Ethereal email.
 
-
 ## Configuration Files
 
 ### `.env` File
 
- - Add the .env file to .gitignore to avoid committing sensitive information.
- - Create the .env file inside your server directory with the following content:
+- Add the .env file to .gitignore to avoid committing sensitive information.
+- Create the .env file inside your server directory with the following content:
 
 ```js
 # Server Configuration
@@ -75,7 +73,7 @@ FRONTEND_URL="http://localhost:5173"
 # REDIS CONNECTION
 REDIS_URL=redis://localhost:6379
 
-# Ethereal Email 
+# Ethereal Email
 ETHEREAL_USER=rbrrttrt@ethereal.email
 ETHEREAL_PASS=hFahptyyyv
 ETHEREAL_PORT=587
@@ -91,12 +89,13 @@ To install PostgreSQL and Prisma, first, you need to install PostgreSQL and crea
    - Download installer: [EnterpriseDB website](https://www.enterprisedb.com/downloads/postgres-postgresql-downloads).
    - Install PostgreSQL, pgAdmin, and CLI tools.
    - Verify installation:
+
 ```bash
 psql --version
 ```
 
 2. **Create a Database and User**:
-  
+
 ```
 -- Log in to PostgreSQL
 psql -U postgres
@@ -110,25 +109,27 @@ CREATE DATABASE your_database_name;
 -- Grant privileges
 GRANT ALL PRIVILEGES ON DATABASE your_database_name TO your_user;
 ```
-   
+
 3.  **Install Prisma and Connect**
-   
-  [Install Prisma](https://www.prisma.io/docs/getting-started/setup-prisma/start-from-scratch/relational-databases/install-prisma-client-node-postgresql
-)
+
+[Install Prisma](https://www.prisma.io/docs/getting-started/setup-prisma/start-from-scratch/relational-databases/install-prisma-client-node-postgresql)
+
 - Inside server directory
+
 ```bash
 npm install prisma --save-dev
 npx prisma init
 ```
+
 - This creates a prisma/schema.prisma and .env file.
 - Set the DATABASE_URL in .env.
 - Run:
+
 ```
   npx prisma generate
 ```
 
-
- ## Common Issues and Troubleshooting
+## Common Issues and Troubleshooting
 
 - **Issue: Database Connection Errors**:
   - **Solution**: Verify that your database credentials are correct and that the database server is accessible.
