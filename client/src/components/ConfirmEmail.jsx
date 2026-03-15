@@ -27,7 +27,7 @@ const ConfirmEmail = () => {
                 setSuccess(true);
                 setMessage('Email confirmed successfully. You can now send messages.');
             } catch (err) {
-                setMessage(`❌ ${err.message}`);
+                setMessage(`${err.message}`);
             } finally {
                 setLoading(false);
             }

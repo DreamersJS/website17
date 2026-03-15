@@ -1,13 +1,18 @@
 import cors from 'cors';
-import dotenv from 'dotenv';
+import { FRONTEND_URL } from '../config/env.js';
 
-dotenv.config();
-const PORT = process.env.PORT;
-const DOMAIN = process.env.DOMAIN;
-const NODE_ENV = process.env.NODE_ENV;
+const allowedOrigins = [
+  FRONTEND_URL
+];
 
 const corsOptions = {
-  origin: [PORT, DOMAIN],
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true, // Allow cookies and auth headers
   allowedHeaders: ['Content-Type', 'Authorization'],

@@ -1,4 +1,6 @@
 import prisma from '../config/prisma.js';
+import { createProduct, deleteProduct, updateProduct } from './command/productCommands.js'
+import { getAllProducts } from './query/productQueries.js';
 
 /**
  * @desc    Create a new product (with tags and category)
@@ -6,53 +8,11 @@ import prisma from '../config/prisma.js';
  * @access  Admin
  * @docs    See: docs/api-doc.md#post-apiproduct
  */
-export const createProduct = async (req, res) => {
-  console.log('createProduct!!!');
+export const handleCreateProduct = async (req, res) => {
+  console.log('handleCreateProduct ProductsController!!!');
   const { name, description, photo, price, quantity, inStock, categoryName, tagNames = [] } = req.body;
-
   try {
-    // 1. Find or create category
-    let category = await prisma.category.findUnique({
-      where: { name: categoryName },
-    });
-
-    if (!category) {
-      console.log(`Category '${categoryName}' not found in DB. Creating it...`);
-      category = await prisma.category.create({
-        data: { name: categoryName },
-      });
-    }
-
-    // 2. Create product
-    console.log('Creating product with categoryId:', category.id);
-    const product = await prisma.product.create({
-      data: {
-        name,
-        description,
-        photo,
-        price,
-        quantity,
-        inStock,
-        categoryId: category.id,
-      },
-    });
-
-    // 3. Handle tags
-    for (const tagName of tagNames) {
-      const tag = await prisma.tag.upsert({
-        where: { name: tagName },
-        update: {},
-        create: { name: tagName },
-      });
-
-      await prisma.productTag.create({
-        data: {
-          productId: product.id,
-          tagId: tag.id,
-        },
-      });
-    }
-
+    const product = await createProduct(prisma)(req.body)
     return res.status(201).json({ results: product });
   } catch (error) {
     console.error('Error creating product with tags:', error.message);
@@ -66,19 +26,9 @@ export const createProduct = async (req, res) => {
  * @access  Public
  * @docs    See: docs/api-doc.md#get-apiproductall
  */
-export const getAllProducts = async (req, res) => {
+export const handleGetAllProducts = async (req, res) => {
   try {
-    const products = await prisma.product.findMany({
-      include: {
-        category: true,
-        tags: {
-          include: {
-            tag: true,
-          },
-        },
-      },
-    });
-
+    const products = await getAllProducts(prisma)()
     return res.status(200).json({ results: products });
   } catch (error) {
     // next(error); if I wanna pass the err to the error handler
@@ -93,26 +43,13 @@ export const getAllProducts = async (req, res) => {
  * @access  Public
  * @docs    See: docs/api-doc.md#get-apiproductid
  */
-export const getProductById = async (req, res) => {
+export const handleGetProductById = async (req, res) => {
   const { id } = req.params;
-
   try {
-    const product = await prisma.product.findUnique({
-      where: { id: Number(id) },
-      include: {
-        category: true,
-        tags: {
-          include: {
-            tag: true,
-          },
-        },
-      },
-    });
-
+    const product = await getProductById(prisma)(id);
     if (!product) {
       return res.status(404).json({ error: 'Product not found' });
     }
-
     return res.status(200).json(product);
   } catch (error) {
     console.error('Error fetching product:', error.message);
@@ -126,57 +63,12 @@ export const getProductById = async (req, res) => {
  * @access  Admin
  * @docs    See: docs/api-doc.md#put-apiproductid
  */
-export const updateProduct = async (req, res) => {
+export const handleUpdateProduct = async (req, res) => {
   const { id } = req.params;
   const { name, description, photo, price, quantity, inStock, categoryName, tagNames = [] } = req.body;
 
   try {
-    // 1. Find or create category
-    let category = await prisma.category.findUnique({
-      where: { name: categoryName },
-    });
-
-    if (!category) {
-      category = await prisma.category.create({
-        data: { name: categoryName },
-      });
-    }
-
-    // 2. Update the product
-    const updatedProduct = await prisma.product.update({
-      where: { id: Number(id) },
-      data: {
-        name,
-        description,
-        photo,
-        price,
-        quantity,
-        inStock,
-        categoryId: category.id,
-      },
-    });
-
-    // 3. Remove existing tags
-    await prisma.productTag.deleteMany({
-      where: { productId: updatedProduct.id },
-    });
-
-    // 4. Recreate tags
-    for (const tagName of tagNames) {
-      const tag = await prisma.tag.upsert({
-        where: { name: tagName },
-        update: {},
-        create: { name: tagName },
-      });
-
-      await prisma.productTag.create({
-        data: {
-          productId: updatedProduct.id,
-          tagId: tag.id,
-        },
-      });
-    }
-
+    const updatedProduct = await updateProduct(prisma)(id, req.body)
     return res.status(200).json({ results: updatedProduct });
   } catch (error) {
     console.error('Error updating product:', error.message);
@@ -190,19 +82,10 @@ export const updateProduct = async (req, res) => {
  * @access  Admin
  * @docs    See: docs/api-doc.md#delete-apiproductid
  */
-export const deleteProduct = async (req, res) => {
+export const handleDeleteProduct = async (req, res) => {
   const { id } = req.params;
-
   try {
-    // 1. Delete tags relation first (if using cascade, this might not be necessary)
-    await prisma.productTag.deleteMany({
-      where: { productId: Number(id) },
-    });
-
-    // 2. Delete the product
-    const deletedProduct = await prisma.product.delete({
-      where: { id: Number(id) },
-    });
+    const deletedProduct = await deleteProduct(prisma)(id);
 
     return res.status(200).json({ results: deletedProduct });
   } catch (error) {
