@@ -9,8 +9,6 @@ import {
 
 const router = express.Router();
 
-router.use(express.json());
-
 router.post('/checkDomain', checkDomainMxRecords);
 router.post('/sendConfirmationEmail', sendConfirmationEmailController);
 router.get('/confirmEmail', confirmEmail);

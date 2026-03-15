@@ -5,8 +5,6 @@ import { searchProducts } from '../controllers/searchController.js';
 
 const router = express.Router();
 
-router.use(express.json());
-
 // You do not put query strings (?q=...) into route definitions — Express automatically parses them via req.query.
 router.get(`/`, searchProducts);
 
