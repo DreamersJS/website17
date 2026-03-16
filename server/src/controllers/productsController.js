@@ -1,6 +1,6 @@
 import prisma from '../config/prisma.js';
 import { createProduct, deleteProduct, updateProduct } from './command/productCommands.js'
-import { getAllProducts } from './query/productQueries.js';
+import { getAllProducts, getProductById } from './query/productQueries.js';
 
 /**
  * @desc    Create a new product (with tags and category)
