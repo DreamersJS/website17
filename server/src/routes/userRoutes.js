@@ -8,7 +8,6 @@ import {
   fetchAllUsers,
   loginUser,
   logoutUser,
-  createDiary,
 } from '../controllers/userController.js';
 import { authorizeRole, verifyAdmin } from '../middleware/authorizationAdmin.js';
 import { authenticateUser } from '../middleware/authentication.js';
@@ -25,7 +24,5 @@ router.get('/:id', fetchUser);
 router.put('/:id/update', authenticateUser, authorizeRole('USER'), updateUser);
 router.delete('/:id', authenticateUser, authorizeRole('USER'), deleteUser);
 router.get('/email/:email', getUserByEmail);
-
-router.post('/:id/diary', authenticateUser, createDiary);
 
 export default router;

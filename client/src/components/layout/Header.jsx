@@ -101,11 +101,6 @@ const Header = () => {
                                                 Results
                                             </MenuItem>
                                             <Divider />
-                                            {/* tabliza moeto hranene?  */}
-                                            <MenuItem component={NavLink} to="/diary" onClick={handleClose}>
-                                                Diary
-                                            </MenuItem>
-                                            <Divider />
                                             <MenuItem component={NavLink} to="/logout" onClick={handleClose}>
                                                 Logout
                                             </MenuItem>
@@ -226,9 +221,6 @@ const Header = () => {
                                     <>
                                         <ListItem button component={NavLink} to="/profile">
                                             <ListItemText primary="Profile" />
-                                        </ListItem>
-                                        <ListItem button component={NavLink} to="/diary">
-                                            <ListItemText primary="Diary" />
                                         </ListItem>
                                         <ListItem button component={NavLink} to="/logout">
                                             <ListItemText primary="Logout" />
