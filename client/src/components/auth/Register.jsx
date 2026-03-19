@@ -38,7 +38,7 @@ const Register = () => {
 
     try {
       const data = await registerUser({ username, email, password });
-      const { user } = data;
+      const user = data;
 
       setUser({
         id: user.id,
