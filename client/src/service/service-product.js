@@ -4,12 +4,11 @@ export const getProductByIdService = async (id) => {
     headers: {
       'Content-Type': 'application/json',
     },
-    // body: JSON.stringify({id}),passing body on a GET request is not valid.
     credentials: 'include',
   });
   if (!res.ok) throw new Error('get product by id request failed');
   const data = await res.json();
-  return data;
+  return data.data;
 };
 // get all products
 export const getAllProductsService = async () => {
@@ -20,27 +19,14 @@ export const getAllProductsService = async () => {
     },
     credentials: 'include',
   });
-  //ok removed console.log(res) and it worked
   if (!res.ok) throw new Error('get all products request failed');
   const data = await res.json();
-  return data.results;
+  return data.data;
 };
 // add product
 export const addProductService = async (product) => {
   const { name, description, photo, price, inStock, quantity, categoryId, categoryName, tagNames } = product;
-
-  // console.log('addProductService', {
-  //   name,
-  //   description,
-  //   photo,
-  //   price,
-  //   inStock,
-  //   quantity,
-  //   categoryId,
-  //   categoryName,
-  //   tagNames,
-  // });
-
+  
   const res = await fetch(`/api/product/`, {
     method: 'POST',
     headers: {
@@ -61,9 +47,13 @@ export const addProductService = async (product) => {
   });
   if (!res.ok) throw new Error('service add product request failed');
   const data = await res.json();
-  return data.results;
+  return data;
 };
-// update product
+// /**
+//  * @param {string} id - The unique id of the product.
+//  * @param {Object} product - The product data to update.
+//  * @returns {{ data: Object, message: string }} The updated product and a success message.
+//  */
 export const updateProductService = async (id, product) => {
   const { name, description, photo, price, inStock, quantity, categoryId, categoryName, tagNames } = product;
 
@@ -88,9 +78,8 @@ export const updateProductService = async (id, product) => {
 
   if (!res.ok) throw new Error('update product request failed');
   const data = await res.json();
-  return data.results;
+  return data;
 };
-
 // delete product
 export const deleteProductService = async (id) => {
   const res = await fetch(`/api/product/${id}`, {
@@ -102,5 +91,5 @@ export const deleteProductService = async (id) => {
   });
   if (!res.ok) throw new Error('delete product request failed');
   const data = await res.json();
-  return data.results;
+  return data.message;
 };

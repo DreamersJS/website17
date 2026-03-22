@@ -87,7 +87,6 @@ const AddProduct = () => {
     if (missingFields.length > 0) {
       const fieldNames = missingFields.map(([, label]) => label).join(", ");
       showFeedback(`Please fill in the following field(s): ${fieldNames}`, "error");
-      console.log(`Please fill in the following field(s): ${fieldNames}`);
       return false;
     }
 
@@ -105,7 +104,6 @@ const AddProduct = () => {
   };
 
   const handleAddProduct = async (data) => {
-    console.log({ data });
     try {
       if (!validateProduct(data)) {
         return;
@@ -116,18 +114,16 @@ const AddProduct = () => {
         quantity: Number(data.quantity),
         categoryId: Number(data.categoryId),
       };
-      console.log("Payload:", payload);
-      await addProductService(payload)
+      const { data: newProduct, message } = await addProductService(payload);
+      showFeedback(message || "Product added successfully", "success");
       getAllProducts(); // refresh list
       toggleModal();
     } catch (error) {
-      console.log(error)
+      showFeedback(error.message || "Failed to add product", "error");
     }
   }
 
   const handleUpdateProduct = async (id, data) => {
-    console.log({ id });
-    console.log({ data });
     try {
       if (!validateProduct(data)) {
         return;
@@ -137,21 +133,24 @@ const AddProduct = () => {
         price: Number(data.price),
         quantity: Number(data.quantity),
       };
-      await updateProductService(id, payload);
+      const updated = await updateProductService(id, payload); // 
+      const { data: updatedProduct, message } = updated;
+      showFeedback(message || "Product updated", "success");
       await getAllProducts(); // refresh
       toggleModal()
     } catch (error) {
-      console.error(error);
+      showFeedback(error.message || "Update failed", "error");
     }
   };
 
   const handleDeleteProduct = async (id) => {
     try {
-      await deleteProductService(id);
+      const deletedMessage = await deleteProductService(id);
+      showFeedback(deletedMessage || "Product deleted", "success");
       await getAllProducts();
       toggleModal();
     } catch (error) {
-      console.error(error);
+      showFeedback(error.message || "Delete failed", "error");
     }
   };
   const toggleModal = () => {
