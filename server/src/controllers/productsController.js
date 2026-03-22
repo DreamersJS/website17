@@ -16,7 +16,7 @@ export const handleCreateProduct = async (req, res) => {
     return res.status(201).json({ data: product, message:"Product created successfully" });
   } catch (error) {
     console.error('Error creating product with tags:', error.message);
-    return res.status(500).json({ error: error.message });
+    return res.status(error.statusCode || 500).json({ error: error.message });
   }
 };
 
@@ -29,11 +29,9 @@ export const handleCreateProduct = async (req, res) => {
 export const handleGetAllProducts = async (req, res) => {
   try {
     const products = await getAllProducts(prisma)()
-    return res.status(200).json({ data: products });// res.status(200).json({message: 'Fetch all products successful', data: products});
+    return res.status(200).json({ data: products });
   } catch (error) {
-    // next(error); if I wanna pass the err to the error handler
-    console.error('Error fetching products:', error.message);
-    return res.status(500).json({ error: error.message });
+    return res.status(error.statusCode || 500).json({ error: error.message });
   }
 };
 
@@ -47,13 +45,10 @@ export const handleGetProductById = async (req, res) => {
   const { id } = req.params;
   try {
     const product = await getProductById(prisma)(id);
-    if (!product) {
-      return res.status(404).json({ error: 'Product not found' });
-    }
     return res.status(200).json({ data: product });
   } catch (error) {
     console.error('Error fetching product:', error.message);
-    return res.status(500).json({ error: error.message });
+    return res.status(error.statusCode || 500).json({ error: error.message });
   }
 };
 
@@ -72,7 +67,7 @@ export const handleUpdateProduct = async (req, res) => {
     return res.status(200).json({ data: updatedProduct, message:"Product updated" });
   } catch (error) {
     console.error('Error updating product:', error.message);
-    return res.status(500).json({ error: error.message });
+    return res.status(error.statusCode || 500).json({ error: error.message });
   }
 };
 
@@ -90,6 +85,6 @@ export const handleDeleteProduct = async (req, res) => {
     return res.status(200).json({ data: deletedProduct, message:"Product deleted" });// message
   } catch (error) {
     console.error('Error deleting product:', error.message);
-    return res.status(500).json({ error: error.message });
+    return res.status(error.statusCode || 500).json({ error: error.message });
   }
 };
