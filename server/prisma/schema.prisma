@@ -79,7 +79,7 @@ model ProductTag {
 
 model Product {
   id          Int      @id @default(autoincrement())
-  name        String
+  name        String @unique
   description String?
   photo       String?
   price       Float

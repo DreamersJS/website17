@@ -9,7 +9,7 @@ const JWT_SECRET = process.env.JWT_SECRET_KEY;
  * const { username, email, password, coachId  } = req.body;
  * coachId is optional and can be null for now
  */
-export const createUser = async (req, res) => {
+export const createUser = async (req, res, next) => {
   const { username, email, password, coachId } = req.body;
 
   if (!username || !email || !password) {
@@ -43,18 +43,13 @@ export const createUser = async (req, res) => {
       data: result
     });
   } catch (error) {
-    console.error('Error creating user:', error);
-
-    if (error.message === 'Email is already in use.') {
-      return res.status(409).json({ error: error.message });
-    }
-    return res.status(500).json({ error: 'Failed to create user' });
+    next(error);
   }
 };
 
 // login a user
 /*Only include the token in the res if your application explicitly needs to support clients that cannot rely on cookies (e.g., mobile apps). */
-export const loginUser = async (req, res) => {
+export const loginUser = async (req, res, next) => {
   const { email, password } = req.body;
 
   try {
@@ -85,20 +80,12 @@ export const loginUser = async (req, res) => {
     });
 
   } catch (error) {
-    if (error.message === 'User not found.') {
-      return res.status(404).json({ error: error.message });
-    }
-
-    if (error.message === 'Invalid credentials.') {
-      return res.status(401).json({ error: error.message });
-    }
-
-    res.status(500).json({ error: 'Failed to log in user' });
+    next(error);
   }
 };
 
 // Logout a user
-export const logoutUser = (req, res) => {
+export const logoutUser = (req, res, next) => {
   res.clearCookie('authToken', {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
@@ -108,20 +95,19 @@ export const logoutUser = (req, res) => {
 };
 
 // Update an existing user
-export const updateUser = async (req, res) => {
+export const updateUser = async (req, res, next) => {
   const { id } = req.params;
 
   try {
     const updatedUser = await updateUserService(id, req.body);
     res.status(200).json({ message: 'User updated successfully', data: updatedUser });
   } catch (error) {
-    console.error('Error updating user:', error);
-    res.status(500).json({ error: 'Failed to update user' });
+    next(error);
   }
 };
 
 // Fetch a single user by ID
-export const fetchUser = async (req, res) => {
+export const fetchUser = async (req, res, next) => {
   const { id } = req.params;
 
   if (!isUUID(id)) {
@@ -135,13 +121,12 @@ export const fetchUser = async (req, res) => {
     }
     res.status(200).json({ message: 'User fetched successfully', data: user });
   } catch (error) {
-    console.error('Error fetching user:', error);
-    res.status(500).json({ error: 'Failed to fetch user' });
+    next(error);
   }
 };
 
 // Fetch a single user by email
-export const getUserByEmail = async (req, res) => {
+export const getUserByEmail = async (req, res, next) => {
   const { email } = req.params;
 
   try {
@@ -153,32 +138,29 @@ export const getUserByEmail = async (req, res) => {
 
     res.status(200).json({ message: 'User fetched successfully', data: user });
   } catch (error) {
-    console.error('Error fetching user by email:', error);
-    res.status(500).json({ error: 'Failed to fetch user by email' });
+    next(error);
   }
 };
 
 // Fetch all users
-export const fetchAllUsers = async (req, res) => {
+export const fetchAllUsers = async (req, res, next) => {
   console.log('Fetching all users...');
   try {
     const users = await getAllUsersService();
     console.log(users);
     res.status(200).json({ message: 'Users fetched successfully', data: users });
   } catch (error) {
-    console.error('Error fetching users:', error);
-    res.status(500).json({ error: 'Failed to fetch users' });
+    next(error);
   }
 };
 
 // Delete a user by ID
-export const deleteUser = async (req, res) => {
+export const deleteUser = async (req, res, next) => {
   const { id } = req.params;
   try {
     await deleteUserService(id);
     res.status(200).json({ message: 'User deleted successfully' });
   } catch (error) {
-    console.error('Error deleting user:', error);
-    res.status(500).json({ error: 'Failed to delete user' });
+    next(error);
   }
 };

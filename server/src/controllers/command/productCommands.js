@@ -1,46 +1,62 @@
+import { AppError } from "../../utils/AppError.js";
 import { queryCategory, queryProductByName } from "../query/productQueries.js";
 
+
 export const createProduct = (prisma) => async (productData) => {
-    return prisma.$transaction(async (tx) => {
+    const {
+        name,
+        description,
+        photo,
+        price,
+        quantity,
+        inStock,
+        categoryName,
+        tagNames = [],
+    } = productData;
 
-        const existingProduct = await queryProductByName(tx)(productData.name);
-        if (existingProduct) {
-            throw new Error('Product already exists');
-        }
+    // 1. Check if exists
+    const existingProduct = await queryProductByName(prisma)(name);
+    if (existingProduct) {
+        throw new Error('Product already exists');
+    }
 
-        let category = await queryCategory(tx)(productData.categoryName);
-        if (!category) {
-            category = await tx.category.create({
-                data: { name: productData.categoryName },
-            });
-        }
+    // 2. Find or create category
+    let category = await queryCategory(prisma)(categoryName);
+    if (!category) {
+        category = await createCategory(prisma)(categoryName);
+    }
 
-        const product = await tx.product.create({
-            data: {
-                ...productData,
-                categoryId: category.id,
-            },
-        });
-
-        await Promise.all(
-            productData.tagNames.map(async (tagName) => {
-                const tag = await tx.tag.upsert({
-                    where: { name: tagName },
-                    update: {},
-                    create: { name: tagName },
-                });
-
-                await tx.productTag.create({
-                    data: {
-                        productId: product.id,
-                        tagId: tag.id,
-                    },
-                });
-            })
-        );
-
-        return product;
+    // 3. Create product
+    const product = await prisma.product.create({
+        data: {
+            name,
+            description,
+            photo,
+            price,
+            quantity,
+            inStock,
+            categoryId: category.id,
+        },
     });
+
+    // 4. Handle tags
+    await Promise.all(
+        tagNames.map(async (tagName) => {
+            const tag = await prisma.tag.upsert({
+                where: { name: tagName },
+                update: {},
+                create: { name: tagName },
+            });
+
+            await prisma.productTag.create({
+                data: {
+                    productId: product.id,
+                    tagId: tag.id,
+                },
+            });
+        })
+    );
+    return product;
 };
 
 export const createCategory = (prisma) => async (categoryName) => {
