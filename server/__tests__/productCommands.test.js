@@ -1,7 +1,6 @@
 import { describe, it, expect, jest } from '@jest/globals';
 import { createProduct } from '../src/controllers/command/productCommands.js';
 import { prismaMock } from '../__mocks__/prisma.js';
-import * as productQueries from '../src/controllers/query/productQueries.js';
 
 describe.only('createProduct', () => {
     beforeEach(() => {
@@ -42,17 +41,7 @@ describe.only('createProduct', () => {
     it('should throw if product exists', async () => {
         //arrange
         prismaMock.product.findUnique = jest.fn().mockResolvedValue({ id: 1 });
-        // mock the query layer instead of prisma
-        // jest
-        //     .spyOn(productQueries, 'queryProductByName')
-        //     .mockReturnValue(() => Promise.resolve({ id: 1 }));
 
-        // //act
-        // const result = await createProduct(prismaMock)({ name: 'Test' });
-        // //assert
-        // expect(result).rejects.toThrow('Product already exists');
-
-        // await & rejects/resolves must be together
         await expect(
             createProduct(prismaMock)({ name: 'Test' })
         ).rejects.toThrow('Product already exists');
