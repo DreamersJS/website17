@@ -1,6 +1,6 @@
 import prisma from '../config/prisma.js';
 import { createProduct, deleteProduct, updateProduct } from './command/productCommands.js'
-import { getAllProducts } from './query/productQueries.js';
+import { getAllProducts, getProductById } from './query/productQueries.js';
 
 /**
  * @desc    Create a new product (with tags and category)
@@ -8,15 +8,12 @@ import { getAllProducts } from './query/productQueries.js';
  * @access  Admin
  * @docs    See: docs/api-doc.md#post-apiproduct
  */
-export const handleCreateProduct = async (req, res) => {
-  console.log('handleCreateProduct ProductsController!!!');
-  const { name, description, photo, price, quantity, inStock, categoryName, tagNames = [] } = req.body;
+export const handleCreateProduct = async (req, res, next) => {
   try {
     const product = await createProduct(prisma)(req.body)
-    return res.status(201).json({ results: product });
+    return res.status(201).json({ data: product, message:"Product created successfully" });
   } catch (error) {
-    console.error('Error creating product with tags:', error.message);
-    return res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 
@@ -26,14 +23,12 @@ export const handleCreateProduct = async (req, res) => {
  * @access  Public
  * @docs    See: docs/api-doc.md#get-apiproductall
  */
-export const handleGetAllProducts = async (req, res) => {
+export const handleGetAllProducts = async (req, res, next) => {
   try {
     const products = await getAllProducts(prisma)()
-    return res.status(200).json({ results: products });
+    return res.status(200).json({ data: products });
   } catch (error) {
-    // next(error); if I wanna pass the err to the error handler
-    console.error('Error fetching products:', error.message);
-    return res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 
@@ -43,17 +38,13 @@ export const handleGetAllProducts = async (req, res) => {
  * @access  Public
  * @docs    See: docs/api-doc.md#get-apiproductid
  */
-export const handleGetProductById = async (req, res) => {
+export const handleGetProductById = async (req, res, next) => {
   const { id } = req.params;
   try {
     const product = await getProductById(prisma)(id);
-    if (!product) {
-      return res.status(404).json({ error: 'Product not found' });
-    }
-    return res.status(200).json(product);
+    return res.status(200).json({ data: product });
   } catch (error) {
-    console.error('Error fetching product:', error.message);
-    return res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 
@@ -63,16 +54,13 @@ export const handleGetProductById = async (req, res) => {
  * @access  Admin
  * @docs    See: docs/api-doc.md#put-apiproductid
  */
-export const handleUpdateProduct = async (req, res) => {
+export const handleUpdateProduct = async (req, res, next) => {
   const { id } = req.params;
-  const { name, description, photo, price, quantity, inStock, categoryName, tagNames = [] } = req.body;
-
   try {
     const updatedProduct = await updateProduct(prisma)(id, req.body)
-    return res.status(200).json({ results: updatedProduct });
+    return res.status(200).json({ data: updatedProduct, message:"Product updated" });
   } catch (error) {
-    console.error('Error updating product:', error.message);
-    return res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 
@@ -82,14 +70,13 @@ export const handleUpdateProduct = async (req, res) => {
  * @access  Admin
  * @docs    See: docs/api-doc.md#delete-apiproductid
  */
-export const handleDeleteProduct = async (req, res) => {
+export const handleDeleteProduct = async (req, res, next) => {
   const { id } = req.params;
   try {
     const deletedProduct = await deleteProduct(prisma)(id);
 
-    return res.status(200).json({ results: deletedProduct });
+    return res.status(200).json({ data: deletedProduct, message:"Product deleted" });
   } catch (error) {
-    console.error('Error deleting product:', error.message);
-    return res.status(500).json({ error: error.message });
+    next(error);
   }
 };

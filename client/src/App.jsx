@@ -23,7 +23,6 @@ import ConfirmEmail from './components/ConfirmEmail';
 // protected components
 const CoachesPage = lazy(() => import('./components/CoachesPage'));
 const ProfilePage = lazy(() => import('./components/ProfilePage'));
-const Diary = lazy(() => import('./components/Diary'));
 // auth components
 const Logout = lazy(() => import('./components/auth/Logout'));
 const Login = lazy(() => import('./components/auth/Login'));
@@ -64,7 +63,6 @@ function App() {
                       <Route path="/testimonials" element={<Layout main={<Testimonials />} />} />
                       <Route path="/products" element={<Layout main={<ProductsPage />} />} />
                       <Route path="/products/:id" element={<Layout main={<ProductDetailsPage />} />} />
-                      <Route path="/diary" element={<Layout main={<Diary />} />} />
                       {/* <Route path="/search/?q=yourSearchTerm" element={<Layout main={<SearchPage />} />} /> */}
                       {/* no need to include ?q=... in route definition. That’s handled by useLocation(). */}
                       <Route path="/search" element={<Layout main={<SearchPage />} />} />

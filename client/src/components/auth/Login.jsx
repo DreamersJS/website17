@@ -29,7 +29,7 @@ const Login = () => {
 
     try {
       const data = await loginUser({ email, password });
-      const user = data.user;
+      const user = data;
 
       if (!user || !user.username || !user.id) {
         throw new Error("Username or ID is missing in the response");

@@ -79,7 +79,7 @@ model ProductTag {
 
 model Product {
   id          Int      @id @default(autoincrement())
-  name        String
+  name        String @unique
   description String?
   photo       String?
   price       Float
@@ -90,25 +90,4 @@ model Product {
   categoryId  Int?                                           // make FK nullable
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-}
-
-model Diary {
-  id          Int      @id @default(autoincrement())
-  createdAt   DateTime @default(now())
-  userId      String?   @unique @db.Uuid
-  waterIntake Float
-  energyLevel Int
-  sleepQuality Int
-  mood        Int
-  meals       Meal[]
-}
-
-model Meal {
-  id      Int    @id @default(autoincrement())
-  meal    String
-  grams   Int
-  type    String
-  notes   String
-  diaryId Int
-  diary   Diary @relation(fields: [diaryId], references: [id])
 }

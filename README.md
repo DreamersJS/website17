@@ -16,7 +16,7 @@ Responsive layout:
 User-based rendering:
 
 - Guest: Login / Register
-- Authenticated: Profile, Diary, Results, Logout
+- Authenticated: Profile, Results, Logout
 - Admin: Additional admin dashboard access
 
 Global Search Bar:

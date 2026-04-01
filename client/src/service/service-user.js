@@ -45,7 +45,7 @@ export const registerUser = async ({ username, password, email }) => {
     const data = await response.json();
     console.log('User registered successfully:', data);
 
-    return data;
+    return data.data;
   } catch (error) {
     console.error('Error registering user:', error);
     throw error;
@@ -73,7 +73,7 @@ export const loginUser = async ({ email, password }) => {
 
     const data = await response.json();
     console.log('User logged in successfully:', data);
-    return data;
+    return data.data;
   } catch (error) {
     console.error('Error logging in:', error);
     throw error;
@@ -113,7 +113,7 @@ export const fetchUsers = async () => {
       throw new Error('Failed to fetch users');
     }
     const data = await response.json();
-    return data;
+    return data.data;
   } catch (error) {
     console.error('Error fetching users:', error);
   }
@@ -134,6 +134,8 @@ export const updateUserRole = async (userId, newRole) => {
       throw new Error(errorData.error || 'Failed to update role');
     }
     console.log('Role updated');
+    const data = await response.json();
+    return data.message;
   } catch (error) {
     console.error('Error updating role:', error);
   }
@@ -156,29 +158,4 @@ export const updateIsBlocked = async (userId) => {
   } catch (error) {
     console.error('Error updating block status:', error);
   }
-};
-
-export const fetchDiary = async () => {};
-export const saveDiary = async (userId, data) => {
-  const { meals, waterIntake, energyLevel, sleepQuality, mood } = data;
-  const response = await fetch(`/api/users/${userId}/diary`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      meals,
-      waterIntake,
-      energyLevel,
-      sleepQuality,
-      mood,
-      userId,
-    }),
-    credentials: 'include',
-  });
-
-  if (!response.ok) {
-    throw new Error('Failed to save diary');
-  }
-  return response.json();
 };
