@@ -1,6 +1,6 @@
 import { describe, it, expect, jest } from '@jest/globals';
-import { createProduct } from '../src/controllers/command/productCommands.js';
-import { prismaMock } from '../__mocks__/prisma.js';
+import { createProduct } from '../../src/controllers/command/productCommands.js';
+import { prismaMock } from '../../__mocks__/prisma.js';
 
 describe.only('createProduct', () => {
     beforeEach(() => {
