@@ -42,7 +42,7 @@ describe('Auth API', () => {
             expect(res.statusCode).toBe(400);
             expect(res.body.error).toBe('Email is already in use.');
         });
-        
+
     });
 
     // describe('POST /api/users/login', () => {
@@ -138,4 +138,5 @@ describe('Auth API', () => {
     //         expect(res.statusCode).toBe(401);
     //     });
     // });
+    
 });
