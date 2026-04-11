@@ -17,7 +17,7 @@ export const createProduct = (prisma) => async (productData) => {
     // 1. Check if exists
     const existingProduct = await queryProductByName(prisma)(name);
     if (existingProduct) {
-        throw new Error('Product already exists');
+        throw new AppError('Product already exists', 400);
     }
 
     // 2. Find or create category
