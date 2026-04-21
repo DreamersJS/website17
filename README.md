@@ -1,8 +1,27 @@
-# Wellness website
+# E-commerce Admin System (Fullstack)
 
 ## Description
 
-This project involves building a full-stack wellness website.
+A system designed for small businesses to manage products, users.
+
+## Technical Highlights
+
+- Role-Based Access Control (RBAC)
+- Email verification with DNS MX check
+- Redis TTL-based session / verification handling
+- Modular backend architecture (controllers/services)
+- PostgreSQL + Prisma ORM
+
+## Architecture
+
+
+
+
+## Trade-offs
+
+- Chose PostgreSQL over Mongo for relational data consistency
+- Used Redis for TTL-based email verification to avoid DB bloat
+- Separated backend from frontend for scalability
 
 ## Features
 
