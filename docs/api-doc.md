@@ -130,7 +130,7 @@ Create a new product with category and tags.
   "price": 95,
   "quantity": 0,
   "inStock": true,
-  "categoryName": "Supplements", //optional
+  "categoryName": "Supplements",
   "tagNames": ["Recovery", "Muscle"] //optional
 }
 ```

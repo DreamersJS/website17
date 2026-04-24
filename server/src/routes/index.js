@@ -13,6 +13,6 @@ router.use('/coaches', coachRoutes);
 router.use('/product', productsRoutes);
 router.use('/search', searchRoutes);
 router.use('/email', emailRoutes);
-router.use('/email', cartRoutes);
+router.use('/cart', cartRoutes);
 
 export default router;
