@@ -12,9 +12,9 @@ A system designed for small businesses to manage products, users.
 - Modular backend architecture (controllers/services)
 - PostgreSQL + Prisma ORM
 
-## Architecture
+<!-- ## Architecture -->
 
-
+  
 
 
 ## Trade-offs
