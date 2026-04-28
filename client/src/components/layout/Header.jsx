@@ -6,6 +6,7 @@ import ButtonHeader from "../Button";
 import HomeIcon from '@mui/icons-material/Home';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { AppBar, Toolbar, IconButton, Typography, Box, Drawer, Menu, MenuItem, Divider, List, ListItem, ListItemText } from '@mui/material';
 import ResponsiveComponent from '../hoc/ResponsiveComponent';
 
@@ -49,7 +50,6 @@ const Header = () => {
             console.error('Navigation failed', error);
         }
     };
-
 
     return (
         <ResponsiveComponent>
@@ -168,6 +168,11 @@ const Header = () => {
                                     />
                                 )}
                             </Box>
+                            <NavLink to="/cart" style={{ margin: width <= 805 ? '0 3px' : '0 10px' }}>
+                                <IconButton>
+                                <ShoppingCartIcon sx={{ color: '#FFF' }} />
+                                </IconButton>
+                            </NavLink>
                         </Box>
 
                         {/* Mobile Menu Icon */}

@@ -19,6 +19,7 @@ import Auth from './components/auth/Auth';
 import ProductDetailsPage from './components/ProductDetailsPage';
 import Contact from './components/quick links/Contacts';
 import ConfirmEmail from './components/ConfirmEmail';
+import Cart from './components/Cart';
 
 // protected components
 const CoachesPage = lazy(() => import('./components/CoachesPage'));
@@ -60,6 +61,7 @@ function App() {
                       <Route path="/" element={<Layout main={<Home />} />} />
                       <Route path="/coach" element={<Layout main={<CoachesPage />} />} />
                       <Route path="/profile" element={<Layout main={<ProfilePage />} />} />
+                      <Route path="/cart" element={<Layout main={<Auth><Cart /></Auth>} />} />
                       <Route path="/testimonials" element={<Layout main={<Testimonials />} />} />
                       <Route path="/products" element={<Layout main={<ProductsPage />} />} />
                       <Route path="/products/:id" element={<Layout main={<ProductDetailsPage />} />} />

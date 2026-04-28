@@ -10,7 +10,6 @@ import WellnessImage from '../../public/wellness-image.jpg';
 // Dynamic Content:
 // Show content based on seasons (e.g., “Winter Wellness Tips”).
 
-
 //  join now button in home: if user is logged in - remove or exchange?
 
 const Home = () => {
@@ -109,8 +108,6 @@ const Home = () => {
                     </Grid>
                 </Grid>
             </Container>
-
-        
         </Box>
     );
 };
