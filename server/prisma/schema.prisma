@@ -11,6 +11,7 @@
 // npx prisma migrate dev
 
 // npx prisma migrate deploy       for production
+// npx prisma format
 
 generator client {
   provider = "prisma-client-js"
@@ -42,7 +43,7 @@ model User {
    // Relationships to other features
   clients      User[]        @relation("UserCoach")
   coachProfile CoachProfile? @relation("CoachProfileUser")  
-  
+  cart  Cart?
   
   @@index([email])
 }
@@ -51,7 +52,7 @@ model CoachProfile {
   id         String   @id @default(uuid()) @db.Uuid
   bio        String
   expertise  String?   // Example: Fitness, Nutrition
-  userId     String?   @unique @db.Uuid // Allows nullability for flexibility
+  userId     String?   @unique @db.Uuid
   user       User?     @relation("CoachProfileUser", fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
 }
@@ -88,6 +89,29 @@ model Product {
   tags        ProductTag[]
   category    Category? @relation(fields: [categoryId], references: [id]) // make relation optional
   categoryId  Int?                                           // make FK nullable
+  cartItems   CartItem[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+model Cart {
+  id        String     @id @default(uuid()) @db.Uuid
+  userId    String     @unique @db.Uuid
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items     CartItem[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model CartItem {
+  id        String   @id @default(uuid()) @db.Uuid
+  cartId    String   @db.Uuid
+  cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+
+  productId Int
+  product   Product  @relation(fields: [productId], references: [id])
+
+  quantity  Int      @default(1)
+
+  @@unique([cartId, productId])
 }

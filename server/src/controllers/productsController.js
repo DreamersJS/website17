@@ -75,7 +75,7 @@ export const handleDeleteProduct = async (req, res, next) => {
   try {
     const deletedProduct = await deleteProduct(prisma)(id);
 
-    return res.status(200).json({ data: deletedProduct, message:"Product deleted" });
+    return res.status(200).json({ data: null, message:"Product deleted" });
   } catch (error) {
     next(error);
   }

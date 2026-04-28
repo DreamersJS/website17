@@ -1,17 +1,18 @@
 import prisma from '../../config/prisma.js';
 import bcrypt from 'bcrypt';
 import { validate as isUUID } from 'uuid';
+import { AppError } from '../../utils/AppError.js';
 
 export const createUserService = async (userData) => {
   const { username, email, password, coachId } = userData;
 
   if (!username || !email || !password) {
-    throw new Error('Username, email and password are required.');
+    throw new AppError('Username, email and password are required.', 400);
   }
 
   const existingUser = await prisma.user.findUnique({ where: { email } });
   if (existingUser) {
-    throw new Error('Email is already in use.');
+    throw new AppError('Email is already in use.', 400);
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -42,7 +43,7 @@ export const createUserService = async (userData) => {
     isBlocked: true
   }
 });select only controls what you return, not what you store. */
-  return safeUser; // just send the full object (excluding password)
+  return safeUser;
 };
 
 export const loginUserService = async (data) => {
@@ -50,12 +51,12 @@ export const loginUserService = async (data) => {
 
   const user = await prisma.user.findUnique({ where: { email } });
   if (!user) {
-    throw new Error('User not found.');
+    throw new AppError('User not found.', 401);
   }
 
   const isPasswordValid = await bcrypt.compare(password, user.password);
   if (!isPasswordValid) {
-    throw new Error('Invalid credentials.');
+    throw new AppError('Invalid credentials.', 401);
   }
 
   const { password: _, ...safeUser } = user;
@@ -76,13 +77,13 @@ export const updateUserService = async (id, data) => {
 
 export const getUserByIdService = async (id) => {
   if (!isUUID(id)) {
-    throw new Error('Invalid UUID format');
+    throw new AppError('Invalid UUID format', 401);
   }
 
   const user = await prisma.user.findUnique({ where: { id } });
 
   if (!user) {
-    throw new Error('User not found');
+    throw new AppError('User not found', 404);
   }
 
   const { password: _, ...safeUser } = user;
@@ -94,7 +95,7 @@ export const getUserByEmailService = async (email) => {
   const user = await prisma.user.findUnique({ where: { email } });
 
   if (!user) {
-    throw new Error('User not found');
+    throw new AppError('User not found', 404);
   }
 
   const { password: _, ...safeUser } = user;

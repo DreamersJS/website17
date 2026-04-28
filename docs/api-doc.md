@@ -28,7 +28,7 @@ Fetch all products, including category and tags.
 
 ```json
 {
-  "results": [
+  "data": {
     {
       "id": "32",
       "name": "Protein Bar",
@@ -60,8 +60,7 @@ Fetch all products, including category and tags.
       ],
       "updatedAt":""
     },
-
-  ]
+  }
 }
 ```
 
@@ -82,6 +81,7 @@ Fetch a single product by its ID.
 
 ```json
 {
+  "data": {
       "id": "32",
       "name": "Protein Bar",
       "description": "...",
@@ -103,6 +103,7 @@ Fetch a single product by its ID.
          }
       ],
       "updatedAt":""
+       }
     }
 ```
 
@@ -129,7 +130,7 @@ Create a new product with category and tags.
   "price": 95,
   "quantity": 0,
   "inStock": true,
-  "categoryName": "Supplements", //optional
+  "categoryName": "Supplements",
   "tagNames": ["Recovery", "Muscle"] //optional
 }
 ```
@@ -138,7 +139,7 @@ Create a new product with category and tags.
 
 ```json
 {
- "results": [
+ "data": {
    {
      "id": "32",
      "name": "Protein Bar",
@@ -162,8 +163,8 @@ Create a new product with category and tags.
      ],
      "updatedAt":""
    },
-
- ]
+ },
+ message:"Product created successfully"
 }
 ```
 
@@ -211,7 +212,7 @@ Update an existing product and its tag list.
 
 ```json
 {
- "results": [
+ "data": {
    {
      "id": "32",
      "name": "Protein Bar",
@@ -235,8 +236,8 @@ Update an existing product and its tag list.
      ],
      "updatedAt":""
    },
-
- ]
+ }, 
+message:"Product updated"
 }
 ```
 
@@ -270,18 +271,8 @@ Delete a product and unlink tags.
 
 ```
 {
-  "results": {
-    id: 44,
-   name: 'wwwwwww',
-   description: 'w',
-   photo: '',
-   price: 3,
-   inStock: true,
-   quantity: 1,
-   categoryId: 3,
-   createdAt: 2025-07-13T19:42:24.320Z,
-   updatedAt: 2025-07-13T19:42:24.321Z
-  }
+  "data": null, 
+  message:"Product deleted"
 }
 
 ```

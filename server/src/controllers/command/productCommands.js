@@ -1,7 +1,6 @@
 import { AppError } from "../../utils/AppError.js";
 import { queryCategory, queryProductByName } from "../query/productQueries.js";
 
-
 export const createProduct = (prisma) => async (productData) => {
     const {
         name,
@@ -17,14 +16,14 @@ export const createProduct = (prisma) => async (productData) => {
     // 1. Check if exists
     const existingProduct = await queryProductByName(prisma)(name);
     if (existingProduct) {
-        throw new Error('Product already exists');
+        throw new AppError('Product already exists', 400);
     }
 
     // 2. Find or create category
     let category = await queryCategory(prisma)(categoryName);
-    if (!category) {
-        category = await createCategory(prisma)(categoryName);
-    }
+        if (!category) {
+            category = await createCategory(prisma)(categoryName);
+        }
 
     // 3. Create product
     const product = await prisma.product.create({
