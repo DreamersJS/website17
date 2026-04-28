@@ -19,16 +19,16 @@ import Auth from './components/auth/Auth';
 import ProductDetailsPage from './components/ProductDetailsPage';
 import Contact from './components/quick links/Contacts';
 import ConfirmEmail from './components/ConfirmEmail';
-import Cart from './components/Cart';
+const CoachesPage = lazy(() => import('./components/CoachesPage'));
 
 // protected components
-const CoachesPage = lazy(() => import('./components/CoachesPage'));
+import Cart from './components/Cart';
 const ProfilePage = lazy(() => import('./components/ProfilePage'));
 // auth components
 const Logout = lazy(() => import('./components/auth/Logout'));
 const Login = lazy(() => import('./components/auth/Login'));
 const Register = lazy(() => import('./components/auth/Register'));
-
+// admin
 const Admin = lazy(() => import('./components/Admin'));
 const AddProduct = lazy(() => import('./components/AddProduct'));
 
@@ -40,10 +40,7 @@ function App() {
 
   useEffect(() => {
     console.log(`user`, user);
-    if (user?.id) {
-      console.log(`no user`);
-      console.log(user?.id);
-    }
+
   }, [user]);
 
   return (

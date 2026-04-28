@@ -35,10 +35,10 @@ const TermsOfUse = () => {
 
       <h2 className="text-2xl font-semibold mt-6 mb-2">6. Governing Law</h2>
       <p className="text-gray-700">
-        These terms are governed by the laws of [Bulgaria]. Any disputes will be handled in accordance with local laws.
+        These terms are governed by the laws of Bulgaria. Any disputes will be handled in accordance with local laws.
       </p>
 
-      <p className="mt-6 text-gray-700">Effective Date: [02.07.2025]</p>
+      <p className="mt-6 text-gray-700">Effective Date: 02.07.2025</p>
     </div>
   );
 };

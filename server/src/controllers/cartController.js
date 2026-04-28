@@ -2,7 +2,7 @@ import prisma from '../config/prisma.js';
 
 export const createCart = async (req, res, next) => {
     try {
-        const userId = req.user.id;
+        const userId = req.user.userId;
 
         const existingCart = await prisma.cart.findUnique({
             where: { userId }
@@ -24,24 +24,36 @@ export const createCart = async (req, res, next) => {
     }
 };
 
-export const getCart = async (req, res) => {
-    const cart = await prisma.cart.findUnique({
-        where: { userId: req.user.id },
-        include: {
-            items: {
-                include: { product: true }
+export const getCart = async (req, res, next) => {
+    try {
+        const userId = req.user.userId
+        console.log(userId);
+        const cart = await prisma.cart.findUnique({
+            where: { userId },
+            include: {
+                items: {
+                    include: { product: true }
+                }
             }
-        }
-    });
-    const total = totalCartPrice(cart)
-    const formattedItems = cart.items.map(item => ({
-        productId: item.productId,
-        name: item.product.name,
-        price: item.product.price,
-        quantity: item.quantity,
-        subtotal: item.quantity * item.product.price
-    }));
-    res.json({ data: { formattedItems, total }, message: 'Cart fetched' });
+        });
+        if (!cart) {
+            return res.status(200).json({
+              data: { formattedItems: [], total: 0 },
+              message: "Cart is empty"
+            });
+          }
+        const total = totalCartPrice(cart)
+        const formattedItems = cart.items.map(item => ({
+            productId: item.productId,
+            name: item.product.name,
+            price: item.product.price,
+            quantity: item.quantity,
+            subtotal: item.quantity * item.product.price
+        }));
+        res.json({ data: { formattedItems, total }, message: 'Cart fetched' });
+    } catch (error) {
+        next(error)
+    }
 }
 
 export const totalCartPrice = (cart) => {
@@ -56,7 +68,7 @@ export const deleteCart = async (req, res, next) => {
         where: { id: req.params.cartId }
     });
 
-    if (!cart || cart.userId !== req.user.id) {
+    if (!cart || cart.userId !== req.user.userId) {
         return res.status(403).json({ error: 'Not allowed' });
     }
     try {
@@ -73,7 +85,7 @@ export const deleteCart = async (req, res, next) => {
 // items in cart
 export const setItemToCart = async (req, res, next) => {
     try {
-        const userId = req.user.id;
+        const userId = req.user.userId;
         const { productId, quantity } = req.body;
 
         if (!productId || quantity == null) {
@@ -114,7 +126,7 @@ export const setItemToCart = async (req, res, next) => {
 
 export const deleteItemInCart = async (req, res, next) => {
     try {
-        const userId = req.user.id;
+        const userId = req.user.userId;
         const { productId } = req.params;
         if (!productId) {
             return res.status(400).json({ error: 'No product' });
@@ -144,7 +156,7 @@ export const deleteItemInCart = async (req, res, next) => {
 
 export const updateQuantityInCart = async (req, res, next) => {
     try {
-        const userId = req.user.id;
+        const userId = req.user.userId;
         const { productId, quantity } = req.body;
 
         if (!productId || quantity == null) {

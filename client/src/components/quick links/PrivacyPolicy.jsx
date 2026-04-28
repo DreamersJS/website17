@@ -41,7 +41,7 @@ const PrivacyPolicy = () => {
 
       <h2 className="text-2xl font-semibold mt-6 mb-2">Your Rights</h2>
       <p className="text-gray-700">
-        You have the right to access, correct, or delete your personal data. Contact us at [your email] for any privacy requests.
+        You have the right to access, correct, or delete your personal data. Contact us at info@example.com for any privacy requests.
       </p>
 
       <h2 className="text-2xl font-semibold mt-6 mb-2">Changes to This Policy</h2>
@@ -49,7 +49,7 @@ const PrivacyPolicy = () => {
         We may update this policy as needed. Updates will be posted here with a revised date.
       </p>
 
-      <p className="mt-6 text-gray-700">Effective Date: [02.07.2025]</p>
+      <p className="mt-6 text-gray-700">Effective Date: 02.07.2025</p>
     </div>
   );
 };

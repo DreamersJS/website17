@@ -2,11 +2,20 @@ import React, { useEffect, useState } from 'react';
 import { Box, Typography, Card, CardContent, CardMedia, IconButton, Button, Divider } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { createCartService, deleteItemsFromCart, getCartService, updateItemsFromCart } from '../service/cartService';
+import { useRecoilValue } from "recoil";
+import { userState } from "../recoil/userAtom";
 
 const Cart = () => {
     const [cartItems, setCartItems] = useState([]);
     const [total, setTotal]=useState(0);
-
+    const user = useRecoilValue(userState);
+    
+    useEffect(() => {
+        if (!user?.id) {
+          navigate('/login');
+        }
+      }, [user]);
+    
     const handleFetchCart = async () => {
         const res = await getCartService()
         setCartItems(res.data.formattedItems);

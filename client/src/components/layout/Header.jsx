@@ -96,10 +96,6 @@ const Header = () => {
                                                 Profile
                                             </MenuItem>
                                             <Divider />
-                                            {/* can submit Results for testimonials, marathons(who can verify the results? само клиенти 'на живо' могат да събмитнат?); take them from Diary logic like DirectChat-ChannelChat */}
-                                            <MenuItem component={NavLink} to="/results" onClick={handleClose}>
-                                                Results
-                                            </MenuItem>
                                             <Divider />
                                             <MenuItem component={NavLink} to="/logout" onClick={handleClose}>
                                                 Logout
@@ -122,8 +118,8 @@ const Header = () => {
                                             Admin
                                         </MenuItem>
                                         {/* <Divider />
-                                <MenuItem component={NavLink} to="/block" onClick={handleClose}>
-                                    Block Users 
+                                <MenuItem component={NavLink} to="/manage-users" onClick={handleClose}>
+                                    Manage Users 
                                 </MenuItem> */}
                                         <Divider />
                                         <MenuItem component={NavLink} to="/manage-products" onClick={handleClose}>
@@ -170,7 +166,7 @@ const Header = () => {
                             </Box>
                             <NavLink to="/cart" style={{ margin: width <= 805 ? '0 3px' : '0 10px' }}>
                                 <IconButton>
-                                <ShoppingCartIcon sx={{ color: '#FFF' }} />
+                                    <ShoppingCartIcon sx={{ color: '#FFF' }} />
                                 </IconButton>
                             </NavLink>
                         </Box>
@@ -206,7 +202,6 @@ const Header = () => {
                                 )}
                             </Box>
                         </Box>
-
                     </Toolbar>
 
                     {/* Mobile Drawer */}
@@ -221,7 +216,15 @@ const Header = () => {
                                 <ListItem button component={NavLink} to="/">
                                     <ListItemText primary="Home" />
                                 </ListItem>
-
+                                <ListItem button component={NavLink} to="/coach">
+                                    <ListItemText primary="Coaches" />
+                                </ListItem>
+                                <ListItem button component={NavLink} to="/testimonials">
+                                    <ListItemText primary="Testimonials" />
+                                </ListItem>
+                                <ListItem button component={NavLink} to="/products">
+                                    <ListItemText primary="Products" />
+                                </ListItem>
                                 {userId ? (
                                     <>
                                         <ListItem button component={NavLink} to="/profile">
@@ -230,18 +233,9 @@ const Header = () => {
                                         <ListItem button component={NavLink} to="/logout">
                                             <ListItemText primary="Logout" />
                                         </ListItem>
-                                        <ListItem button component={NavLink} to="/coach">
-                                            <ListItemText primary="Coaches" />
+                                        <ListItem button component={NavLink} to="/cart">
+                                            <ListItemText primary="Cart" />
                                         </ListItem>
-                                        <ListItem button component={NavLink} to="/testimonials">
-                                            <ListItemText primary="Testimonials" />
-                                        </ListItem>
-                                        <ListItem button component={NavLink} to="/products">
-                                            <ListItemText primary="Products" />
-                                        </ListItem>
-                                        {/* <ListItem button component={NavLink} to="/shop">
-                                    <ListItemText primary="Shop" />
-                                </ListItem> */}
                                     </>
                                 )
                                     :
@@ -252,15 +246,6 @@ const Header = () => {
                                             </ListItem>
                                             <ListItem button component={NavLink} to="/register">
                                                 <ListItemText primary="Register" />
-                                            </ListItem>
-                                            <ListItem button component={NavLink} to="/coach">
-                                                <ListItemText primary="Coaches" />
-                                            </ListItem>
-                                            <ListItem button component={NavLink} to="/testimonials">
-                                                <ListItemText primary="Testimonials" />
-                                            </ListItem>
-                                            <ListItem button component={NavLink} to="/products">
-                                                <ListItemText primary="Products" />
                                             </ListItem>
                                         </>
                                     )}
