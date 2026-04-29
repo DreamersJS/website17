@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { Container, Typography, Box, Card, CardContent, CardMedia, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { addItemsToCart } from '../service/cartService';
+import { useFeedback } from './hoc/FeedbackContext';
 
 const ProductsCard = ({ product }) => {
     const { id, name, description, price, photo } = product;
     const navigate = useNavigate();
     const [isExpanded, setIsExpanded] = useState(false);
+    const { showFeedback } = useFeedback();
 
     // Limit description
     const limit = 100;
@@ -84,7 +87,8 @@ const ProductsCard = ({ product }) => {
                             }}
                             onClick={(e) => {
                                 e.stopPropagation();
-                                console.log('hey');
+                                addItemsToCart(product.id)
+                                showFeedback('Item added successfully!', 'success');
                                 return;
                             }}
                         >

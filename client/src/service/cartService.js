@@ -42,8 +42,8 @@ export const deleteCartService = async () => {
     return data.message;
 };
 
-export const addItemsToCart = async () => {
-    const res = await fetch('api/cart/items', {
+export const addItemsToCart = async (productId, quantity = 1) => {
+    const res = await fetch('/api/cart/items', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

@@ -38,10 +38,10 @@ export const getCart = async (req, res, next) => {
         });
         if (!cart) {
             return res.status(200).json({
-              data: { formattedItems: [], total: 0 },
-              message: "Cart is empty"
+                data: { formattedItems: [], total: 0 },
+                message: "Cart is empty"
             });
-          }
+        }
         const total = totalCartPrice(cart)
         const formattedItems = cart.items.map(item => ({
             productId: item.productId,
@@ -109,7 +109,9 @@ export const setItemToCart = async (req, res, next) => {
                 }
             },
             update: {
-                quantity
+                quantity: {
+                    increment: quantity
+                }
             },
             create: {
                 cartId: cart.id,

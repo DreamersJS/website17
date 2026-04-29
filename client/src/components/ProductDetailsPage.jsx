@@ -10,12 +10,15 @@ import {
   Button,
   CircularProgress,
 } from '@mui/material';
-import { getProductByIdService } from '../service/service-product'; 
+import { getProductByIdService } from '../service/service-product';
+import { addItemsToCart } from '../service/cartService';
+import { useFeedback } from './hoc/FeedbackContext';
 
 const ProductDetailsPage = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
+  const { showFeedback } = useFeedback();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -102,6 +105,12 @@ const ProductDetailsPage = () => {
               mt: 4,
               backgroundColor: '#177F2E',
               '&:hover': { backgroundColor: '#0b4017' },
+            }}
+            onClick={(e) => {
+              e.stopPropagation();
+              addItemsToCart(product.id)
+              showFeedback('Item added successfully!', 'success');
+              
             }}
           >
             Add to Cart
