@@ -33,8 +33,8 @@ const ProductsCard = ({ product }) => {
                         alt={name + ' photo'}
                         height="200"
                         image={photo}
-                        sx={{ objectFit: 'scale-down',  overflow: 'hidden', }} // cover or scale-down
-                        
+                        sx={{ objectFit: 'scale-down', overflow: 'hidden', }} // cover or scale-down
+
                     />
                 ) : (
                     // Placeholder box if no image
@@ -85,11 +85,14 @@ const ProductsCard = ({ product }) => {
                                 backgroundColor: '#177F2E',
                                 '&:hover': { backgroundColor: '#0b4017' },
                             }}
-                            onClick={(e) => {
+                            onClick={async (e) => {
                                 e.stopPropagation();
-                                addItemsToCart(product.id)
-                                showFeedback('Item added successfully!', 'success');
-                                return;
+                                try {
+                                    await addItemsToCart(product.id);
+                                    showFeedback('Item added successfully!', 'success');
+                                } catch (err) {
+                                    showFeedback(err.message || 'Failed to add item', 'error');
+                                }
                             }}
                         >
                             Add to Cart

@@ -106,11 +106,14 @@ const ProductDetailsPage = () => {
               backgroundColor: '#177F2E',
               '&:hover': { backgroundColor: '#0b4017' },
             }}
-            onClick={(e) => {
+            onClick={async (e) => {
               e.stopPropagation();
-              addItemsToCart(product.id)
-              showFeedback('Item added successfully!', 'success');
-              
+              try {
+                await addItemsToCart(product.id);
+                showFeedback('Item added successfully!', 'success');
+              } catch (err) {
+                showFeedback(err.message || 'Failed to add item', 'error');
+              }
             }}
           >
             Add to Cart
