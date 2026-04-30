@@ -5,6 +5,10 @@ import prisma from './src/config/prisma.js';
 
 export async function cleanDb() {
     const dbName = await prisma.$queryRaw`SELECT current_database()`;
+    const result = await prisma.$queryRaw`
+  SELECT current_database(), inet_server_addr(), inet_server_port()
+`
+    console.log(result)
     if (process.env.NODE_ENV !== 'test') {
         throw new Error('cleanDb() called outside test environment');
     }

@@ -8,10 +8,10 @@
     "dev": "nodemon src/server.js",
     "lint": "eslint .",
     "test:db": "docker compose -f docker-compose.test.yml up -d",
-    "test:migrate": "dotenv -e .env.test -- npx prisma migrate deploy --schema prisma/schema.prisma",
+    "test:migrate": "dotenv -e .env.test -- npx prisma migrate deploy --schema=prisma/schema.test.prisma",
     "test": "cross-env NODE_ENV=test dotenv_config_path=.env.test node --experimental-vm-modules node_modules/jest/bin/jest.js",
-    "test:watch": "jest --watch",
-    "test:reset": "dotenv -e .env.test -- prisma migrate reset --force"
+    "test:watch": "cross-env NODE_ENV=test dotenv_config_path=.env.test jest --watch",
+    "test:reset": "dotenv -e .env.test -- prisma migrate reset --schema=prisma/schema.test.prisma --force"
   },
   "keywords": [],
   "author": "",

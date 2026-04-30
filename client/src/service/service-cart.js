@@ -1,5 +1,5 @@
 export const createCartService = async () => {
-    const res = await fetch('api/cart/create', {
+    const res = await fetch('/api/cart/create', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -18,7 +18,7 @@ export const createCartService = async () => {
 }
 
 export const getCartService = async () => {
-    const res = await fetch(`api/cart/get`, {
+    const res = await fetch(`/api/cart/get`, {
         method: 'GET',
         credentials: "include"
     })
@@ -42,8 +42,8 @@ export const deleteCartService = async () => {
     return data.message;
 };
 
-export const addItemsToCart = async () => {
-    const res = await fetch('api/cart/items', {
+export const addItemsToCart = async (productId, quantity = 1) => {
+    const res = await fetch('/api/cart/items', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -61,8 +61,8 @@ export const addItemsToCart = async () => {
     return data;
 }
 
-export const deleteItemsFromCart = async (id) => {
-    const res = await fetch(`api/cart/items/${id}`, {
+export const deleteItemsFromCart = async (productId) => {
+    const res = await fetch(`/api/cart/items/${productId}`, {
         method: 'DELETE',
         credentials: 'include'
     })
@@ -72,8 +72,9 @@ export const deleteItemsFromCart = async (id) => {
     const data = res.json();
     return data;
 }
-export const updateItemsFromCart = async (id) => {
-    const res = await fetch(`api/cart/items/${id}`, {
+
+export const updateItemsFromCart = async (productId, quantity) => {
+    const res = await fetch(`/api/cart/items/${productId}`, {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json',
@@ -85,7 +86,7 @@ export const updateItemsFromCart = async (id) => {
         credentials: 'include'
     })
     if (!res.ok) {
-        throw new Error('Delete item from cart failed')
+        throw new Error('Update failed')
     }
     const data = res.json();
     return data;

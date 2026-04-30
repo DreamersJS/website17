@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { Container, Typography, Box, Card, CardContent, CardMedia, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { addItemsToCart } from '../service/cartService';
+import { useFeedback } from './hoc/FeedbackContext';
 
 const ProductsCard = ({ product }) => {
     const { id, name, description, price, photo } = product;
     const navigate = useNavigate();
     const [isExpanded, setIsExpanded] = useState(false);
+    const { showFeedback } = useFeedback();
 
     // Limit description
     const limit = 100;
@@ -30,8 +33,8 @@ const ProductsCard = ({ product }) => {
                         alt={name + ' photo'}
                         height="200"
                         image={photo}
-                        sx={{ objectFit: 'scale-down',  overflow: 'hidden', }} // cover or scale-down
-                        
+                        sx={{ objectFit: 'scale-down', overflow: 'hidden', }} // cover or scale-down
+
                     />
                 ) : (
                     // Placeholder box if no image
@@ -82,10 +85,14 @@ const ProductsCard = ({ product }) => {
                                 backgroundColor: '#177F2E',
                                 '&:hover': { backgroundColor: '#0b4017' },
                             }}
-                            onClick={(e) => {
+                            onClick={async (e) => {
                                 e.stopPropagation();
-                                console.log('hey');
-                                return;
+                                try {
+                                    await addItemsToCart(product.id);
+                                    showFeedback('Item added successfully!', 'success');
+                                } catch (err) {
+                                    showFeedback(err.message || 'Failed to add item', 'error');
+                                }
                             }}
                         >
                             Add to Cart

@@ -7,15 +7,15 @@ import { userState } from "../recoil/userAtom";
 
 const Cart = () => {
     const [cartItems, setCartItems] = useState([]);
-    const [total, setTotal]=useState(0);
+    const [total, setTotal] = useState(0);
     const user = useRecoilValue(userState);
-    
+
     useEffect(() => {
         if (!user?.id) {
-          navigate('/login');
+            navigate('/login');
         }
-      }, [user]);
-    
+    }, [user]);
+
     const handleFetchCart = async () => {
         const res = await getCartService()
         setCartItems(res.data.formattedItems);
@@ -29,19 +29,47 @@ const Cart = () => {
         }
     }, []);
 
-    const handleRemove = (id) => {
-        setCartItems(cartItems.filter(item => item.id !== id));
-        deleteItemsFromCart(id)
+    const handleRemove = (productId) => {
+        setCartItems(cartItems.filter(item => item.productId !== productId));
+        deleteItemsFromCart(productId)
     };
 
-    // const handleQuantityChange = (id, delta) => {
-    //     setCartItems(cartItems.map(item =>
-    //         item.id === id
-    //             ? { ...item, quantity: Math.max(1, item.quantity + delta) }
-    //             : item
-    //     ));
-    //     updateItemsFromCart(id)
-    // };
+    const handleQuantityChange = async (productId, delta) => {
+        const item = cartItems.find(i => i.productId === productId);
+        if (!item) return;
+
+        const newQuantity = item.quantity + delta;
+
+        //  don't allow if product disabled
+        if (!item.inStock) {
+            alert("Product is out of stock");
+            return;
+        }
+
+        //  don't exceed stock
+        if (newQuantity > item.stock) {
+            alert(`Only ${item.stock} left in stock`);
+            return;
+        }
+
+        //  optimistic UI update
+        setCartItems(prev =>
+            prev.map(i =>
+                i.productId === productId
+                    ? { ...i, quantity: newQuantity }
+                    : i
+            )
+        );
+
+        try {
+            await updateItemsFromCart(productId, newQuantity);
+            // optional: refresh totals
+            handleFetchCart();
+        } catch (err) {
+            console.error(err);
+            handleFetchCart(); // rollback if failed
+        }
+    };
 
     return (
         <Box sx={{ padding: 3, maxWidth: 800, margin: '0 auto' }}>
@@ -59,9 +87,23 @@ const Cart = () => {
                             </Typography>
 
                             <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
-                                {/* <Button size="small" onClick={() => handleQuantityChange(item.productId, -1)}>-</Button>
+                                <Button
+                                    size="small"
+                                    disabled={item.quantity <= 0}
+                                    onClick={() => handleQuantityChange(item.productId, -1)}
+                                >
+                                    -
+                                </Button>
+
                                 <Typography sx={{ mx: 2 }}>{item.quantity}</Typography>
-                                <Button size="small" onClick={() => handleQuantityChange(item.productId, 1)}>+</Button> */}
+
+                                <Button
+                                    size="small"
+                                    disabled={!item.inStock || item.quantity >= item.stock}
+                                    onClick={() => handleQuantityChange(item.productId, 1)}
+                                >
+                                    +
+                                </Button>
                             </Box>
                         </CardContent>
 

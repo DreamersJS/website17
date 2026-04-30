@@ -27,7 +27,7 @@ export const createCart = async (req, res, next) => {
 export const getCart = async (req, res, next) => {
     try {
         const userId = req.user.userId
-        console.log(userId);
+
         const cart = await prisma.cart.findUnique({
             where: { userId },
             include: {
@@ -38,16 +38,18 @@ export const getCart = async (req, res, next) => {
         });
         if (!cart) {
             return res.status(200).json({
-              data: { formattedItems: [], total: 0 },
-              message: "Cart is empty"
+                data: { formattedItems: [], total: 0 },
+                message: "Cart is empty"
             });
-          }
+        }
         const total = totalCartPrice(cart)
         const formattedItems = cart.items.map(item => ({
             productId: item.productId,
             name: item.product.name,
             price: item.product.price,
             quantity: item.quantity,
+            stock: item.product.quantity,
+            inStock: item.product.inStock,
             subtotal: item.quantity * item.product.price
         }));
         res.json({ data: { formattedItems, total }, message: 'Cart fetched' });
@@ -91,6 +93,7 @@ export const setItemToCart = async (req, res, next) => {
         if (!productId || quantity == null) {
             return res.status(400).json({ error: 'Missing fields' });
         }
+
         if (quantity <= 0) {
             return res.status(400).json({ error: "Quantity must be positive" });
         }
@@ -100,7 +103,38 @@ export const setItemToCart = async (req, res, next) => {
             create: { userId },
             update: {},
         });
-        // Atomic (safe from race conditions) Requires @@cartId_productId
+
+        const product = await prisma.product.findUnique({
+            where: { id: productId }
+        });
+
+        if (!product) {
+            return res.status(404).json({ error: 'Product not found' });
+        }
+
+        if (!product.inStock) {
+            return res.status(400).json({ error: "Product is out of stock" });
+        }
+
+        //check existing quantity
+        const existingCartItem = await prisma.cartItem.findUnique({
+            where: {
+                cartId_productId: {
+                    cartId: cart.id,
+                    productId
+                }
+            }
+        });
+
+        const currentQuantity = existingCartItem?.quantity || 0;
+        const newTotalQuantity = currentQuantity + quantity;
+
+        if (newTotalQuantity > product.quantity) {
+            return res.status(400).json({
+                error: `Only ${product.quantity - currentQuantity} left in stock`
+            });
+        }
+
         const item = await prisma.cartItem.upsert({
             where: {
                 cartId_productId: {
@@ -109,7 +143,9 @@ export const setItemToCart = async (req, res, next) => {
                 }
             },
             update: {
-                quantity
+                quantity: {
+                    increment: quantity
+                }
             },
             create: {
                 cartId: cart.id,
@@ -127,7 +163,11 @@ export const setItemToCart = async (req, res, next) => {
 export const deleteItemInCart = async (req, res, next) => {
     try {
         const userId = req.user.userId;
-        const { productId } = req.params;
+        const productId = Number(req.params.productId);
+        // console.log({req});
+        if (Number.isNaN(productId)) {
+            return res.status(400).json({ error: 'Invalid productId' });
+        }
         if (!productId) {
             return res.status(400).json({ error: 'No product' });
         }
@@ -162,8 +202,20 @@ export const updateQuantityInCart = async (req, res, next) => {
         if (!productId || quantity == null) {
             return res.status(400).json({ error: 'Missing fields' });
         }
-        if (quantity <= 0) {
-            return res.status(400).json({ error: "Quantity must be positive" });
+
+        const product = await prisma.product.findUnique({
+            where: { id: productId }
+        });
+
+        if (!product) {
+            return res.status(404).json({ error: 'Product not found' });
+        }
+        if (!product.inStock) {
+            return res.status(400).json({ error: "Product is out of stock" });
+        }
+
+        if (quantity > product.quantity) {
+            return res.status(400).json({ error: "Quantity exceeds stock" });
         }
 
         const cart = await prisma.cart.findUnique({
@@ -187,9 +239,15 @@ export const updateQuantityInCart = async (req, res, next) => {
             return res.json({ message: 'Item removed from cart' });
         }
 
-        const existingCartItem = await prisma.cartItem.findFirst({
-            where: { productId },
-        })
+        const existingCartItem = await prisma.cartItem.findUnique({
+            where: {
+                cartId_productId: {
+                    cartId: cart.id,
+                    productId,
+                },
+            },
+        });
+
         if (!existingCartItem) {
             return res.status(404).json({ error: 'Item not found in cart' });
         }
