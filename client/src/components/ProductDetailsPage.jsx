@@ -11,7 +11,7 @@ import {
   CircularProgress,
 } from '@mui/material';
 import { getProductByIdService } from '../service/service-product';
-import { addItemsToCart } from '../service/cartService';
+import { addItemsToCart } from '../service/service-cart';
 import { useFeedback } from './hoc/FeedbackContext';
 
 const ProductDetailsPage = () => {
