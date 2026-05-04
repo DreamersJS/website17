@@ -6,7 +6,7 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { userState } from '../recoil/userAtom';
 import { useNavigate } from 'react-router-dom';
 import { useFeedback } from './hoc/FeedbackContext';
-import { apiFetch } from '../service/apiFetch';
+import { profileUpdate } from '../service/service-user';
 
 const ProfilePage = () => {
     const [user, setUser] = useRecoilState(userState);
@@ -31,27 +31,22 @@ const ProfilePage = () => {
         setFormData({ ...formData, [prop]: e.target.value });
     };
 
-    const handleSave = async () => {
-        try {
-            const response = await apiFetch(`/api/users/${user.id}/update`, {
-                method: 'PUT',
-                body: JSON.stringify(formData),
-            });
+const handleSave = async () => {
+    try {
+        const updatedUser = await profileUpdate(user.id, formData);
 
-            if (!response.ok) {
-                throw new Error('Failed to update profile');
-            }
+        setUser((prev) => ({
+            ...prev,
+            ...updatedUser
+        }));
 
-            const updatedUser = await response.json();
-            setUser({ ...user, ...updatedUser });
-            showFeedback('Edit profile successful!', 'success');
-            handleToggleModal();
-        } catch (err) {
-            console.error(err);
-            showFeedback('Profile update failed. Please try again.', 'error');
-        }
-    };
-
+        showFeedback('Edit profile successful!', 'success');
+        handleToggleModal();
+    } catch (err) {
+        console.error(err);
+        showFeedback('Profile update failed.', 'error');
+    }
+};
 
     if (loading) {
         return <ProfileSkeleton />;

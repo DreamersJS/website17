@@ -16,7 +16,7 @@ export const validateForm = ({ username, email, password }) => {
 /**
  *
  * @param {*} param0 { username, password, email }
- * @returns response.json() containing user details
+ * @returns obj containing user details & access token
  */
 export const registerUser = async ({ username, password, email }) => {
   try {
@@ -40,7 +40,7 @@ export const registerUser = async ({ username, password, email }) => {
       throw new Error(errorData.error || 'Failed to register user');
     }
 
-    const {data, meta} = await response.json();
+    const { data, meta } = await response.json();
     console.log('User registered successfully:', data);
 
     return {
@@ -153,3 +153,17 @@ export const refreshUser = async () => {
   }
   return res.json();
 };
+
+export const profileUpdate = async (userId, formData) => {
+  const response = await apiFetch(`/api/users/${userId}/update`, {
+    method: 'PUT',
+    body: JSON.stringify(formData),
+});
+
+if (!response.ok) {
+    throw new Error('Failed to update profile');
+}
+
+const updatedUser = await response.json();
+return updatedUser.data;
+}
