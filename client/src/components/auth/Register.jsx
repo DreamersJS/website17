@@ -37,9 +37,8 @@ const Register = () => {
     setLoading(true);
 
     try {
-      const data = await registerUser({ username, email, password });
-      const user = data;
-
+      const { user, accessToken } = await registerUser({ username, email, password });
+console.log({ user, accessToken });
       setUser({
         id: user.id,
         email: user.email,
@@ -48,6 +47,7 @@ const Register = () => {
         role: user.role,
         isBlocked: user.isBlocked,
         coachId: user.coachId,
+        accessToken
       });
       showFeedback('Registration successful!', 'success');
       navigate('/');

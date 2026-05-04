@@ -1,24 +1,14 @@
+import { apiFetch } from "./apiFetch";
+
 export const getProductByIdService = async (id) => {
-  const res = await fetch(`/api/product/${id}`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
-  });
+  const res = await apiFetch(`/api/product/${id}`);
   if (!res.ok) throw new Error('get product by id request failed');
   const data = await res.json();
   return data.data;
 };
 // get all products
 export const getAllProductsService = async () => {
-  const res = await fetch(`/api/product/all`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
-  });
+  const res = await apiFetch(`/api/product/all`);
   if (!res.ok) throw new Error('get all products request failed');
   const data = await res.json();
   return data.data;
@@ -27,11 +17,8 @@ export const getAllProductsService = async () => {
 export const addProductService = async (product) => {
   const { name, description, photo, price, inStock, quantity, categoryId, categoryName, tagNames } = product;
   
-  const res = await fetch(`/api/product/`, {
+  const res = await apiFetch(`/api/product/`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
     body: JSON.stringify({
       name,
       description,
@@ -43,7 +30,6 @@ export const addProductService = async (product) => {
       categoryName,
       tagNames,
     }),
-    credentials: 'include',
   });
   if (!res.ok) throw new Error('service add product request failed');
   const data = await res.json();
@@ -57,11 +43,8 @@ export const addProductService = async (product) => {
 export const updateProductService = async (id, product) => {
   const { name, description, photo, price, inStock, quantity, categoryId, categoryName, tagNames } = product;
 
-  const res = await fetch(`/api/product/${id}`, {
+  const res = await apiFetch(`/api/product/${id}`, {
     method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
     body: JSON.stringify({
       name,
       description,
@@ -73,7 +56,6 @@ export const updateProductService = async (id, product) => {
       categoryName,
       tagNames,
     }),
-    credentials: 'include',
   });
 
   if (!res.ok) throw new Error('update product request failed');
@@ -82,12 +64,8 @@ export const updateProductService = async (id, product) => {
 };
 // delete product
 export const deleteProductService = async (id) => {
-  const res = await fetch(`/api/product/${id}`, {
+  const res = await apiFetch(`/api/product/${id}`, {
     method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include',
   });
   if (!res.ok) throw new Error('delete product request failed');
   const data = await res.json();

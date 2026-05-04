@@ -1,27 +1,29 @@
 import { useSetRecoilState } from 'recoil';
-import Cookies from 'js-cookie';
-import { userState } from './state';
-import { useEffect } from 'react';
+import { userState } from '../recoil/userAtom.js';
+import { useEffect, useState } from 'react';
+import { refreshUser } from '../service/service-user.js';
 
 export const useHydrateUserState = () => {
   const setUser = useSetRecoilState(userState);
-
+  const [loading, setLoading] = useState(true);
+  
   useEffect(() => {
-    const userCookie = Cookies.get('authToken');
-    if (userCookie) {
+    const initAuth = async () => {
       try {
-        const token = userCookie;
-        const userPayload = JSON.parse(atob(token.split('.')[1])); // Decode JWT payload
-        // shall I add a role?
-        setUser((prev) => ({
-          ...prev,
-          id: userPayload.userId,
-          email: userPayload.email,
-          token,
-        }));
+        const { data, meta } = await refreshUser();
+        
+        setUser({
+          ...data,
+          accessToken: meta?.accessToken,
+        });
+
       } catch (error) {
         console.error('Failed to decode token:', error);
+      } finally {
+        setLoading(false);
       }
     }
-  }, [setUser]);
+    initAuth();
+  }, []);
+  return loading;
 };

@@ -1,14 +1,12 @@
+import { apiFetch } from "./apiFetch";
+
 export const createCartService = async () => {
-    const res = await fetch('/api/cart/create', {
+    const res = await apiFetch('/api/cart/create', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
         body: JSON.stringify({
             productId,
             quantity
         }),
-        credentials: 'include',
     })
     if (!res.ok) {
         throw new Error('Cart creation failed')
@@ -18,10 +16,7 @@ export const createCartService = async () => {
 }
 
 export const getCartService = async () => {
-    const res = await fetch(`/api/cart/get`, {
-        method: 'GET',
-        credentials: "include"
-    })
+    const res = await apiFetch(`/api/cart/get`)
     if (!res.ok) {
         throw new Error('No cart found')
     }
@@ -30,12 +25,8 @@ export const getCartService = async () => {
 }
 
 export const deleteCartService = async () => {
-    const res = await fetch(`/api/cart/delete`, {
+    const res = await apiFetch(`/api/cart/delete`, {
         method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        credentials: 'include',
     });
     if (!res.ok) throw new Error('delete cart request failed');
     const data = await res.json();
@@ -43,16 +34,12 @@ export const deleteCartService = async () => {
 };
 
 export const addItemsToCart = async (productId, quantity = 1) => {
-    const res = await fetch('/api/cart/items', {
+    const res = await apiFetch('/api/cart/items', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
         body: JSON.stringify({
             productId,
             quantity
         }),
-        credentials: 'include'
     })
     if (!res.ok) {
         throw new Error('Adding item in cart failed')
@@ -62,9 +49,8 @@ export const addItemsToCart = async (productId, quantity = 1) => {
 }
 
 export const deleteItemsFromCart = async (productId) => {
-    const res = await fetch(`/api/cart/items/${productId}`, {
+    const res = await apiFetch(`/api/cart/items/${productId}`, {
         method: 'DELETE',
-        credentials: 'include'
     })
     if (!res.ok) {
         throw new Error('Delete item from cart failed')
@@ -74,16 +60,12 @@ export const deleteItemsFromCart = async (productId) => {
 }
 
 export const updateItemsFromCart = async (productId, quantity) => {
-    const res = await fetch(`/api/cart/items/${productId}`, {
+    const res = await apiFetch(`/api/cart/items/${productId}`, {
         method: 'PATCH',
-        headers: {
-            'Content-Type': 'application/json',
-        },
         body: JSON.stringify({
             productId,
             quantity
         }),
-        credentials: 'include'
     })
     if (!res.ok) {
         throw new Error('Update failed')

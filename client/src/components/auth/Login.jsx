@@ -28,8 +28,7 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const data = await loginUser({ email, password });
-      const user = data;
+      const { user, accessToken } = await loginUser({ email, password });
 
       if (!user || !user.username || !user.id) {
         throw new Error("Username or ID is missing in the response");
@@ -43,6 +42,7 @@ const Login = () => {
         role: user.role,
         isBlocked: user.isBlocked,
         coachId: user.coachId,
+        accessToken,
       });
       showFeedback('Login successful!', 'success');
       navigate('/');

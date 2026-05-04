@@ -2,7 +2,16 @@ import jwt from 'jsonwebtoken';
 import { validate as isUUID } from 'uuid';
 import { createUserService, deleteUserService, getAllUsersService, getUserByEmailService, getUserByIdService, loginUserService, updateUserService } from './service/user.service.js';
 
-const JWT_SECRET = process.env.JWT_SECRET_KEY;
+const ACCESS_SECRET = process.env.JWT_SECRET_KEY;
+const REFRESH_SECRET = process.env.JWT_REFRESH_SECRET;
+
+if (!ACCESS_SECRET) {
+  throw new Error('JWT_SECRET_KEY missing');
+}
+
+if (!REFRESH_SECRET) {
+  throw new Error('JWT_REFRESH_SECRET missing');
+}
 
 /**
  * Create a new user(Register)
@@ -10,7 +19,7 @@ const JWT_SECRET = process.env.JWT_SECRET_KEY;
  * coachId is optional and can be null for now
  */
 export const createUser = async (req, res, next) => {
-  const { username, email, password, coachId } = req.body;
+  const { username, email, password } = req.body;
 
   if (!username || !email || !password) {
     return res.status(400).json({ error: 'Username, email, and password are required.' });
@@ -18,29 +27,36 @@ export const createUser = async (req, res, next) => {
 
   try {
     const result = await createUserService(req.body)
-    const token = jwt.sign(
+    const accessToken = jwt.sign(
       {
         userId: result.id,
         email: result.email,
         role: result.role,
         isBlocked: result.isBlocked,
       },
-      JWT_SECRET,
-      {
-        expiresIn: '1h',
-      },
+      ACCESS_SECRET,
+      { expiresIn: '15m' }
+    );
+
+    const refreshToken = jwt.sign(
+      { userId: result.id },
+      REFRESH_SECRET,
+      { expiresIn: '7d' }
     );
 
     // Store token in HTTP-only cookie
-    res.cookie('authToken', token, {
+    res.cookie('refreshToken', refreshToken, {
       httpOnly: true, // Prevents JavaScript access
       secure: process.env.NODE_ENV === 'production', // Use HTTPS in production
       sameSite: 'Strict', // Prevents CSRF
-      maxAge: 3600 * 1000, // 1 hour
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
     res.status(201).json({
       message: 'User created successfully',
-      data: result
+      data: result,
+      meta: {
+        accessToken,
+      },
     });
   } catch (error) {
     next(error);
@@ -55,28 +71,36 @@ export const loginUser = async (req, res, next) => {
   try {
     const user = await loginUserService({ email, password });
 
-    const token = jwt.sign(
+    const accessToken = jwt.sign(
       {
         userId: user.id,
         email: user.email,
         role: user.role,
         isBlocked: user.isBlocked,
-        coachId: user.coachId,
       },
-      JWT_SECRET,
-      { expiresIn: '1h' }
+      ACCESS_SECRET,
+      { expiresIn: '15m' }
     );
 
-    res.cookie('authToken', token, {
+    const refreshToken = jwt.sign(
+      { userId: user.id },
+      REFRESH_SECRET,
+      { expiresIn: '7d' }
+    );
+    // old authToken
+    res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'Strict',
-      maxAge: 3600 * 1000,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     res.status(200).json({
       message: 'Login successful',
       data: user,
+      meta: {
+        accessToken,
+      },
     });
 
   } catch (error) {
@@ -86,7 +110,7 @@ export const loginUser = async (req, res, next) => {
 
 // Logout a user
 export const logoutUser = (req, res, next) => {
-  res.clearCookie('authToken', {
+  res.clearCookie('refreshToken', {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'Strict',
@@ -162,5 +186,46 @@ export const deleteUser = async (req, res, next) => {
     res.status(200).json({ message: 'User deleted successfully' });
   } catch (error) {
     next(error);
+  }
+};
+
+export const refreshAccessToken = async (req, res) => {
+  const token = req.cookies.refreshToken;
+
+  if (!token) {
+    return res.status(401).json({ error: 'No refresh token' });
+  }
+
+  try {
+    const decoded = jwt.verify(token, REFRESH_SECRET);
+
+    const user = await getUserByIdService(decoded.userId);
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const accessToken = jwt.sign(
+      {
+        userId: user.id,
+        email: user.email,
+        role: user.role,
+        isBlocked: user.isBlocked,
+      },
+      ACCESS_SECRET,
+      { expiresIn: '15m' }
+    );
+
+    res.status(200).json({
+      // success: true, // sounds good for testing
+      message: 'User re-fetched successfully',
+      data: user,
+      meta: {
+        accessToken,
+      },
+    });
+
+  } catch (err) {
+    return res.status(403).json({ error: 'Invalid refresh token' });
   }
 };

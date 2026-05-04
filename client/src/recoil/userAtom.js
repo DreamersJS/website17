@@ -9,6 +9,7 @@ const initialState = {
   role: null,
   isBlocked: null,
   coachId: null,
+  accessToken: null,
 };
 
 export const userState = atom({

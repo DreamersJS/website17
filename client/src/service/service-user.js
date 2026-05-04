@@ -1,3 +1,5 @@
+import { apiFetch } from "./apiFetch";
+
 export const validateForm = ({ username, email, password }) => {
   if (!username || username.length < 3) {
     return 'Username must be at least 3 characters long.';
@@ -21,17 +23,13 @@ export const registerUser = async ({ username, password, email }) => {
     console.log('Starting user registration...');
     console.log('Request data:', { username, email });
 
-    const response = await fetch('/api/users/register', {
+    const response = await apiFetch('/api/users/register', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
       body: JSON.stringify({
         username,
         password,
         email,
       }),
-      credentials: 'include', // Include cookies with the request
     });
 
     console.log('Received response from server:', response.status, response.statusText);
@@ -42,10 +40,13 @@ export const registerUser = async ({ username, password, email }) => {
       throw new Error(errorData.error || 'Failed to register user');
     }
 
-    const data = await response.json();
+    const {data, meta} = await response.json();
     console.log('User registered successfully:', data);
 
-    return data.data;
+    return {
+      user: data,
+      accessToken: meta?.accessToken,
+    };
   } catch (error) {
     console.error('Error registering user:', error);
     throw error;
@@ -54,16 +55,12 @@ export const registerUser = async ({ username, password, email }) => {
 
 export const loginUser = async ({ email, password }) => {
   try {
-    const response = await fetch('/api/users/login', {
+    const response = await apiFetch('/api/users/login', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
       body: JSON.stringify({
         email,
         password,
       }),
-      credentials: 'include', // Include cookies with the request
     });
 
     if (!response.ok) {
@@ -71,9 +68,12 @@ export const loginUser = async ({ email, password }) => {
       throw new Error(errorData.error || 'Failed to login');
     }
 
-    const data = await response.json();
+    const { data, meta } = await response.json();
     console.log('User logged in successfully:', data);
-    return data.data;
+    return {
+      user: data,
+      accessToken: meta?.accessToken,
+    };
   } catch (error) {
     console.error('Error logging in:', error);
     throw error;
@@ -82,9 +82,8 @@ export const loginUser = async ({ email, password }) => {
 
 export const logoutUser = async () => {
   try {
-    const response = await fetch('/api/users/logout', {
+    const response = await apiFetch('/api/users/logout', {
       method: 'POST',
-      credentials: 'include',
     });
 
     if (!response.ok) {
@@ -96,18 +95,10 @@ export const logoutUser = async () => {
   }
 };
 
-/**
- *
- * Since your auth token is HTTP-only, it is not accessible in JavaScript, meaning you cannot directly reference authToken in the frontend. This means your frontend should not manually send the token in the headers. Instead, just ensure that requests include credentials so the cookie is automatically sent.
- */
 export const fetchUsers = async () => {
   try {
-    const response = await fetch('/api/users/all', {
+    const response = await apiFetch('/api/users/all', {
       method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
     });
     if (!response.ok) {
       throw new Error('Failed to fetch users');
@@ -121,13 +112,9 @@ export const fetchUsers = async () => {
 
 export const updateUserRole = async (userId, newRole) => {
   try {
-    const response = await fetch(`/api/coaches/${userId}/role`, {
+    const response = await apiFetch(`/api/coaches/${userId}/role`, {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
       body: JSON.stringify({ role: newRole }),
-      credentials: 'include',
     });
     if (!response.ok) {
       const errorData = await response.json();
@@ -143,12 +130,8 @@ export const updateUserRole = async (userId, newRole) => {
 
 export const updateIsBlocked = async (userId) => {
   try {
-    const response = await fetch(`/api/coaches/${userId}/block`, {
+    const response = await apiFetch(`/api/coaches/${userId}/block`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
     });
     if (!response.ok) {
       const errorData = await response.json();
@@ -158,4 +141,15 @@ export const updateIsBlocked = async (userId) => {
   } catch (error) {
     console.error('Error updating block status:', error);
   }
+};
+
+export const refreshUser = async () => {
+  const res = await apiFetch('/api/users/refresh',
+    {
+      method: 'POST',
+    })
+  if (!res.ok) {
+    throw new Error('Refresh failed');
+  }
+  return res.json();
 };

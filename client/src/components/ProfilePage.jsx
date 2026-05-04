@@ -6,6 +6,7 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { userState } from '../recoil/userAtom';
 import { useNavigate } from 'react-router-dom';
 import { useFeedback } from './hoc/FeedbackContext';
+import { apiFetch } from '../service/apiFetch';
 
 const ProfilePage = () => {
     const [user, setUser] = useRecoilState(userState);
@@ -32,10 +33,8 @@ const ProfilePage = () => {
 
     const handleSave = async () => {
         try {
-            const response = await fetch(`/api/users/${user.id}/update`, {
+            const response = await apiFetch(`/api/users/${user.id}/update`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',
                 body: JSON.stringify(formData),
             });
 
