@@ -12,14 +12,14 @@ export default defineConfig({
       '@': '/src',
     },
   },
-  server: {
-    proxy: {
-      '/api': {
-        target: 'http://localhost:3007',
-        changeOrigin: true,
-      },
-    },
-  },
+  // server: {
+  //   proxy: {
+  //     '/api': {
+  //       target: 'http://localhost:3007',
+  //       changeOrigin: true,
+  //     },
+  //   },
+  // },
   test: {
     /* for example, use global to avoid globals imports (describe, test, expect): */
     // globals: true,

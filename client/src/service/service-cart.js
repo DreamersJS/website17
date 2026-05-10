@@ -1,7 +1,8 @@
 import { apiFetch } from "./apiFetch";
+import { API_URL } from "../utils/helpers"
 
 export const createCartService = async () => {
-    const res = await apiFetch('/api/cart/create', {
+    const res = await apiFetch(`${API_URL}/api/cart/create`, {
         method: 'POST',
         body: JSON.stringify({
             productId,
@@ -16,7 +17,7 @@ export const createCartService = async () => {
 }
 
 export const getCartService = async () => {
-    const res = await apiFetch(`/api/cart/get`)
+    const res = await apiFetch(`${API_URL}/api/cart/get`)
     if (!res.ok) {
         throw new Error('No cart found')
     }
@@ -25,7 +26,7 @@ export const getCartService = async () => {
 }
 
 export const deleteCartService = async () => {
-    const res = await apiFetch(`/api/cart/delete`, {
+    const res = await apiFetch(`${API_URL}/api/cart/delete`, {
         method: 'DELETE',
     });
     if (!res.ok) throw new Error('delete cart request failed');
@@ -34,7 +35,7 @@ export const deleteCartService = async () => {
 };
 
 export const addItemsToCart = async (productId, quantity = 1) => {
-    const res = await apiFetch('/api/cart/items', {
+    const res = await apiFetch(`${API_URL}/api/cart/items`, {
         method: 'POST',
         body: JSON.stringify({
             productId,
@@ -49,18 +50,18 @@ export const addItemsToCart = async (productId, quantity = 1) => {
 }
 
 export const deleteItemsFromCart = async (productId) => {
-    const res = await apiFetch(`/api/cart/items/${productId}`, {
+    const res = await apiFetch(`${API_URL}/api/cart/items/${productId}`, {
         method: 'DELETE',
     })
     if (!res.ok) {
         throw new Error('Delete item from cart failed')
     }
-    const data = res.json();
+    const data = await res.json();
     return data;
 }
 
 export const updateItemsFromCart = async (productId, quantity) => {
-    const res = await apiFetch(`/api/cart/items/${productId}`, {
+    const res = await apiFetch(`${API_URL}/api/cart/items/${productId}`, {
         method: 'PATCH',
         body: JSON.stringify({
             productId,
@@ -70,7 +71,7 @@ export const updateItemsFromCart = async (productId, quantity) => {
     if (!res.ok) {
         throw new Error('Update failed')
     }
-    const data = res.json();
+    const data = await res.json();
     return data;
 }
 

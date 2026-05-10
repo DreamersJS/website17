@@ -1,10 +1,10 @@
+import { apiFetch } from "./apiFetch";
+import { API_URL } from "../utils/helpers"
+
 export const checkDomain = async (email) => {
   try {
-    const response = await fetch('/api/email/checkDomain', {
+    const response = await apiFetch(`${API_URL}/api/email/checkDomain`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
       body: JSON.stringify({ email }),
     });
 
@@ -22,11 +22,8 @@ export const checkDomain = async (email) => {
 
 export const emailSendConfirmationEmail = async (email) => {
   try {
-    const response = await fetch('/api/email/sendConfirmationEmail', {
+    const response = await apiFetch(`${API_URL}/api/email/sendConfirmationEmail`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
       body: JSON.stringify({ email }),
     });
 
@@ -44,11 +41,8 @@ export const emailSendConfirmationEmail = async (email) => {
 
 export const emailSendMsg = async (name, email, phone, message) => {
   try {
-    const response = await fetch('/api/email/sendMsg', {
+    const response = await apiFetch(`${API_URL}/api/email/sendMsg`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
       body: JSON.stringify({ name, email, phone, message }),
     });
 
@@ -65,7 +59,6 @@ export const emailSendMsg = async (name, email, phone, message) => {
 };
 
 /**
- * 
  * @param {*} email 
  * @returns  return res.status(200).json({
             message: 'Email confirmed successfully. You may now send your message.',
@@ -75,11 +68,8 @@ export const emailSendMsg = async (name, email, phone, message) => {
  */
 export const checkEmailConfirmed = async (email) => {
   try {
-    const response = await fetch(`/api/email/isConfirmed?email=${encodeURIComponent(email)}`, {
+    const response = await apiFetch(`${API_URL}/api/email/isConfirmed?email=${encodeURIComponent(email)}`, {
       method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
     });
 
     if (!response.ok) {

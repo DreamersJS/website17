@@ -1,9 +1,10 @@
 import { apiFetch } from "./apiFetch";
+import { API_URL } from "../utils/helpers"
 
 // search
 export const searchService = async (query) => {
   console.log({ query });
-  const res = await apiFetch(`/api/search?q=${encodeURIComponent(query)}`, {
+  const res = await apiFetch(`${API_URL}/api/search?q=${encodeURIComponent(query)}`, {
     method: 'GET',
   });
   console.log({ res });

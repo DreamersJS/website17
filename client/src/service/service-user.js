@@ -1,4 +1,5 @@
 import { apiFetch } from "./apiFetch";
+import { API_URL } from "../utils/helpers"
 
 export const validateForm = ({ username, email, password }) => {
   if (!username || username.length < 3) {
@@ -21,7 +22,7 @@ export const registerUser = async ({ username, password, email }) => {
   try {
     console.log('registration data:', { username, email });
 
-    const response = await apiFetch('/api/users/register', {
+    const response = await apiFetch(`${API_URL}/api/users/register`, {
       method: 'POST',
       body: JSON.stringify({
         username,
@@ -53,7 +54,7 @@ export const registerUser = async ({ username, password, email }) => {
 
 export const loginUser = async ({ email, password }) => {
   try {
-    const response = await apiFetch('/api/users/login', {
+    const response = await apiFetch(`${API_URL}/api/users/login`, {
       method: 'POST',
       body: JSON.stringify({
         email,
@@ -80,7 +81,7 @@ export const loginUser = async ({ email, password }) => {
 
 export const logoutUser = async () => {
   try {
-    const response = await apiFetch('/api/users/logout', {
+    const response = await apiFetch(`${API_URL}/api/users/logout`, {
       method: 'POST',
     });
 
@@ -95,7 +96,7 @@ export const logoutUser = async () => {
 
 export const fetchUsers = async () => {
   try {
-    const response = await apiFetch('/api/users/all', {
+    const response = await apiFetch(`${API_URL}/api/users/all`, {
       method: 'GET',
     });
     if (!response.ok) {
@@ -111,7 +112,7 @@ export const fetchUsers = async () => {
 
 export const updateUserRole = async (userId, newRole) => {
   try {
-    const response = await apiFetch(`/api/coaches/${userId}/role`, {
+    const response = await apiFetch(`${API_URL}/api/coaches/${userId}/role`, {
       method: 'PUT',
       body: JSON.stringify({ role: newRole }),
     });
@@ -130,7 +131,7 @@ export const updateUserRole = async (userId, newRole) => {
 
 export const updateIsBlocked = async (userId) => {
   try {
-    const response = await apiFetch(`/api/coaches/${userId}/block`, {
+    const response = await apiFetch(`${API_URL}/api/coaches/${userId}/block`, {
       method: 'POST',
     });
     if (!response.ok) {
@@ -145,7 +146,7 @@ export const updateIsBlocked = async (userId) => {
 };
 
 export const refreshUser = async () => {
-  const res = await apiFetch('/api/users/refresh',
+  const res = await apiFetch(`${API_URL}/api/users/refresh`,
     {
       method: 'POST',
     })
@@ -156,15 +157,15 @@ export const refreshUser = async () => {
 };
 
 export const profileUpdate = async (userId, formData) => {
-  const response = await apiFetch(`/api/users/${userId}`, {
+  const response = await apiFetch(`${API_URL}/api/users/${userId}`, {
     method: 'PUT',
     body: JSON.stringify(formData),
-});
+  });
 
-if (!response.ok) {
+  if (!response.ok) {
     throw new Error('Failed to update profile');
-}
+  }
 
-const updatedUser = await response.json();
-return updatedUser.data;
+  const updatedUser = await response.json();
+  return updatedUser.data;
 }
