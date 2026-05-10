@@ -70,7 +70,6 @@ export const sendConfirmationEmailController = async (req, res) => {
     const storedToken = await redisClient.get(`confirm_tokens:${token}`);
     console.log('Token stored in Redis:', storedToken);
 
-    // const confirmationLink = `${process.env.APP_URL}/api/confirmEmail?token=${token}&email=${email}`;
     const confirmationLink = `${process.env.FRONTEND_URL}/confirm?token=${token}&email=${email}`;
 
     const subject = 'Confirm your email address';

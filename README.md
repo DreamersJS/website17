@@ -1,164 +1,192 @@
 # E-commerce Admin System (Fullstack)
 
-## Description
+## Overview
 
-A system designed for small businesses to manage products, users.
+**E-commerce Admin System** is a fullstack role-based platform designed for small businesses to manage products, users, and authentication workflows with secure email verification and scalable backend architecture.
 
-## Technical Highlights
+The project focuses on modular backend design, role-based access control, Redis-powered verification flows, and scalable frontend/backend separation.
 
-- Role-Based Access Control (RBAC)
-- Email verification with DNS MX check
-- Redis TTL-based session / verification handling
-- Modular backend architecture (controllers/services)
-- PostgreSQL
-- [![Made with Prisma](http://made-with.prisma.io/dark.svg)](https://prisma.io)
-<!-- https://github.com/prisma/prisma-examples?utm_source=chatgpt.com -->
+---
+[Features](#features)</br>
+[Tech Stack](#tech-stack)</br>
+[Installation](#installation)</br>
+[Documentation](#documentation)</br>
+[Known Issues](#known-issues)
 
-<!-- ## Architecture -->
-
-  
-
-
-## Trade-offs
-
-- Chose PostgreSQL over Mongo for relational data consistency
-- Used Redis for TTL-based email verification to avoid DB bloat
-- Separated backend from frontend for scalability
+---
 
 ## Features
 
-### Header Navigation
+### User & Navigation System
 
-Responsive layout:
+* Responsive header navigation
 
-- Desktop: Full nav with dropdowns
-- Mobile: Drawer-based navigation
+  * Desktop: full navigation with dropdown menus
+  * Mobile: drawer-based navigation
+* Role-based UI rendering:
 
-User-based rendering:
+  * Guest: Login / Register
+  * Authenticated users: Profile, results, logout
+  * Admin: access to admin dashboard
+* Global search bar (in progress)
 
-- Guest: Login / Register
-- Authenticated: Profile, Results, Logout
-- Admin: Additional admin dashboard access
+  * Toggles search input and redirects to search page
 
-Global Search Bar:
-
-- Toggles search input with redirect to search page(still working on it)
+---
 
 ### Admin Panel
 
 Admins can:
 
-- View and search users
-- Filter by role (admin, coach, user)
-- Sort users by name or registration date
-- Change user roles
-- Block/unblock user accounts
+* View, search, and filter users by role (admin, coach, user)
+* Sort users by name or registration date
+* Change user roles
+* Block and unblock user accounts
 
-### Manage Products
+---
+
+### Product Management (Admin)
 
 Admins can:
 
-- View and search products by name and tag
-- Filter by category (supplements, cosmetics)
-- Sort products by name, price, newest
-- Create new product
-- Update product
-- Delete product
+* View and search products by name and tag
+* Filter by category (supplements, cosmetics)
+* Sort products by name, price, or newest
+* Create, update, and delete products
 
-### Products Page
+---
+
+### Products Page (User)
 
 Users can:
 
-- View and search products by name and tag
-- Filter by category (supplements, cosmetics)
-- Sort products by name, price, newest
-- Load more products
-- Scroll-to-top
+* View and search products by name and tag
+* Filter by category (supplements, cosmetics)
+* Sort products by name, price, or newest
+* Load more products
+* Use scroll-to-top functionality
+* Add to cart button
 
-The page has Skeleton loading that improves UX.<br/>
-And single product view.
+Additional UX improvements:
+
+* Skeleton loading for better perceived performance
+* Dedicated single product view page
+
+---
 
 ### Email Confirmation Contact Form
 
-A secure contact form featuring:
+A secure contact system featuring:
 
-- Email domain validation (DNS MX check)
-- Confirmation via email token (*Ethereal*\* Nodemailer)
-- Redis TTL-based email verification
-- Auto-resume form after confirmation
+* Email domain validation (DNS MX check)
+* Email confirmation via token (Nodemailer with Ethereal)
+* Redis TTL-based verification system
+* Automatic form resume after confirmation
 
-\*Ethereal is meant for testing purposes only - it doesn't send email to your real inbox, you can check the email via terminal console's link.
+> Ethereal is used for testing purposes only and does not send real emails. Emails can be viewed via the provided console link in terminal.
 
-## Code Architecture
+---
 
-**Frontend (Client)**
+### Cart
+* Add, delete and modify quantities of products to cart
 
-Built in React with:
+---
 
-- State management - Recoil, ContextAPI
-- Custom hooks
-- Modular component structure
-- Shared UI (e.g. SearchToolbar)
-- UI Libraries: Material UI, Tailwind CSS
+## Tech Stack
 
-**Backend (Server)**
+### Frontend
 
-Express.js
+* React
+* Recoil
+* Context API
+* Tailwind CSS
+* Material UI
 
-PostgreSQL with Prisma ORM
+### Backend
 
-Folder structure includes:
+* Express.js
+* PostgreSQL
+* Prisma ORM
+* Redis
+* JWT authentication
+* bcrypt
 
-- controllers, middleware, routes
-- prisma/ for schema & migrations
-- config/ for Prisma client, CORS
+### Testing & DevOps
 
-**Docs**
+* Jest
+* Supertest
+* Vitest
+* Docker
 
-- [API Documentation](./docs/api-doc.md)
-- Includes cURL examples for testing endpoints
-- [Configuration Guide](./docs/CONFIGURATION_GUIDE.md)
+### Email Service
 
-## Creators
+* Nodemailer
+* Ethereal (testing environment)
 
-- Zvezda Neycheva - [@DreamersJS](https://github.com/DreamersJS)
+### General
 
-## Technologies
+* JavaScript (ES6+)
+* Git
 
-- JavaScript (ES6+)
-- React & Recoil
-- Tailwind CSS & MUI
-- Express.js
-- bcrypt
-- JWT
-- PostgreSQL & Prisma ORM
-- Vitest
-- git
-- Redis
-- Nodemailer + Ethereal
+---
 
 ## Installation
 
-To get the project running on your local machine, follow these steps:
+### 1. Install dependencies
 
-1. Install dependencies: In the terminal, run the following command in the root, client, and server folders:
+Run in root, client, and server folders:
 
-```
+```bash
 npm install
 ```
 
-## Run the application
+### 2. Setup environment variables
 
-2. Run the Application: From the root folder, run the following command to start the app:
+Create a `.env` file inside both `client` and `server` directory.
 
-```
+See:
+
+* [Configuration Guide](./docs/CONFIGURATION_GUIDE.md)
+
+### 3. Start the application
+
+From the root folder:
+
+```bash
 npm run dev
 ```
 
-**_Alternatively, you can start the client and server separately by running the same command in the client folder first, then in the server folder._**
+Alternatively, run client and server separately.
+
+---
+
+## Documentation
+
+* [API Documentation](./docs/api-doc.md)
+
+  * Includes cURL examples for testing endpoints
+
+* [Configuration Guide](./docs/CONFIGURATION_GUIDE.md)
+* [Architecture Overview](./docs/ARCHITECTURE.md)
+
+---
 
 ## Known Issues
 
-## Homepage
+* Global search navigation is still in progress
 
-<img src="./client/public/readme/home.png"/>
+---
+
+## Screenshots
+
+### Homepage
+
+<img src="./client/public/readme/home.png" />
+
+---
+
+## Creator
+
+* Zvezda Neycheva — [@DreamersJS](https://github.com/DreamersJS)
+
+---

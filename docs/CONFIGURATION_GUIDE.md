@@ -1,8 +1,8 @@
-# Configuration Guide for Wellness App
+# Configuration Guide
 
 ## Introduction
 
-This guide provides detailed instructions for configuring the Wellness App with PostgreSQL & Prisma ORM. Follow these steps to set up your environment and configure necessary variables.
+This guide provides detailed instructions for configuring the App with PostgreSQL & Prisma ORM. Follow these steps to set up your environment and configure necessary variables.
 
 ## Environment Variables
 
@@ -51,7 +51,7 @@ The following environment variables need to be set up to configure the applicati
 
 ## Configuration Files
 
-### `.env` File
+### `.env` File in server folder
 
 - Add the .env file to .gitignore to avoid committing sensitive information.
 - Create the .env file inside your server directory with the following content:
@@ -60,10 +60,10 @@ The following environment variables need to be set up to configure the applicati
 # Server Configuration
 PORT=3000
 NODE_ENV=development
-DOMAIN=(Set according to deployment)
 
 # JSON Web Token secret key
-JWT_SECRET_KEY=c82367c4c01fcv4cv2e02d7736
+JWT_SECRET_KEY
+JWT_REFRESH_SECRET
 
 # Database Configuration
 DATABASE_URL=postgresql://user:pass@host/db
@@ -79,6 +79,18 @@ ETHEREAL_PASS=hFahptyyyv
 ETHEREAL_PORT=587
 ETHEREAL_HOST=smtp.ethereal.email
 
+# for tests:
+POSTGRES_USER
+POSTGRES_PASSWORD
+POSTGRES_DB
+TEST_DATABASE_URL
+
+```
+
+### `.env` File in client folder
+
+```js
+VITE_BACK_END_URL=http://localhost:3000
 ```
 
 ## Setting Up PostgreSQL & Prisma
