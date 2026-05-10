@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { validate as isUUID } from 'uuid';
 import { createUserService, deleteUserService, getAllUsersService, getUserByEmailService, getUserByIdService, loginUserService, updateUserService } from './service/user.service.js';
+import { AppError } from '../utils/AppError.js';
 
 const ACCESS_SECRET = process.env.JWT_SECRET_KEY;
 const REFRESH_SECRET = process.env.JWT_REFRESH_SECRET;
@@ -87,7 +88,8 @@ export const loginUser = async (req, res, next) => {
       REFRESH_SECRET,
       { expiresIn: '7d' }
     );
-    // old authToken
+    // in production:
+    // sameSite: 'None',
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',

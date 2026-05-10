@@ -27,10 +27,7 @@ export const createUserService = async (userData) => {
   });
 
   const { password: _, ...safeUser } = newUser;
-  /**This means:
-  take password
-  rename it to _
-  don’t use it 
+  /**
   or
   const newUser = await prisma.user.create({
   data: {...},

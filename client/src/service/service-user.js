@@ -14,14 +14,12 @@ export const validateForm = ({ username, email, password }) => {
 };
 
 /**
- *
  * @param {*} param0 { username, password, email }
  * @returns obj containing user details & access token
  */
 export const registerUser = async ({ username, password, email }) => {
   try {
-    console.log('Starting user registration...');
-    console.log('Request data:', { username, email });
+    console.log('registration data:', { username, email });
 
     const response = await apiFetch('/api/users/register', {
       method: 'POST',
@@ -107,6 +105,7 @@ export const fetchUsers = async () => {
     return data.data;
   } catch (error) {
     console.error('Error fetching users:', error);
+    throw error;
   }
 };
 
@@ -125,6 +124,7 @@ export const updateUserRole = async (userId, newRole) => {
     return data.message;
   } catch (error) {
     console.error('Error updating role:', error);
+    throw error;
   }
 };
 
@@ -140,6 +140,7 @@ export const updateIsBlocked = async (userId) => {
     console.log('Block status updated');
   } catch (error) {
     console.error('Error updating block status:', error);
+    throw error;
   }
 };
 
@@ -155,7 +156,7 @@ export const refreshUser = async () => {
 };
 
 export const profileUpdate = async (userId, formData) => {
-  const response = await apiFetch(`/api/users/${userId}/update`, {
+  const response = await apiFetch(`/api/users/${userId}`, {
     method: 'PUT',
     body: JSON.stringify(formData),
 });
