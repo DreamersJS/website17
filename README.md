@@ -10,7 +10,9 @@ A system designed for small businesses to manage products, users.
 - Email verification with DNS MX check
 - Redis TTL-based session / verification handling
 - Modular backend architecture (controllers/services)
-- PostgreSQL + Prisma ORM
+- PostgreSQL
+- [![Made with Prisma](http://made-with.prisma.io/dark.svg)](https://prisma.io)
+<!-- https://github.com/prisma/prisma-examples?utm_source=chatgpt.com -->
 
 <!-- ## Architecture -->
 
