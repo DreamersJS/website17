@@ -7,7 +7,6 @@ import { userState } from './recoil/userAtom';
 import ResponsiveComponent from './components/hoc/ResponsiveComponent';
 import Layout from './components/layout/Layout';
 import Home from './components/Home';
-import Testimonials from './components/Testimonials';
 import ProductsPage from './components/Products';
 import SearchPage from './components/SearchPage'; // not logged in users but with restrictions
 import ErrorBoundary from './components/hoc/ErrorBoundry';
@@ -60,7 +59,6 @@ function App() {
                         <Route path="/coach" element={<Layout main={<CoachesPage />} />} />
                         <Route path="/profile" element={<Layout main={<Auth><ProfilePage /></Auth>} />} />
                         <Route path="/cart" element={<Layout main={<Auth><Cart /></Auth>} />} />
-                        <Route path="/testimonials" element={<Layout main={<Testimonials />} />} />
                         <Route path="/products" element={<Layout main={<ProductsPage />} />} />
                         <Route path="/products/:id" element={<Layout main={<ProductDetailsPage />} />} />
                         {/* <Route path="/search/?q=yourSearchTerm" element={<Layout main={<SearchPage />} />} /> */}
