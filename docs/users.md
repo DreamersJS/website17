@@ -167,6 +167,7 @@ Get a user by email.
 curl
 ```bash
 curl -X GET "http://localhost:3000/api/users/email/skyrim5a@gmail.com" \
+-H "Authorization: Bearer <your_token>"
 ```
 
 # GET /api/users/:id
