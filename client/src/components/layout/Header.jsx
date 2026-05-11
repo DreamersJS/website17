@@ -130,9 +130,6 @@ const Header = () => {
                             )}
 
                             {/* Available to all users */}
-                            <NavLink to="/coach" style={{ margin: width <= 805 ? '0 3px' : '0 10px' }}>
-                                <ButtonHeader content="Coaches" />
-                            </NavLink>
                             <NavLink to="/products" style={{ margin: width <= 805 ? '0 3px' : '0 10px' }}>
                                 <ButtonHeader content="Products" />
                             </NavLink>
@@ -212,9 +209,6 @@ const Header = () => {
                             <List>
                                 <ListItem button component={NavLink} to="/">
                                     <ListItemText primary="Home" />
-                                </ListItem>
-                                <ListItem button component={NavLink} to="/coach">
-                                    <ListItemText primary="Coaches" />
                                 </ListItem>
                                 <ListItem button component={NavLink} to="/products">
                                     <ListItemText primary="Products" />

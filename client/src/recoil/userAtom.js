@@ -8,7 +8,6 @@ const initialState = {
   photo: null,
   role: null,
   isBlocked: null,
-  coachId: null,
   accessToken: null,
 };
 

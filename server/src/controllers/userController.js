@@ -24,8 +24,7 @@ if (!REFRESH_SECRET) {
 
 /**
  * Create a new user(Register)
- * const { username, email, password, coachId  } = req.body;
- * coachId is optional and can be null for now
+ * const { username, email, password } = req.body;
  */
 export const createUser = async (req, res, next) => {
   const { username, email, password } = req.body;

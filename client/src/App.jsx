@@ -18,7 +18,6 @@ import Auth from './components/auth/Auth';
 import ProductDetailsPage from './components/ProductDetailsPage';
 import Contact from './components/quick links/Contacts';
 import ConfirmEmail from './components/ConfirmEmail';
-const CoachesPage = lazy(() => import('./components/CoachesPage'));
 
 // protected components
 import Cart from './components/Cart';
@@ -56,7 +55,6 @@ function App() {
 
                         <Route path="*" element={<Layout main={<Home />} />} />
                         <Route path="/" element={<Layout main={<Home />} />} />
-                        <Route path="/coach" element={<Layout main={<CoachesPage />} />} />
                         <Route path="/profile" element={<Layout main={<Auth><ProfilePage /></Auth>} />} />
                         <Route path="/cart" element={<Layout main={<Auth><Cart /></Auth>} />} />
                         <Route path="/products" element={<Layout main={<ProductsPage />} />} />

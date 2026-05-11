@@ -41,7 +41,6 @@ const Login = () => {
         photo: user.photo,
         role: user.role,
         isBlocked: user.isBlocked,
-        coachId: user.coachId,
         accessToken,
       });
       showFeedback('Login successful!', 'success');

@@ -38,7 +38,7 @@ The project focuses on modular backend design, role-based access control, Redis-
 
 Admins can:
 
-- View, search, and filter users by role (admin, coach, user)
+- View, search, and filter users by role (admin, user)
 - Sort users by name or registration date
 - Change user roles
 - Block and unblock user accounts

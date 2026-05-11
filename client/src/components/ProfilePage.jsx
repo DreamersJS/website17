@@ -55,14 +55,11 @@ const handleSave = async () => {
     return (
         <Box sx={{ padding: '20px' }}>
             <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <Avatar src={user.photo || "https://via.placeholder.com/100"} sx={{ width: 100, height: 100 }} />
                 <Typography variant="h5" sx={{ marginTop: '15px' }}>{user.username}</Typography>
                 <Typography variant="body1" sx={{ color: 'gray', marginTop: '5px' }}>{user.email}</Typography>
 
                 <Box sx={{ marginTop: '20px', display: 'flex', gap: 2 }}>
                     <ButtonAction onClick={handleToggleModal} content="Edit Profile" />
-                    <ButtonAction onClick={() => { }} content="Change Password" />
-
                 </Box>
             </Box>
 

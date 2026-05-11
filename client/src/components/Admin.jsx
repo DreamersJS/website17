@@ -105,7 +105,7 @@ const Admin = () => {
         onSearchChange={setSearch}
         selectedCategory={selectedRole}
         onCategoryChange={setSelectedRole}
-        categoryOptions={['admin', 'user', 'coach']}
+        categoryOptions={['admin', 'user']}
         sortOption={sortOption}
         onSortChange={setSortOption}
         sortOptions={[
@@ -156,7 +156,6 @@ const Admin = () => {
                                   onChange={(e) => handleRoleChange(user.id, e.target.value)}
                                 >
                                   <option value="user">User</option>
-                                  <option value="coach">Coach</option>
                                   <option value="admin">Admin</option>
                                 </select>
                               </TableCell>
@@ -205,7 +204,6 @@ const Admin = () => {
                     onChange={(e) => handleRoleChange(user.id, e.target.value)}
                   >
                     <option value="user">User</option>
-                    <option value="coach">Coach</option>
                     <option value="admin">Admin</option>
                   </select>
                 </p>

@@ -46,7 +46,6 @@ console.log({ user, accessToken });
         photo: user.photo,
         role: user.role,
         isBlocked: user.isBlocked,
-        coachId: user.coachId,
         accessToken
       });
       showFeedback('Registration successful!', 'success');

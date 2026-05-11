@@ -31,7 +31,6 @@ Create new user.
     "username": "Andy",
     "email": "andy@gmail.com",
     "role": "USER",
-    "coachId": null,
     "createdAt": "2025-07-01T14:24:04.329Z",
     "isBlocked": false
   },
@@ -72,7 +71,6 @@ Login a user.
     "role": "USER",
     "isBlocked": false,
     "createdAt": "2025-07-01T14:24:04.329Z",
-    "coachId": null
   },
   "meta": {
     "accessToken": "jwt_token"
@@ -129,7 +127,6 @@ Get all users.
 [1]     role: 'USER',
 [1]     isBlocked: true,
 [1]     createdAt: 2026-05-03T21:40:30.451Z,
-[1]     coachId: null
 [1]   },
 [1]   {
 [1]     id: '4716a667-6acc-4bdd-bd5c-1b94509af5d0',
@@ -138,7 +135,6 @@ Get all users.
 [1]     role: 'USER',
 [1]     isBlocked: true,
 [1]     createdAt: 2026-05-03T21:47:04.873Z,
-[1]     coachId: null
 [1]   }
 [1] ]
 }
@@ -171,7 +167,6 @@ Get a user by email.
     "role": "ADMIN",
     "isBlocked": false,
     "createdAt": "2025-07-01T14:24:04.329Z",
-    "coachId": null
   }
 }
 ```
@@ -202,7 +197,6 @@ Get a user by id.
     "role": "ADMIN",
     "isBlocked": false,
     "createdAt": "2025-07-01T14:24:04.329Z",
-    "coachId": null
   }
 }
 ```
@@ -232,7 +226,6 @@ Update a user by id.
     "role": "ADMIN",
     "isBlocked": false,
     "createdAt": "2025-07-01T14:24:04.329Z",
-    "coachId": null
   }
 }
 ```
@@ -288,7 +281,6 @@ refresh a user by headers token.
         "role":"ADMIN",
         "isBlocked":false,
         "createdAt":"2025-07-01T14:24:04.329Z",
-        "coachId":null
         },
       "meta": {
         "accessToken"

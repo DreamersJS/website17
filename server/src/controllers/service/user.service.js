@@ -4,7 +4,7 @@ import { validate as isUUID } from "uuid";
 import { AppError } from "../../utils/AppError.js";
 
 export const createUserService = async (userData) => {
-  const { username, email, password, coachId } = userData;
+  const { username, email, password } = userData;
 
   if (!username || !email || !password) {
     throw new AppError("Username, email and password are required.", 400);
@@ -16,12 +16,10 @@ export const createUserService = async (userData) => {
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
-  const sanitizedCoachId = coachId && isUUID(coachId) ? coachId : null;
   const newUser = await prisma.user.create({
     data: {
       username,
       email,
-      coachId: sanitizedCoachId || null,
       password: hashedPassword,
     },
   });
@@ -36,7 +34,6 @@ export const createUserService = async (userData) => {
     username: true,
     email: true,
     role: true,
-    coachId: true,
     isBlocked: true
   }
 });select only controls what you return, not what you store. */
@@ -101,14 +98,7 @@ export const getUserByEmailService = async (email) => {
 };
 
 export const getAllUsersService = async () => {
-  const users = await prisma.user.findMany({
-    where: {
-      OR: [
-        { coachId: null }, // Optional `null` coachId
-        { coachId: { not: null } }, // Valid UUID coachId
-      ],
-    },
-  });
+  const users = await prisma.user.findMany();
 
   return users.map(({ password: _, ...user }) => user);
 };
