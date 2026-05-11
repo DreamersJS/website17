@@ -1,11 +1,11 @@
-import { getRecoil } from 'recoil-nexus';
-import { userState } from '../recoil/userAtom';
+import { getRecoil } from "recoil-nexus";
+import { userState } from "../recoil/userAtom";
 
 export const apiFetch = async (url, options = {}) => {
   const user = getRecoil(userState);
 
   const headers = {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
     ...(options.headers || {}),
   };
 
@@ -16,7 +16,7 @@ export const apiFetch = async (url, options = {}) => {
   const res = await fetch(url, {
     ...options,
     headers,
-    credentials: 'include', 
+    credentials: "include",
   });
 
   return res;

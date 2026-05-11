@@ -1,17 +1,25 @@
-import jwt from 'jsonwebtoken';
-import { validate as isUUID } from 'uuid';
-import { createUserService, deleteUserService, getAllUsersService, getUserByEmailService, getUserByIdService, loginUserService, updateUserService } from './service/user.service.js';
-import { AppError } from '../utils/AppError.js';
+import jwt from "jsonwebtoken";
+import { validate as isUUID } from "uuid";
+import {
+  createUserService,
+  deleteUserService,
+  getAllUsersService,
+  getUserByEmailService,
+  getUserByIdService,
+  loginUserService,
+  updateUserService,
+} from "./service/user.service.js";
+import { AppError } from "../utils/AppError.js";
 
 const ACCESS_SECRET = process.env.JWT_SECRET_KEY;
 const REFRESH_SECRET = process.env.JWT_REFRESH_SECRET;
 
 if (!ACCESS_SECRET) {
-  throw new Error('JWT_SECRET_KEY missing');
+  throw new Error("JWT_SECRET_KEY missing");
 }
 
 if (!REFRESH_SECRET) {
-  throw new Error('JWT_REFRESH_SECRET missing');
+  throw new Error("JWT_REFRESH_SECRET missing");
 }
 
 /**
@@ -23,11 +31,11 @@ export const createUser = async (req, res, next) => {
   const { username, email, password } = req.body;
 
   if (!username || !email || !password) {
-    return res.status(400).json({ error: 'Username, email, and password are required.' });
+    return res.status(400).json({ error: "Username, email, and password are required." });
   }
 
   try {
-    const result = await createUserService(req.body)
+    const result = await createUserService(req.body);
     const accessToken = jwt.sign(
       {
         userId: result.id,
@@ -36,24 +44,20 @@ export const createUser = async (req, res, next) => {
         isBlocked: result.isBlocked,
       },
       ACCESS_SECRET,
-      { expiresIn: '15m' }
+      { expiresIn: "15m" },
     );
 
-    const refreshToken = jwt.sign(
-      { userId: result.id },
-      REFRESH_SECRET,
-      { expiresIn: '7d' }
-    );
+    const refreshToken = jwt.sign({ userId: result.id }, REFRESH_SECRET, { expiresIn: "7d" });
 
     // Store token in HTTP-only cookie
-    res.cookie('refreshToken', refreshToken, {
+    res.cookie("refreshToken", refreshToken, {
       httpOnly: true, // Prevents JavaScript access
-      secure: process.env.NODE_ENV === 'production', // Use HTTPS in production
-      sameSite: 'Strict', // Prevents CSRF
+      secure: process.env.NODE_ENV === "production", // Use HTTPS in production
+      sameSite: "Strict", // Prevents CSRF
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
     res.status(201).json({
-      message: 'User created successfully',
+      message: "User created successfully",
       data: result,
       meta: {
         accessToken,
@@ -80,31 +84,26 @@ export const loginUser = async (req, res, next) => {
         isBlocked: user.isBlocked,
       },
       ACCESS_SECRET,
-      { expiresIn: '15m' }
+      { expiresIn: "15m" },
     );
 
-    const refreshToken = jwt.sign(
-      { userId: user.id },
-      REFRESH_SECRET,
-      { expiresIn: '7d' }
-    );
+    const refreshToken = jwt.sign({ userId: user.id }, REFRESH_SECRET, { expiresIn: "7d" });
     // in production:
     // sameSite: 'None',
-    res.cookie('refreshToken', refreshToken, {
+    res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'Strict',
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "Strict",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     res.status(200).json({
-      message: 'Login successful',
+      message: "Login successful",
       data: user,
       meta: {
         accessToken,
       },
     });
-
   } catch (error) {
     next(error);
   }
@@ -112,21 +111,18 @@ export const loginUser = async (req, res, next) => {
 
 // Logout a user
 export const logoutUser = (req, res, next) => {
-  res.clearCookie('refreshToken', {
+  res.clearCookie("refreshToken", {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'Strict',
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "Strict",
   });
-  res.status(200).json({ message: 'Logged out successfully' });
+  res.status(200).json({ message: "Logged out successfully" });
 };
 
 // Update an existing user - backend should whitelist allowed fields
 export const updateUser = async (req, res, next) => {
   const { id } = req.params;
-  const allowedUpdates =
-  req.user.role === 'ADMIN'
-    ? ['username', 'email', 'isBlocked']
-    : ['username', 'email'];
+  const allowedUpdates = req.user.role === "ADMIN" ? ["username", "email", "isBlocked"] : ["username", "email"];
 
   const updates = {};
 
@@ -136,11 +132,11 @@ export const updateUser = async (req, res, next) => {
     }
   });
   if (Object.keys(updates).length === 0) {
-    return next(new AppError('No valid fields provided for update', 400));
+    return next(new AppError("No valid fields provided for update", 400));
   }
   try {
     const updatedUser = await updateUserService(id, updates);
-    res.status(200).json({ message: 'User updated successfully', data: updatedUser });
+    res.status(200).json({ message: "User updated successfully", data: updatedUser });
   } catch (error) {
     next(error);
   }
@@ -151,15 +147,15 @@ export const fetchUser = async (req, res, next) => {
   const { id } = req.params;
 
   if (!isUUID(id)) {
-    return res.status(400).json({ error: 'Invalid UUID format' });
+    return res.status(400).json({ error: "Invalid UUID format" });
   }
 
   try {
     const user = await getUserByIdService(id);
     if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+      return res.status(404).json({ error: "User not found" });
     }
-    res.status(200).json({ message: 'User fetched successfully', data: user });
+    res.status(200).json({ message: "User fetched successfully", data: user });
   } catch (error) {
     next(error);
   }
@@ -169,19 +165,19 @@ export const fetchUser = async (req, res, next) => {
 export const getUserByEmail = async (req, res, next) => {
   const { email } = req.params;
   if (req.user.email !== req.params.email) {
-    throw new AppError('Unauthorized', 403);
+    throw new AppError("Unauthorized", 403);
   }
-  if (req.user.role !== 'ADMIN') {
-    throw new AppError('Unauthorized', 403);
+  if (req.user.role !== "ADMIN") {
+    throw new AppError("Unauthorized", 403);
   }
   try {
     const user = await getUserByEmailService(email);
 
     if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+      return res.status(404).json({ error: "User not found" });
     }
 
-    res.status(200).json({ message: 'User fetched successfully', data: user });
+    res.status(200).json({ message: "User fetched successfully", data: user });
   } catch (error) {
     next(error);
   }
@@ -189,11 +185,11 @@ export const getUserByEmail = async (req, res, next) => {
 
 // Fetch all users
 export const fetchAllUsers = async (req, res, next) => {
-  console.log('Fetching all users...');
+  console.log("Fetching all users...");
   try {
     const users = await getAllUsersService();
     console.log(users);
-    res.status(200).json({ message: 'Users fetched successfully', data: users });
+    res.status(200).json({ message: "Users fetched successfully", data: users });
   } catch (error) {
     next(error);
   }
@@ -204,7 +200,7 @@ export const deleteUser = async (req, res, next) => {
   const { id } = req.params;
   try {
     await deleteUserService(id);
-    res.status(200).json({ message: 'User deleted successfully' });
+    res.status(200).json({ message: "User deleted successfully" });
   } catch (error) {
     next(error);
   }
@@ -214,7 +210,7 @@ export const refreshAccessToken = async (req, res) => {
   const token = req.cookies.refreshToken;
 
   if (!token) {
-    return res.status(401).json({ error: 'No refresh token' });
+    return res.status(401).json({ error: "No refresh token" });
   }
 
   try {
@@ -223,7 +219,7 @@ export const refreshAccessToken = async (req, res) => {
     const user = await getUserByIdService(decoded.userId);
 
     if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+      return res.status(404).json({ error: "User not found" });
     }
 
     const accessToken = jwt.sign(
@@ -234,19 +230,18 @@ export const refreshAccessToken = async (req, res) => {
         isBlocked: user.isBlocked,
       },
       ACCESS_SECRET,
-      { expiresIn: '15m' }
+      { expiresIn: "15m" },
     );
 
     res.status(200).json({
       // success: true, // sounds good for testing
-      message: 'User re-fetched successfully',
+      message: "User re-fetched successfully",
       data: user,
       meta: {
         accessToken,
       },
     });
-
   } catch (err) {
-    return res.status(403).json({ error: 'Invalid refresh token' });
+    return res.status(403).json({ error: "Invalid refresh token" });
   }
 };

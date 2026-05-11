@@ -1,25 +1,25 @@
 import { apiFetch } from "./apiFetch";
-import { API_URL } from "../utils/helpers"
+import { API_URL } from "../utils/helpers";
 
 export const getProductByIdService = async (id) => {
   const res = await apiFetch(`${API_URL}/api/product/${id}`);
-  if (!res.ok) throw new Error('get product by id request failed');
+  if (!res.ok) throw new Error("get product by id request failed");
   const data = await res.json();
   return data.data;
 };
 // get all products
 export const getAllProductsService = async () => {
   const res = await apiFetch(`${API_URL}/api/product/all`);
-  if (!res.ok) throw new Error('get all products request failed');
+  if (!res.ok) throw new Error("get all products request failed");
   const data = await res.json();
   return data.data;
 };
 // add product
 export const addProductService = async (product) => {
   const { name, description, photo, price, inStock, quantity, categoryId, categoryName, tagNames } = product;
-  
+
   const res = await apiFetch(`${API_URL}/api/product/`, {
-    method: 'POST',
+    method: "POST",
     body: JSON.stringify({
       name,
       description,
@@ -32,7 +32,7 @@ export const addProductService = async (product) => {
       tagNames,
     }),
   });
-  if (!res.ok) throw new Error('service add product request failed');
+  if (!res.ok) throw new Error("service add product request failed");
   const data = await res.json();
   return data;
 };
@@ -45,7 +45,7 @@ export const updateProductService = async (id, product) => {
   const { name, description, photo, price, inStock, quantity, categoryId, categoryName, tagNames } = product;
 
   const res = await apiFetch(`${API_URL}/api/product/${id}`, {
-    method: 'PUT',
+    method: "PUT",
     body: JSON.stringify({
       name,
       description,
@@ -59,16 +59,16 @@ export const updateProductService = async (id, product) => {
     }),
   });
 
-  if (!res.ok) throw new Error('update product request failed');
+  if (!res.ok) throw new Error("update product request failed");
   const data = await res.json();
   return data;
 };
 // delete product
 export const deleteProductService = async (id) => {
   const res = await apiFetch(`${API_URL}/api/product/${id}`, {
-    method: 'DELETE',
+    method: "DELETE",
   });
-  if (!res.ok) throw new Error('delete product request failed');
+  if (!res.ok) throw new Error("delete product request failed");
   const data = await res.json();
   return data.message;
 };

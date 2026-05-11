@@ -7,6 +7,7 @@
 The project focuses on modular backend design, role-based access control, Redis-powered verification flows, and scalable frontend/backend separation.
 
 ---
+
 [Features](#features)</br>
 [Tech Stack](#tech-stack)</br>
 [Installation](#installation)</br>
@@ -19,18 +20,17 @@ The project focuses on modular backend design, role-based access control, Redis-
 
 ### User & Navigation System
 
-* Responsive header navigation
+- Responsive header navigation
+  - Desktop: full navigation with dropdown menus
+  - Mobile: drawer-based navigation
 
-  * Desktop: full navigation with dropdown menus
-  * Mobile: drawer-based navigation
-* Role-based UI rendering:
+- Role-based UI rendering:
+  - Guest: Login / Register
+  - Authenticated users: Profile, results, logout
+  - Admin: access to admin dashboard
 
-  * Guest: Login / Register
-  * Authenticated users: Profile, results, logout
-  * Admin: access to admin dashboard
-* Global search bar (in progress)
-
-  * Toggles search input and redirects to search page
+- Global search bar (in progress)
+  - Toggles search input and redirects to search page
 
 ---
 
@@ -38,10 +38,10 @@ The project focuses on modular backend design, role-based access control, Redis-
 
 Admins can:
 
-* View, search, and filter users by role (admin, coach, user)
-* Sort users by name or registration date
-* Change user roles
-* Block and unblock user accounts
+- View, search, and filter users by role (admin, coach, user)
+- Sort users by name or registration date
+- Change user roles
+- Block and unblock user accounts
 
 ---
 
@@ -49,10 +49,10 @@ Admins can:
 
 Admins can:
 
-* View and search products by name and tag
-* Filter by category (supplements, cosmetics)
-* Sort products by name, price, or newest
-* Create, update, and delete products
+- View and search products by name and tag
+- Filter by category (supplements, cosmetics)
+- Sort products by name, price, or newest
+- Create, update, and delete products
 
 ---
 
@@ -60,17 +60,17 @@ Admins can:
 
 Users can:
 
-* View and search products by name and tag
-* Filter by category (supplements, cosmetics)
-* Sort products by name, price, or newest
-* Load more products
-* Use scroll-to-top functionality
-* Add to cart button
+- View and search products by name and tag
+- Filter by category (supplements, cosmetics)
+- Sort products by name, price, or newest
+- Load more products
+- Use scroll-to-top functionality
+- Add to cart button
 
 Additional UX improvements:
 
-* Skeleton loading for better perceived performance
-* Dedicated single product view page
+- Skeleton loading for better perceived performance
+- Dedicated single product view page
 
 ---
 
@@ -78,17 +78,18 @@ Additional UX improvements:
 
 A secure contact system featuring:
 
-* Email domain validation (DNS MX check)
-* Email confirmation via token (Nodemailer with Ethereal)
-* Redis TTL-based verification system
-* Automatic form resume after confirmation
+- Email domain validation (DNS MX check)
+- Email confirmation via token (Nodemailer with Ethereal)
+- Redis TTL-based verification system
+- Automatic form resume after confirmation
 
 > Ethereal is used for testing purposes only and does not send real emails. Emails can be viewed via the provided console link in terminal.
 
 ---
 
 ### Cart
-* Add, delete and modify quantities of products to cart
+
+- Add, delete and modify quantities of products to cart
 
 ---
 
@@ -96,37 +97,37 @@ A secure contact system featuring:
 
 ### Frontend
 
-* React
-* Recoil
-* Context API
-* Tailwind CSS
-* Material UI
+- React
+- Recoil
+- Context API
+- Tailwind CSS
+- Material UI
 
 ### Backend
 
-* Express.js
-* PostgreSQL
-* Prisma ORM
-* Redis
-* JWT authentication
-* bcrypt
+- Express.js
+- PostgreSQL
+- Prisma ORM
+- Redis
+- JWT authentication
+- bcrypt
 
 ### Testing & DevOps
 
-* Jest
-* Supertest
-* Vitest
-* Docker
+- Jest
+- Supertest
+- Vitest
+- Docker
 
 ### Email Service
 
-* Nodemailer
-* Ethereal (testing environment)
+- Nodemailer
+- Ethereal (testing environment)
 
 ### General
 
-* JavaScript (ES6+)
-* Git
+- JavaScript (ES6+)
+- Git
 
 ---
 
@@ -146,7 +147,7 @@ Create a `.env` file inside both `client` and `server` directory.
 
 See:
 
-* [Configuration Guide](./docs/CONFIGURATION_GUIDE.md)
+- [Configuration Guide](./docs/CONFIGURATION_GUIDE.md)
 
 ### 3. Start the application
 
@@ -162,18 +163,17 @@ Alternatively, run client and server separately.
 
 ## Documentation
 
-* [API Documentation](./docs/api-doc.md)
+- [API Documentation](./docs/api-doc.md)
+  - Includes cURL examples for testing endpoints
 
-  * Includes cURL examples for testing endpoints
-
-* [Configuration Guide](./docs/CONFIGURATION_GUIDE.md)
-* [Architecture Overview](./docs/ARCHITECTURE.md)
+- [Configuration Guide](./docs/CONFIGURATION_GUIDE.md)
+- [Architecture Overview](./docs/ARCHITECTURE.md)
 
 ---
 
 ## Known Issues
 
-* Global search navigation is still in progress
+- Global search navigation is still in progress
 
 ---
 
@@ -187,6 +187,6 @@ Alternatively, run client and server separately.
 
 ## Creator
 
-* Zvezda Neycheva — [@DreamersJS](https://github.com/DreamersJS)
+- Zvezda Neycheva — [@DreamersJS](https://github.com/DreamersJS)
 
 ---

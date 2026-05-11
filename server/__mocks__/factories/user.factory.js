@@ -1,13 +1,13 @@
-import prisma from '../../src/config/prisma.js';
-import { v4 as uuid } from 'uuid';
+import prisma from "../../src/config/prisma.js";
+import { v4 as uuid } from "uuid";
 
 export async function createUser(overrides = {}) {
   return prisma.user.create({
     data: {
       id: uuid(),
-      username: 'testUser',
+      username: "testUser",
       email: `test-${Date.now()}@gmail.com`,
-      password: 'hashed',
+      password: "hashed",
       ...overrides,
     },
   });

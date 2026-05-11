@@ -131,7 +131,7 @@ Create a new product with category and tags.
 **Response:**
 
 ```json
-{ 
+{
  "data": {
      "id": "32",
      "name": "Protein Bar",
@@ -227,7 +227,7 @@ Update an existing product and its tag list.
      ],
      "updatedAt":""
    },
- }, 
+ },
 message:"Product updated"
 }
 ```
@@ -262,7 +262,7 @@ Delete a product and unlink tags.
 
 ```
 {
-  "data": null, 
+  "data": null,
   message:"Product deleted"
 }
 

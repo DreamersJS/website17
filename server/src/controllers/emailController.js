@@ -1,35 +1,35 @@
-import redisClient, { connectRedis } from '../config/redisClient.js';
-import { rateLimiter } from '../middleware/rateLimiter.js';
-import { generateToken } from '../middleware/tokenService.js';
-import dns from 'dns';
-import nodemailer from 'nodemailer';
+import redisClient, { connectRedis } from "../config/redisClient.js";
+import { rateLimiter } from "../middleware/rateLimiter.js";
+import { generateToken } from "../middleware/tokenService.js";
+import dns from "dns";
+import nodemailer from "nodemailer";
 
 // List of known email providers
 const knownDomains = new Set([
-  'gmail.com',
-  'yahoo.com',
-  'hotmail.com',
-  'outlook.com',
-  'icloud.com',
-  'abv.bg',
-  'mail.bg',
+  "gmail.com",
+  "yahoo.com",
+  "hotmail.com",
+  "outlook.com",
+  "icloud.com",
+  "abv.bg",
+  "mail.bg",
 ]);
 
 export async function checkDomainMxRecords(req, res) {
   const { email } = req.body;
 
-  if (typeof email !== 'string' || !email.includes('@')) {
-    return res.status(400).json({ valid: false, reason: 'Invalid email format' });
+  if (typeof email !== "string" || !email.includes("@")) {
+    return res.status(400).json({ valid: false, reason: "Invalid email format" });
   }
 
-  const domain = email.split('@')[1];
+  const domain = email.split("@")[1];
 
   if (!domain) {
-    return res.status(400).json({ valid: false, reason: 'Missing domain' });
+    return res.status(400).json({ valid: false, reason: "Missing domain" });
   }
 
   if (!knownDomains.has(domain)) {
-    return res.status(200).json({ valid: false, reason: 'Unknown or uncommon domain' });
+    return res.status(200).json({ valid: false, reason: "Unknown or uncommon domain" });
   }
 
   try {
@@ -38,7 +38,7 @@ export async function checkDomainMxRecords(req, res) {
     if (addresses.length > 0) {
       return res.status(200).json({ valid: true });
     } else {
-      return res.status(200).json({ valid: false, reason: 'No MX records' });
+      return res.status(200).json({ valid: false, reason: "No MX records" });
     }
   } catch (error) {
     return res.status(500).json({
@@ -50,11 +50,11 @@ export async function checkDomainMxRecords(req, res) {
 
 export const sendConfirmationEmailController = async (req, res) => {
   try {
-    const ip = req.ip || req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    const ip = req.ip || req.headers["x-forwarded-for"] || req.connection.remoteAddress;
 
     const isAllowed = await rateLimiter(ip);
     if (!isAllowed) {
-      return res.status(429).json({ message: 'Too many requests. Please try again later.' });
+      return res.status(429).json({ message: "Too many requests. Please try again later." });
     }
 
     const { email } = req.body;
@@ -68,19 +68,19 @@ export const sendConfirmationEmailController = async (req, res) => {
     await redisClient.setEx(`confirm_tokens:${token}`, 3600, JSON.stringify({ email, expiresAt }));
 
     const storedToken = await redisClient.get(`confirm_tokens:${token}`);
-    console.log('Token stored in Redis:', storedToken);
+    console.log("Token stored in Redis:", storedToken);
 
     const confirmationLink = `${process.env.FRONTEND_URL}/confirm?token=${token}&email=${email}`;
 
-    const subject = 'Confirm your email address';
+    const subject = "Confirm your email address";
     const text = `Please confirm your email by clicking the link: ${confirmationLink}`;
 
     await sendEmail({ to: email, subject, text });
 
-    return res.status(200).json({ message: 'Confirmation email sent!' });
+    return res.status(200).json({ message: "Confirmation email sent!" });
   } catch (error) {
-    console.error('Error in sendConfirmationEmailController:', error);
-    return res.status(500).json({ message: 'Failed to send confirmation email.' });
+    console.error("Error in sendConfirmationEmailController:", error);
+    return res.status(500).json({ message: "Failed to send confirmation email." });
   }
 };
 
@@ -90,39 +90,39 @@ export const confirmEmail = async (req, res) => {
   const { token, email } = req.query;
 
   if (!token || !email) {
-    return res.status(400).json({ message: 'Missing token or email' });
+    return res.status(400).json({ message: "Missing token or email" });
   }
 
   try {
     const storedStrToken = await redisClient.get(`confirm_tokens:${token}`);
     if (!storedStrToken) {
-      return res.status(400).json({ message: 'Invalid or expired token' });
+      return res.status(400).json({ message: "Invalid or expired token" });
     }
 
     const { email: storedEmail, expiresAt } = JSON.parse(storedStrToken);
 
     // Check if token is tied to this email
     if (email !== storedEmail) {
-      return res.status(400).json({ message: 'Email does not match token' });
+      return res.status(400).json({ message: "Email does not match token" });
     }
 
     // Check if token is expired
     if (Date.now() > expiresAt) {
-      return res.status(400).json({ message: 'Token expired' });
+      return res.status(400).json({ message: "Token expired" });
     }
 
     // Confirm email
-    await redisClient.set(`confirmed:${email}`, 'true', { EX: 86400 });
+    await redisClient.set(`confirmed:${email}`, "true", { EX: 86400 });
     await redisClient.del(`confirm_tokens:${token}`);
 
     return res.status(200).json({
-      message: 'Email confirmed successfully. You may now send your message.',
+      message: "Email confirmed successfully. You may now send your message.",
       confirmed: true,
       email,
     });
   } catch (err) {
-    console.error('Confirmation error:', err);
-    return res.status(500).json({ message: 'Internal Server Error' });
+    console.error("Confirmation error:", err);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
@@ -131,29 +131,29 @@ export const isConfirmed = async (req, res) => {
 
   const { email } = req.query;
   if (!email) {
-    return res.status(400).json({ message: 'Missing email' });
+    return res.status(400).json({ message: "Missing email" });
   }
   try {
     const isConfirmed = await redisClient.get(`confirmed:${email}`);
     return res.status(200).json({ confirmed: Boolean(isConfirmed) });
   } catch (error) {
-    console.error('isConfirmed error:', error);
-    return res.status(500).json({ message: 'Internal Server Error' });
+    console.error("isConfirmed error:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
 export const sendMsgController = async (req, res) => {
   try {
     await connectRedis();
-    const { name, email, phone, message, subject = 'New Contact Form Message' } = req.body;
+    const { name, email, phone, message, subject = "New Contact Form Message" } = req.body;
 
     if (!email) {
-      return res.status(400).json({ message: 'Recipient email is required.' });
+      return res.status(400).json({ message: "Recipient email is required." });
     }
 
     const isConfirmed = await redisClient.get(`confirmed:${email}`);
     if (!isConfirmed) {
-      return res.status(400).json({ message: 'Email not confirmed yet' });
+      return res.status(400).json({ message: "Email not confirmed yet" });
     }
 
     await sendEmail({
@@ -162,16 +162,16 @@ export const sendMsgController = async (req, res) => {
       text: `${message}\n\nFrom:\nName: ${name}\nPhone: ${phone}\nEmail: ${email}`,
     });
 
-    return res.status(200).json({ message: 'Message sent successfully!' });
+    return res.status(200).json({ message: "Message sent successfully!" });
   } catch (error) {
-    console.error('Error in sendMsgController:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
+    console.error("Error in sendMsgController:", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
-export async function sendEmail({ to, subject = 'Email Confirmation', text }) {
+export async function sendEmail({ to, subject = "Email Confirmation", text }) {
   const transporter = nodemailer.createTransport({
-    host: process.env.ETHEREAL_HOST || 'smtp.ethereal.email',
+    host: process.env.ETHEREAL_HOST || "smtp.ethereal.email",
     port: process.env.ETHEREAL_PORT || 587,
     secure: false,
     auth: {
@@ -187,6 +187,6 @@ export async function sendEmail({ to, subject = 'Email Confirmation', text }) {
     text,
   });
 
-  console.log('Email sent. Preview URL:', nodemailer.getTestMessageUrl(info));
+  console.log("Email sent. Preview URL:", nodemailer.getTestMessageUrl(info));
   return info;
 }

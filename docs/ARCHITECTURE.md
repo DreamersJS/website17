@@ -12,6 +12,7 @@ Fullstack web application for product and user management.
 The backend uses a hybrid approach:
 
 Products module → CQRS-inspired (commands & queries separation)
+
 - Dependency Injection (DI)
 - Command Query Responsibility Separation (CQRS-inspired)
 - Centralized Error Handling
@@ -20,10 +21,11 @@ Users module → traditional service-based architecture
 
 Other controllers → direct controller-level logic (minimal abstraction)
 Example:
+
 - Email controller
 
-
 ## Folder Structure(Simplified)
+
 ```
 server
 ├── prisma
@@ -32,7 +34,7 @@ server
 ├── src
 │   ├── app.js
 │   ├── config
-│   ├── controllers 
+│   ├── controllers
 |   │   ├── service
 |   │   ├── command
 |   │   └── query
@@ -46,7 +48,7 @@ server
     └── unit
 ```
 
-*The project does not enforce a single strict architectural pattern.*
+_The project does not enforce a single strict architectural pattern._
 
 Instead, it uses:
 

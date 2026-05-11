@@ -1,48 +1,48 @@
 export const getAllProducts = (prisma) => async () => {
-    return prisma.product.findMany({
-        include: {
-            category: true,
-            tags: { include: { tag: true } }
-        }
-    })
-}
+  return prisma.product.findMany({
+    include: {
+      category: true,
+      tags: { include: { tag: true } },
+    },
+  });
+};
 
 export const getProductById = (prisma) => async (id) => {
-    const product = await prisma.product.findUnique({
-        where: { id: Number(id) },
+  const product = await prisma.product.findUnique({
+    where: { id: Number(id) },
+    include: {
+      category: true,
+      tags: {
         include: {
-            category: true,
-            tags: {
-                include: {
-                    tag: true,
-                },
-            },
+          tag: true,
         },
-    });
-    if (!product) {
-        throw new Error('Product not found');
-    }
-    return product;
+      },
+    },
+  });
+  if (!product) {
+    throw new Error("Product not found");
+  }
+  return product;
 };
 
 export const queryProductByName = (prisma) => async (name) => {
-    const product = await prisma.product.findUnique({
-        where: { name },
+  const product = await prisma.product.findUnique({
+    where: { name },
+    include: {
+      category: true,
+      tags: {
         include: {
-            category: true,
-            tags: {
-                include: {
-                    tag: true,
-                },
-            },
+          tag: true,
         },
-    });
-    return product;
+      },
+    },
+  });
+  return product;
 };
 
 export const queryCategory = (prisma) => async (categoryName) => {
-    let category = await prisma.category.findUnique({
-        where: { name: categoryName },
-    });
-    return category;
-}
+  let category = await prisma.category.findUnique({
+    where: { name: categoryName },
+  });
+  return category;
+};
