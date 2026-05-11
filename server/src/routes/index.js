@@ -1,18 +1,18 @@
-import express from 'express';
-import userRoutes from './userRoutes.js';
-import coachRoutes from './coachRoutes.js';
-import productsRoutes from './productsRoutes.js';
-import searchRoutes from './searchRoutes.js';
-import emailRoutes from './emailRoutes.js';
-import cartRoutes from './cartRoutes.js';
+import express from "express";
+import userRoutes from "./userRoutes.js";
+import coachRoutes from "./coachRoutes.js";
+import productsRoutes from "./productsRoutes.js";
+import searchRoutes from "./searchRoutes.js";
+import emailRoutes from "./emailRoutes.js";
+import cartRoutes from "./cartRoutes.js";
 
 const router = express.Router();
 
-router.use('/users', userRoutes);
-router.use('/coaches', coachRoutes);
-router.use('/product', productsRoutes);
-router.use('/search', searchRoutes);
-router.use('/email', emailRoutes);
-router.use('/cart', cartRoutes);
+router.use("/users", userRoutes);
+router.use("/coaches", coachRoutes);
+router.use("/product", productsRoutes);
+router.use("/search", searchRoutes);
+router.use("/email", emailRoutes);
+router.use("/cart", cartRoutes);
 
 export default router;

@@ -1,20 +1,20 @@
-import { useMemo } from 'react';
+import { useMemo } from "react";
 
 const getValue = (obj, path) => {
-  return path.split('.').reduce((acc, part) => acc?.[part], obj);
+  return path.split(".").reduce((acc, part) => acc?.[part], obj);
 };
 
 function getNestedValue(obj, path) {
-  const parts = path.split('.');
+  const parts = path.split(".");
   let current = obj;
   for (let part of parts) {
     if (Array.isArray(current)) {
       // If current is array, flatten and extract part from each item
-      current = current.flatMap((item) => getNestedValue(item, parts.slice(parts.indexOf(part)).join('.')));
+      current = current.flatMap((item) => getNestedValue(item, parts.slice(parts.indexOf(part)).join(".")));
       break; // handled in recursion
     }
     if (!current || !Object.prototype.hasOwnProperty.call(current, part)) {
-      return '';
+      return "";
     }
     current = current[part];
   }
@@ -23,10 +23,10 @@ function getNestedValue(obj, path) {
 
 export const useFilterSearchSort = ({
   items,
-  searchQuery = '',
+  searchQuery = "",
   searchKeys = [],
-  categoryKey = '',
-  selectedCategory = '',
+  categoryKey = "",
+  selectedCategory = "",
   sortKeys = [],
 }) => {
   return useMemo(() => {
@@ -46,7 +46,7 @@ export const useFilterSearchSort = ({
         searchWords.some((word) =>
           searchKeys.some((key) => {
             const value = getNestedValue(item, key);
-            if (value != null && (typeof value === 'string' || typeof value === 'number')) {
+            if (value != null && (typeof value === "string" || typeof value === "number")) {
               return value.toString().toLowerCase().includes(word);
             }
 
@@ -67,15 +67,15 @@ export const useFilterSearchSort = ({
           const bVal = getValue(b, key);
 
           let result = 0;
-          if (typeof aVal === 'string' && typeof bVal === 'string') {
+          if (typeof aVal === "string" && typeof bVal === "string") {
             result = aVal.localeCompare(bVal);
-          } else if (typeof aVal === 'number' && typeof bVal === 'number') {
+          } else if (typeof aVal === "number" && typeof bVal === "number") {
             result = aVal - bVal;
           } else if (aVal instanceof Date || bVal instanceof Date) {
             result = new Date(aVal) - new Date(bVal);
           }
 
-          if (result !== 0) return order === 'asc' ? result : -result;
+          if (result !== 0) return order === "asc" ? result : -result;
         }
         return 0;
       });

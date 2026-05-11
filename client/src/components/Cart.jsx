@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Typography, Card, CardContent, CardMedia, IconButton, Button, Divider } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { createCartService, deleteItemsFromCart, getCartService, updateItemsFromCart } from '../service/cartService';
+import { createCartService, deleteItemsFromCart, getCartService, updateItemsFromCart } from '../service/service-cart';
 import { useRecoilValue } from "recoil";
 import { userState } from "../recoil/userAtom";
 

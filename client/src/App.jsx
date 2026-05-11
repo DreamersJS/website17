@@ -23,6 +23,7 @@ const CoachesPage = lazy(() => import('./components/CoachesPage'));
 
 // protected components
 import Cart from './components/Cart';
+import { useHydrateUserState } from './utils/rehydrate';
 const ProfilePage = lazy(() => import('./components/ProfilePage'));
 // auth components
 const Logout = lazy(() => import('./components/auth/Logout'));
@@ -32,59 +33,60 @@ const Register = lazy(() => import('./components/auth/Register'));
 const Admin = lazy(() => import('./components/Admin'));
 const AddProduct = lazy(() => import('./components/AddProduct'));
 
-
 // https://excalidraw.com/#json=rSo3sN2fJiBowpks8Aw-h,bYdqBNvCUjKXOchU2HEJMg
 
 function App() {
   const user = useRecoilValue(userState); // Read-only access
+  const loading = useHydrateUserState();
 
   useEffect(() => {
     console.log(`user`, user);
-
   }, [user]);
 
   return (
     <>
-      <ResponsiveComponent>
-        {({ width, height }) => (
-          <div className=' w-screen h-screen left-0 top-0 absolute'>
-            <FeedbackProvider>
-              <BrowserRouter>
-                <Suspense fallback={<div>Loading...</div>}> {/* Fallback while loading */}
-                  <ErrorBoundary>
-                    <Routes>
+      {loading ? (<div>Loading auth...</div>) : (
+        <ResponsiveComponent>
+          {({ width, height }) => (
+            <div className=' w-screen h-screen left-0 top-0 absolute'>
+              <FeedbackProvider>
+                <BrowserRouter>
+                  <Suspense fallback={<div>Loading...</div>}> {/* Fallback while loading */}
+                    <ErrorBoundary>
+                      <Routes>
 
-                      <Route path="*" element={<Layout main={<Home />} />} />
-                      <Route path="/" element={<Layout main={<Home />} />} />
-                      <Route path="/coach" element={<Layout main={<CoachesPage />} />} />
-                      <Route path="/profile" element={<Layout main={<ProfilePage />} />} />
-                      <Route path="/cart" element={<Layout main={<Auth><Cart /></Auth>} />} />
-                      <Route path="/testimonials" element={<Layout main={<Testimonials />} />} />
-                      <Route path="/products" element={<Layout main={<ProductsPage />} />} />
-                      <Route path="/products/:id" element={<Layout main={<ProductDetailsPage />} />} />
-                      {/* <Route path="/search/?q=yourSearchTerm" element={<Layout main={<SearchPage />} />} /> */}
-                      {/* no need to include ?q=... in route definition. That’s handled by useLocation(). */}
-                      <Route path="/search" element={<Layout main={<SearchPage />} />} />
-                      <Route path="/about" element={<Layout main={<About />} />} />
-                      <Route path="/privacy" element={<Layout main={<PrivacyPolicy />} />} />
-                      <Route path="/terms" element={<Layout main={<TermsOfUse />} />} />
-                      <Route path="/contact" element={<Layout main={<Contact />} />} />
-                      <Route path="/confirm" element={<ConfirmEmail />} />
+                        <Route path="*" element={<Layout main={<Home />} />} />
+                        <Route path="/" element={<Layout main={<Home />} />} />
+                        <Route path="/coach" element={<Layout main={<CoachesPage />} />} />
+                        <Route path="/profile" element={<Layout main={<Auth><ProfilePage /></Auth>} />} />
+                        <Route path="/cart" element={<Layout main={<Auth><Cart /></Auth>} />} />
+                        <Route path="/testimonials" element={<Layout main={<Testimonials />} />} />
+                        <Route path="/products" element={<Layout main={<ProductsPage />} />} />
+                        <Route path="/products/:id" element={<Layout main={<ProductDetailsPage />} />} />
+                        {/* <Route path="/search/?q=yourSearchTerm" element={<Layout main={<SearchPage />} />} /> */}
+                        {/* no need to include ?q=... in route definition. That’s handled by useLocation(). */}
+                        <Route path="/search" element={<Layout main={<SearchPage />} />} />
+                        <Route path="/about" element={<Layout main={<About />} />} />
+                        <Route path="/privacy" element={<Layout main={<PrivacyPolicy />} />} />
+                        <Route path="/terms" element={<Layout main={<TermsOfUse />} />} />
+                        <Route path="/contact" element={<Layout main={<Contact />} />} />
+                        <Route path="/confirm" element={<ConfirmEmail />} />
 
-                      <Route path="/admin" element={<Layout main={<Auth><Admin /></Auth>} />} />
-                      <Route path="/manage-products" element={<Auth><Layout main={<AddProduct />} /></Auth>} />
+                        <Route path="/admin" element={<Layout main={<Auth><Admin /></Auth>} />} />
+                        <Route path="/manage-products" element={<Auth><Layout main={<AddProduct />} /></Auth>} />
 
-                      <Route path="/logout" element={<Layout main={<Logout />} />} />
-                      <Route path="/login" element={<Layout main={<Login />} />} />
-                      <Route path="/register" element={<Layout main={<Register />} />} />
-                    </Routes>
-                  </ErrorBoundary>
-                </Suspense>
-              </BrowserRouter>
-            </FeedbackProvider>
-          </div>
-        )}
-      </ResponsiveComponent>
+                        <Route path="/logout" element={<Layout main={<Logout />} />} />
+                        <Route path="/login" element={<Layout main={<Login />} />} />
+                        <Route path="/register" element={<Layout main={<Register />} />} />
+                      </Routes>
+                    </ErrorBoundary>
+                  </Suspense>
+                </BrowserRouter>
+              </FeedbackProvider>
+            </div>
+          )}
+        </ResponsiveComponent>
+      )}
     </>
   )
 }

@@ -4,10 +4,9 @@ import { userState } from "../../recoil/userAtom";
 
 export default function Auth({ children }) {
     const user = useRecoilValue(userState);
-    const isAdmin = user?.role === "ADMIN";
     const location = useLocation();
 
-    if (!user?.id || !isAdmin) {
+    if (!user?.id ) {
         return <Navigate to="/login" replace state={{ from: location }} />;
     }
 

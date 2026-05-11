@@ -1,7 +1,7 @@
-import express from 'express';
+import express from "express";
 // import { authorizeRole } from '../middleware/authorizationAdmin.js';
 // import { authenticateUser } from '../middleware/authentication.js';
-import { searchProducts } from '../controllers/searchController.js';
+import { searchProducts } from "../controllers/searchController.js";
 
 const router = express.Router();
 

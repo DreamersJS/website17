@@ -1,5 +1,9 @@
 {
-  "singleQuote": true,
+  "singleQuote": false,
   "semi": true,
-  "printWidth": 120
+  "printWidth": 120,
+  "bracketSpacing": true,
+  "jsxBracketSameLine": true,
+  "arrowParens": "always",
+  "endOfLine": "lf"
 }

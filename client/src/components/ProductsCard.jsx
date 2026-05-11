@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Container, Typography, Box, Card, CardContent, CardMedia, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { addItemsToCart } from '../service/cartService';
+import { addItemsToCart } from '../service/service-cart';
 import { useFeedback } from './hoc/FeedbackContext';
 
 const ProductsCard = ({ product }) => {

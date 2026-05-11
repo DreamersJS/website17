@@ -1,4 +1,4 @@
-import redisClient from '../config/redisClient.js';
+import redisClient from "../config/redisClient.js";
 
 export async function rateLimiter(ip) {
   const redisKey = `rate_limit:${ip}`;
@@ -10,7 +10,7 @@ export async function rateLimiter(ip) {
 
     return incrementResult <= maxRequests;
   } catch (error) {
-    console.error('Error in rate limiter:', error);
+    console.error("Error in rate limiter:", error);
     return false;
   }
 }

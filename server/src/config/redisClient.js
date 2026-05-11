@@ -1,4 +1,4 @@
-import { createClient } from 'redis';
+import { createClient } from "redis";
 
 // const redisClient = createClient({
 //     password: process.env.REDIS_PASSWORD,
@@ -12,7 +12,7 @@ const redisClient = createClient({
   url: process.env.REDIS_URL,
 });
 
-redisClient.on('error', (err) => console.error('Redis Client Error', err));
+redisClient.on("error", (err) => console.error("Redis Client Error", err));
 
 let isConnected = false;
 
@@ -21,10 +21,10 @@ export const connectRedis = async () => {
     if (!isConnected) {
       await redisClient.connect();
       isConnected = true;
-      console.log('Connected to Redis!');
+      console.log("Connected to Redis!");
     }
   } catch (error) {
-    console.error('Failed to connect to Redis:', error);
+    console.error("Failed to connect to Redis:", error);
   }
 };
 

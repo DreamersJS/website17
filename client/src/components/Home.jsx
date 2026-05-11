@@ -1,7 +1,6 @@
 import React from 'react';
 import { Box, Typography, Grid, Button, Container } from '@mui/material';
 import { NavLink } from 'react-router-dom';
-import WellnessImage from '../../public/wellness-image.jpg'; 
 
 // "vegan diets", "beginner workouts", "boost your energy", "boost your mood", "improve your sleep", "improve your digestion", "improve your skin", "improve your posture", "boost your immunity", "improve your microbiome health", 
 // Story Highlights: Feature personal stories with clickable links to read more.
@@ -18,32 +17,45 @@ const Home = () => {
             {/* Hero Section */}
             <Box
                 sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
+                    position: 'relative',
                     height: '80vh',
-                    backgroundImage: `url(${WellnessImage})`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    position: 'relative', // Needed to position the overlay
-                    color: 'white',
-                    textAlign: 'center',
-                    padding: '0 20px',
+                    overflow: 'hidden',
                 }}
             >
-                {/* Dim Overlay */}
+                {/* Background image */}
                 <Box
+                    component="img"
+                    src="../../public/wellness-image.jpg"
+                    alt="Wellness"
                     sx={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        backgroundColor: 'rgba(0, 0, 0, 0.6)', // 50%-60% dark overlay
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
                     }}
                 />
 
-                <Box sx={{ position: 'relative', zIndex: 2 }}>
+                {/* Dark overlay */}
+                <Box
+                    sx={{
+                        position: 'absolute',
+                        inset: 0,
+                        backgroundColor: 'rgba(0,0,0,0.6)',
+                    }}
+                />
+
+
+                <Box sx={{
+                    position: 'absolute',
+                    inset: 0,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: 'white',
+                    textAlign: 'center',
+                    px: 2,
+                    zIndex: 2
+                }}>
                     <Typography variant="h2" sx={{ fontWeight: 'bold', fontSize: '3rem' }}>
                         Unlock Your Best Self
                     </Typography>
