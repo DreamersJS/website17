@@ -120,12 +120,26 @@ export const logoutUser = (req, res, next) => {
   res.status(200).json({ message: 'Logged out successfully' });
 };
 
-// Update an existing user
+// Update an existing user - backend should whitelist allowed fields
 export const updateUser = async (req, res, next) => {
   const { id } = req.params;
+  const allowedUpdates =
+  req.user.role === 'ADMIN'
+    ? ['username', 'email', 'isBlocked']
+    : ['username', 'email'];
 
+  const updates = {};
+
+  allowedUpdates.forEach((field) => {
+    if (req.body[field] !== undefined) {
+      updates[field] = req.body[field];
+    }
+  });
+  if (Object.keys(updates).length === 0) {
+    return next(new AppError('No valid fields provided for update', 400));
+  }
   try {
-    const updatedUser = await updateUserService(id, req.body);
+    const updatedUser = await updateUserService(id, updates);
     res.status(200).json({ message: 'User updated successfully', data: updatedUser });
   } catch (error) {
     next(error);
@@ -154,7 +168,12 @@ export const fetchUser = async (req, res, next) => {
 // Fetch a single user by email
 export const getUserByEmail = async (req, res, next) => {
   const { email } = req.params;
-
+  if (req.user.email !== req.params.email) {
+    throw new AppError('Unauthorized', 403);
+  }
+  if (req.user.role !== 'ADMIN') {
+    throw new AppError('Unauthorized', 403);
+  }
   try {
     const user = await getUserByEmailService(email);
 

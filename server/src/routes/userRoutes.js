@@ -22,8 +22,8 @@ router.post('/logout', logoutUser);
 
 // router.get('/all', fetchAllUsers); // for testing purposes only
 router.get('/all', authenticateUser, verifyAdmin, fetchAllUsers);
-router.get('/email/:email', authenticateUser,verifyOwnershipOrAdmin, getUserByEmail);
-router.get('/:id', authenticateUser,verifyOwnershipOrAdmin, fetchUser);
+router.get('/email/:email', authenticateUser, getUserByEmail);
+router.get('/:id', authenticateUser, verifyOwnershipOrAdmin, fetchUser);
 router.put('/:id', authenticateUser, verifyOwnershipOrAdmin, updateUser);
 router.delete('/:id', authenticateUser, verifyOwnershipOrAdmin, deleteUser);
 router.post('/refresh', refreshAccessToken)
