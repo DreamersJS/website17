@@ -5,14 +5,19 @@
 **E-commerce Admin System** is a fullstack role-based platform designed for small businesses to manage products, users, and authentication workflows with secure email verification and scalable backend architecture.
 
 The project focuses on modular backend design, role-based access control, Redis-powered verification flows, and scalable frontend/backend separation.
-
+---
+![React](https://img.shields.io/badge/React-Frontend-blue)
+![Express](https://img.shields.io/badge/Express-Backend-black)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-blue)
+![Redis](https://img.shields.io/badge/Redis-Cache-red)
 ---
 
-[Features](#features)</br>
-[Tech Stack](#tech-stack)</br>
-[Installation](#installation)</br>
-[Documentation](#documentation)</br>
-[Known Issues](#known-issues)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Installation](#installation)
+- [Documentation](#documentation)
+- [Known Issues](#known-issues)
+- [Screenshots](#screenshots)
 
 ---
 
@@ -65,7 +70,7 @@ Users can:
 - Sort products by name, price, or newest
 - Load more products
 - Use scroll-to-top functionality
-- Add to cart button
+- Add-to-cart button
 
 Additional UX improvements:
 
@@ -143,7 +148,7 @@ npm install
 
 ### 2. Setup environment variables
 
-Create a `.env` file inside both `client` and `server` directory.
+Create a `.env` file inside both `client` and `server` directories.
 
 See:
 
