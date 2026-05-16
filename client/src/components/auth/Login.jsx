@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { loginUser } from '../../service/service-user.js';
+import { loginUser, vZod } from '../../service/service-user.js';
 import { useSetRecoilState } from "recoil";
 import { userState } from "../../recoil/userAtom.js";
 import {
@@ -12,7 +12,7 @@ import {
   CircularProgress,
 } from '@mui/material';
 import { useFeedback } from '../hoc/FeedbackContext.jsx';
-
+import { loginSchema } from '../../../../shared/schemas/user.schema.js';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -28,7 +28,13 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const { user, accessToken } = await loginUser({ email, password });
+      const validation = vZod(loginSchema, { email, password })
+      if (!validation.success) {
+        console.log(validation.errors);
+        showFeedback(Object.values(validation.errors)?.[0]?.[0], "error");
+        return;
+      }
+      const { user, message, accessToken } = await loginUser(validation.data);
 
       if (!user || !user.username || !user.id) {
         throw new Error("Username or ID is missing in the response");
@@ -43,11 +49,11 @@ const Login = () => {
         isBlocked: user.isBlocked,
         accessToken,
       });
-      showFeedback('Login successful!', 'success');
+      showFeedback(message, 'success');
       navigate('/');
     } catch (err) {
       console.error('Login error:', err);
-      showFeedback('Login failed!', 'error');
+      showFeedback(err.message || 'Login failed!', 'error');
     } finally {
       setLoading(false);
     }

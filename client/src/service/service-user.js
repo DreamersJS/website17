@@ -18,14 +18,8 @@ export const vZod = (schema, data) => {
   };
 };
 
-/**
- * @param {*} param0 { username, password, email }
- * @returns obj containing user details & access token
- */
 export const registerUser = async ({ username, password, email }) => {
   try {
-    console.log("registration data:", { username, email });
-
     const response = await apiFetch(`${API_URL}/api/users/register`, {
       method: "POST",
       body: JSON.stringify({
@@ -34,8 +28,6 @@ export const registerUser = async ({ username, password, email }) => {
         email,
       }),
     });
-
-    console.log("Received response from server:", response.status, response.statusText);
 
     if (!response.ok) {
       const errorData = await response.json();
@@ -54,10 +46,9 @@ export const registerUser = async ({ username, password, email }) => {
       console.error(parsed.errors);
       throw new Error("Invalid server response");
     }
-    console.log("User registered successfully:", parsed);
-
     return {
       user: parsed.data.data,
+      message: parsed.data.message,
       accessToken: parsed.data.meta?.accessToken,
     };
   } catch (error) {
@@ -78,14 +69,22 @@ export const loginUser = async ({ email, password }) => {
 
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(errorData.error || "Failed to login");
+      throw new Error(errorData.message ||
+        errorData.error ||
+        Object.values(errorData.errors?.fieldErrors || {})?.[0]?.[0] ||
+        "Failed to login");
     }
 
-    const { data, meta } = await response.json();
-    console.log("User logged in successfully:", data);
+    const responseJson = await response.json();
+    const parsed = vZod(authResponseSchema, responseJson)
+    if (!parsed.success) {
+      console.error(parsed.errors);
+      throw new Error("Invalid server response");
+    }
     return {
-      user: data,
-      accessToken: meta?.accessToken,
+      user: parsed.data.data,
+      message: parsed.data.message,
+      accessToken: parsed.data.meta?.accessToken,
     };
   } catch (error) {
     console.error("Error logging in:", error);

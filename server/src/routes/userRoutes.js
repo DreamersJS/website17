@@ -14,12 +14,12 @@ import { verifyAdmin } from "../middleware/authorizationAdmin.js";
 import { authenticateUser } from "../middleware/authentication.js";
 import { verifyOwnershipOrAdmin } from "../middleware/verifyOwnershipOrAdmin.js";
 import { validateZod } from "../middleware/validateZod.js"
-import { registerSchema } from "../../../shared/schemas/user.schema.js";
+import { loginSchema, registerSchema } from "../../../shared/schemas/user.schema.js";
 
 const router = express.Router();
 
 router.post("/register", validateZod(registerSchema), createUser);
-router.post("/login", loginUser);
+router.post("/login",validateZod(loginSchema), loginUser);
 router.post("/logout", logoutUser);
 
 // router.get('/all', fetchAllUsers); // for testing purposes only

@@ -22,12 +22,7 @@ if (!REFRESH_SECRET) {
   throw new Error("JWT_REFRESH_SECRET missing");
 }
 
-/**
- * Create a new user(Register)
- * const { username, email, password } = req.body;
- */
 export const createUser = async (req, res, next) => {
-  const { username, email, password } = req.validatedData;
   try {
     const result = await createUserService(req.validatedData);
     const accessToken = jwt.sign(
@@ -68,7 +63,7 @@ export const createUser = async (req, res, next) => {
 // login a user
 /*Only include the token in the res if your application explicitly needs to support clients that cannot rely on cookies (e.g., mobile apps). */
 export const loginUser = async (req, res, next) => {
-  const { email, password } = req.body;
+  const { email, password } = req.validatedData;
 
   try {
     const user = await loginUserService({ email, password });
@@ -96,7 +91,10 @@ export const loginUser = async (req, res, next) => {
 
     res.status(200).json({
       message: "Login successful",
-      data: user,
+      data: {
+        ...result,
+        createdAt: result.createdAt.toISOString(),
+      },
       meta: {
         accessToken,
       },

@@ -38,13 +38,12 @@ const Register = () => {
     setLoading(true);
 
     try {
-      const { user, accessToken } = await registerUser(validation.data); 
-      console.log({user});     
+      const { user, message, accessToken } = await registerUser(validation.data);
       setUser({
         ...user,
         accessToken,
       });
-      showFeedback('Registration successful!', 'success');
+      showFeedback(message, 'success');
       navigate('/');
     } catch (err) {
       console.error('Register error', err);
