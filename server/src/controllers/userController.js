@@ -27,14 +27,9 @@ if (!REFRESH_SECRET) {
  * const { username, email, password } = req.body;
  */
 export const createUser = async (req, res, next) => {
-  const { username, email, password } = req.body;
-
-  if (!username || !email || !password) {
-    return res.status(400).json({ error: "Username, email, and password are required." });
-  }
-
+  const { username, email, password } = req.validatedData;
   try {
-    const result = await createUserService(req.body);
+    const result = await createUserService(req.validatedData);
     const accessToken = jwt.sign(
       {
         userId: result.id,
@@ -57,7 +52,10 @@ export const createUser = async (req, res, next) => {
     });
     res.status(201).json({
       message: "User created successfully",
-      data: result,
+      data: {
+        ...result,
+        createdAt: result.createdAt.toISOString(),
+      },
       meta: {
         accessToken,
       },
@@ -188,7 +186,8 @@ export const fetchAllUsers = async (req, res, next) => {
   try {
     const users = await getAllUsersService();
     console.log(users);
-    res.status(200).json({ message: "Users fetched successfully", data: users });
+    const parsed = userSchema.array().parse(users);
+    res.status(200).json({ message: "Users fetched successfully", data: parsed });
   } catch (error) {
     next(error);
   }

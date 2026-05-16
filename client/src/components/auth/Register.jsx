@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { validateForm, registerUser } from '../../service/service-user.js';
+import { registerUser, vZod } from '../../service/service-user.js';
 import { useSetRecoilState } from "recoil";
 import { userState } from "../../recoil/userAtom.js";
 import {
@@ -10,9 +10,9 @@ import {
   Button,
   CircularProgress,
   Container,
-  Grid,
 } from '@mui/material';
 import { useFeedback } from '../hoc/FeedbackContext.jsx';
+import { registerSchema } from '../../../../shared/schemas/user.schema.js';
 
 const Register = () => {
   const [username, setUsername] = useState('');
@@ -27,32 +27,28 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const validationError = validateForm({ username, email, password });
-    if (validationError) {
-      console.error('Validation error:', validationError);
-      showFeedback(`${validationError}`, 'error');
+    const validation = vZod(registerSchema, { username, email, password });
+
+    if (!validation.success) {
+      console.log(validation.errors);
+      showFeedback(Object.values(validation.errors)?.[0]?.[0], "error");
       return;
     }
 
     setLoading(true);
 
     try {
-      const { user, accessToken } = await registerUser({ username, email, password });
-console.log({ user, accessToken });
+      const { user, accessToken } = await registerUser(validation.data); 
+      console.log({user});     
       setUser({
-        id: user.id,
-        email: user.email,
-        username: user.username,
-        photo: user.photo,
-        role: user.role,
-        isBlocked: user.isBlocked,
-        accessToken
+        ...user,
+        accessToken,
       });
       showFeedback('Registration successful!', 'success');
       navigate('/');
     } catch (err) {
       console.error('Register error', err);
-      showFeedback('Registration failed!', 'error');
+      showFeedback(err.message || 'Registration failed!', 'error');
     } finally {
       setLoading(false);
     }

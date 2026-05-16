@@ -1,17 +1,21 @@
 import { apiFetch } from "./apiFetch";
 import { API_URL } from "../utils/helpers";
+import { authResponseSchema, } from "../../../shared/schemas/user.schema";
 
-export const validateForm = ({ username, email, password }) => {
-  if (!username || username.length < 3) {
-    return "Username must be at least 3 characters long.";
+export const vZod = (schema, data) => {
+  const result = schema.safeParse(data);
+
+  if (!result.success) {
+    return {
+      success: false,
+      errors: result.error.flatten().fieldErrors,
+    };
   }
-  if (!email || !/^\S+@\S+\.\S+$/.test(email)) {
-    return "Please enter a valid email address.";
-  }
-  if (!password || password.length < 6) {
-    return "Password must be at least 6 characters long.";
-  }
-  return null;
+
+  return {
+    success: true,
+    data: result.data,
+  };
 };
 
 /**
@@ -36,15 +40,25 @@ export const registerUser = async ({ username, password, email }) => {
     if (!response.ok) {
       const errorData = await response.json();
       console.error("Server error response:", errorData);
-      throw new Error(errorData.error || "Failed to register user");
+      throw new Error(
+        errorData.message ||
+        errorData.error ||
+        Object.values(errorData.errors?.fieldErrors || {})?.[0]?.[0] ||
+        "Failed to register user"
+      );
     }
 
-    const { data, meta } = await response.json();
-    console.log("User registered successfully:", data);
+    const responseJson = await response.json();
+    const parsed = vZod(authResponseSchema, responseJson)
+    if (!parsed.success) {
+      console.error(parsed.errors);
+      throw new Error("Invalid server response");
+    }
+    console.log("User registered successfully:", parsed);
 
     return {
-      user: data,
-      accessToken: meta?.accessToken,
+      user: parsed.data.data,
+      accessToken: parsed.data.meta?.accessToken,
     };
   } catch (error) {
     console.error("Error registering user:", error);

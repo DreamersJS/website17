@@ -13,10 +13,12 @@ import {
 import { verifyAdmin } from "../middleware/authorizationAdmin.js";
 import { authenticateUser } from "../middleware/authentication.js";
 import { verifyOwnershipOrAdmin } from "../middleware/verifyOwnershipOrAdmin.js";
+import { validateZod } from "../middleware/validateZod.js"
+import { registerSchema } from "../../../shared/schemas/user.schema.js";
 
 const router = express.Router();
 
-router.post("/register", createUser);
+router.post("/register", validateZod(registerSchema), createUser);
 router.post("/login", loginUser);
 router.post("/logout", logoutUser);
 

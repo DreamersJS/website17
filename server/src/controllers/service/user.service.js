@@ -6,10 +6,6 @@ import { AppError } from "../../utils/AppError.js";
 export const createUserService = async (userData) => {
   const { username, email, password } = userData;
 
-  if (!username || !email || !password) {
-    throw new AppError("Username, email and password are required.", 400);
-  }
-
   const existingUser = await prisma.user.findUnique({ where: { email } });
   if (existingUser) {
     throw new AppError("Email is already in use.", 400);
@@ -22,22 +18,17 @@ export const createUserService = async (userData) => {
       email,
       password: hashedPassword,
     },
+    select: {
+      id: true,
+      username: true,
+      email: true,
+      role: true,
+      isBlocked: true,
+      createdAt: true,
+    },
   });
 
-  const { password: _, ...safeUser } = newUser;
-  /**
-  or
-  const newUser = await prisma.user.create({
-  data: {...},
-  select: {
-    id: true,
-    username: true,
-    email: true,
-    role: true,
-    isBlocked: true
-  }
-});select only controls what you return, not what you store. */
-  return safeUser;
+  return newUser;
 };
 
 export const loginUserService = async (data) => {
