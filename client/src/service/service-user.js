@@ -67,6 +67,7 @@ export const loginUser = async ({ email, password }) => {
       }),
     });
 
+    console.log({response});
     if (!response.ok) {
       const errorData = await response.json();
       throw new Error(errorData.message ||
@@ -74,7 +75,6 @@ export const loginUser = async ({ email, password }) => {
         Object.values(errorData.errors?.fieldErrors || {})?.[0]?.[0] ||
         "Failed to login");
     }
-
     const responseJson = await response.json();
     const parsed = vZod(authResponseSchema, responseJson)
     if (!parsed.success) {
