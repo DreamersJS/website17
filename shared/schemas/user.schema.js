@@ -12,7 +12,7 @@ export const loginSchema = z.object({
 });
 
 export const userSchema = z.object({
-    id: z.string(),
+    id: z.string().trim(),
     username: z.string().min(3, "username must be at least 3 chars"),
     email: z.string().email("Invalid email"),
     role: z.enum(["USER", "ADMIN"]),

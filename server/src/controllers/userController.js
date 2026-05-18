@@ -92,8 +92,8 @@ export const loginUser = async (req, res, next) => {
     res.status(200).json({
       message: "Login successful",
       data: {
-        ...result,
-        createdAt: result.createdAt.toISOString(),
+        ...user,
+        createdAt: user.createdAt.toISOString(),
       },
       meta: {
         accessToken,
