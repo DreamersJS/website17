@@ -12,7 +12,6 @@ datasource db {
 
 enum Role {
   USER
-  COACH
   ADMIN
 }
 
@@ -25,24 +24,10 @@ model User {
   isBlocked Boolean  @default(false)
   createdAt DateTime @default(now())
 
-  coachId      String?       @db.Uuid
-  coach        User?         @relation("UserCoach", fields: [coachId], references: [id], onDelete: SetNull)
-
-   // Relationships to other features
-  clients      User[]        @relation("UserCoach")
-  coachProfile CoachProfile? @relation("CoachProfileUser")  
+   // Relationships to other features 
   cart  Cart?
   
   @@index([email])
-}
-
-model CoachProfile {
-  id         String   @id @default(uuid()) @db.Uuid
-  bio        String
-  expertise  String?   // Example: Fitness, Nutrition
-  userId     String?   @unique @db.Uuid
-  user       User?     @relation("CoachProfileUser", fields: [userId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
 }
 
 model Category {

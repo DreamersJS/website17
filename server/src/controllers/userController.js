@@ -22,20 +22,9 @@ if (!REFRESH_SECRET) {
   throw new Error("JWT_REFRESH_SECRET missing");
 }
 
-/**
- * Create a new user(Register)
- * const { username, email, password, coachId  } = req.body;
- * coachId is optional and can be null for now
- */
 export const createUser = async (req, res, next) => {
-  const { username, email, password } = req.body;
-
-  if (!username || !email || !password) {
-    return res.status(400).json({ error: "Username, email, and password are required." });
-  }
-
   try {
-    const result = await createUserService(req.body);
+    const result = await createUserService(req.validatedData);
     const accessToken = jwt.sign(
       {
         userId: result.id,
@@ -58,7 +47,10 @@ export const createUser = async (req, res, next) => {
     });
     res.status(201).json({
       message: "User created successfully",
-      data: result,
+      data: {
+        ...result,
+        createdAt: result.createdAt.toISOString(),
+      },
       meta: {
         accessToken,
       },
@@ -71,7 +63,7 @@ export const createUser = async (req, res, next) => {
 // login a user
 /*Only include the token in the res if your application explicitly needs to support clients that cannot rely on cookies (e.g., mobile apps). */
 export const loginUser = async (req, res, next) => {
-  const { email, password } = req.body;
+  const { email, password } = req.validatedData;
 
   try {
     const user = await loginUserService({ email, password });
@@ -99,7 +91,10 @@ export const loginUser = async (req, res, next) => {
 
     res.status(200).json({
       message: "Login successful",
-      data: user,
+      data: {
+        ...user,
+        createdAt: user.createdAt.toISOString(),
+      },
       meta: {
         accessToken,
       },
@@ -189,7 +184,8 @@ export const fetchAllUsers = async (req, res, next) => {
   try {
     const users = await getAllUsersService();
     console.log(users);
-    res.status(200).json({ message: "Users fetched successfully", data: users });
+    const parsed = userSchema.array().parse(users);
+    res.status(200).json({ message: "Users fetched successfully", data: parsed });
   } catch (error) {
     next(error);
   }

@@ -162,7 +162,7 @@
 
 //     // it('redirects to the home page after successful registration', async () => {
 //     //     const mockRegisterUser = vi.fn().mockResolvedValue({
-//     //         user: { id: 1, username: 'testuser', email: 'test@domain.com', photo: '', role: 'user', coachId: null }
+//     //         user: { id: 1, username: 'testuser', email: 'test@domain.com', photo: '', role: 'user',}
 //     //     });
 //     //     const mockSetUser = vi.fn();
 //     //     const mockNavigate = vi.fn();
@@ -191,7 +191,7 @@
 
 //     // it('updates user state after successful registration', async () => {
 //     //     const mockRegisterUser = vi.fn().mockResolvedValue({
-//     //         user: { id: 1, username: 'testuser', email: 'test@domain.com', photo: '', role: 'user', coachId: null }
+//     //         user: { id: 1, username: 'testuser', email: 'test@domain.com', photo: '', role: 'user'}
 //     //     });
 //     //     const mockSetUser = vi.fn();
 
@@ -219,7 +219,6 @@
 //     //             email: 'test@domain.com',
 //     //             photo: '',
 //     //             role: 'user',
-//     //             coachId: null,
 //     //         });
 //     //     });
 //     // });

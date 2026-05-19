@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Box, Typography, TextField, Button, CircularProgress, Container } from '@mui/material';
 import { useFeedback } from '../hoc/FeedbackContext.jsx';
 import { checkDomain, emailSendConfirmationEmail, emailSendMsg, checkEmailConfirmed } from '../../service/service-email.js';
+import { contactSchema } from '../../../../shared/schemas/email.schema.js';
+import { vZod } from '../../service/service-user.js';
 
 const Contact = () => {
     const [name, setName] = useState('');
@@ -11,21 +13,34 @@ const Contact = () => {
     const [loading, setLoading] = useState(false);
     const { showFeedback } = useFeedback();
     const [isConfirmed, setIsConfirmed] = useState(false);
+    const autoSubmittedRef = useRef(false);
 
     useEffect(() => {
         if (!email) return;
-      
-        const verifyConfirmed = async () => {
-          try {
-            const resp = await checkEmailConfirmed(email);
-            setIsConfirmed(resp?.confirmed || false);
-          } catch {
-            setIsConfirmed(false);
-          }
-        };
-      
-        verifyConfirmed();
-      }, [email]);      
+    
+        const isValidEmail =
+            /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    
+        if (!isValidEmail) return;
+    
+        const timer = setTimeout(async () => {
+            try {
+                const resp =
+                    await checkEmailConfirmed(email);
+    console.log({resp});
+                setIsConfirmed(
+                    resp?.confirmed || false
+                );
+    
+            } catch (err) {
+                console.error(err);
+                setIsConfirmed(false);
+            }
+        }, 500);
+    
+        return () => clearTimeout(timer);
+    
+    }, [email]);
 
     // Prefill form from query params
     useEffect(() => {
@@ -45,18 +60,27 @@ const Contact = () => {
         if (
             isConfirmed &&
             name && email && phone && message &&
-            !sessionStorage.getItem('autoSubmitted')
+            !autoSubmittedRef.current
         ) {
-            sessionStorage.setItem('autoSubmitted', 'true');
-            setTimeout(() => {
-                handleSubmit(new Event('submit'));
-            }, 2000); // Wait a sec for UI to settle
+            autoSubmittedRef.current = true;
+
+            const timer = setTimeout(() => {
+                handleSubmit({ preventDefault: () => { } });
+            }, 2000);
+
+            return () => clearTimeout(timer);
         }
     }, [isConfirmed, name, email, phone, message]);
 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const validation = vZod(contactSchema, { name, email, phone, message })
+        if (!validation.success) {
+            console.log(validation.errors);
+            showFeedback(Object.values(validation.errors)?.[0]?.[0], "error");
+            return;
+        }
         setLoading(true);
         try {
             const verifyDomain = await checkDomain(email)
@@ -65,14 +89,7 @@ const Contact = () => {
                 setLoading(false);
                 return;
             }
-            // const verifyEmail = await emailSendConfirmationEmail(email)
-            // if (verifyEmail.ok) showFeedback(`Confirmation email sent. Please confirm before messaging.`, 'info');
-            // STOP here - let user confirm.
-            // const isConfirmed = await checkEmailConfirmed(email);
-            // if (!isConfirmed) {
-            //     showFeedback("Email not confirmed yet. Please check your inbox.", 'error');
-            //     return;
-            // }
+
             localStorage.setItem('unsentMessage', JSON.stringify({ name, email, phone, message }));
             const emailConfirmedResp = await checkEmailConfirmed(email);
             const isConfirmed = emailConfirmedResp?.confirmed;
