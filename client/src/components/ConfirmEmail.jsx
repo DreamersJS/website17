@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Container, Typography, CircularProgress, Box } from '@mui/material';
+import { API_URL } from "../utils/helpers";
 
 const ConfirmEmail = () => {
     const [searchParams] = useSearchParams();
@@ -20,7 +21,7 @@ const ConfirmEmail = () => {
 
         const confirmEmail = async () => {
             try {
-                const res = await fetch(`/api/email/confirmEmail?token=${token}&email=${email}`);
+                const res = await fetch(`${API_URL}/api/email/confirmEmail?token=${token}&email=${email}`);
                 const data = await res.json();
                 if (!res.ok) throw new Error(data.message || 'Failed to confirm email');
 

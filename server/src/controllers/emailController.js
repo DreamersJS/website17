@@ -16,7 +16,7 @@ const knownDomains = new Set([
 ]);
 
 export async function checkDomainMxRecords(req, res) {
-  const { email } = req.body;
+  const { email } = req.validatedData;
 
   if (typeof email !== "string" || !email.includes("@")) {
     return res.status(400).json({ valid: false, reason: "Invalid email format" });
@@ -57,7 +57,7 @@ export const sendConfirmationEmailController = async (req, res) => {
       return res.status(429).json({ message: "Too many requests. Please try again later." });
     }
 
-    const { email } = req.body;
+    const { email } = req.validatedData;
 
     await connectRedis();
 
@@ -129,7 +129,7 @@ export const confirmEmail = async (req, res) => {
 export const isConfirmed = async (req, res) => {
   await connectRedis();
 
-  const { email } = req.query;
+  const { email } = req.validatedData;
   if (!email) {
     return res.status(400).json({ message: "Missing email" });
   }
@@ -145,7 +145,7 @@ export const isConfirmed = async (req, res) => {
 export const sendMsgController = async (req, res) => {
   try {
     await connectRedis();
-    const { name, email, phone, message, subject = "New Contact Form Message" } = req.body;
+    const { name, email, phone, message, subject = "New Contact Form Message" } = req.validatedData;
 
     if (!email) {
       return res.status(400).json({ message: "Recipient email is required." });
