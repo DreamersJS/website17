@@ -82,3 +82,17 @@ export const checkEmailConfirmed = async (email) => {
     throw error;
   }
 };
+
+export const fetchEmailConfirmed = async () => {
+  try {
+    const response = await apiFetch(`${API_URL}/api/email/confirmEmail?token=${token}&email=${email}`);
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || 'Failed to confirm email')
+    };
+
+  } catch (error) {
+    console.error("Error isConfirmed:", error);
+    throw error;
+  }
+};
