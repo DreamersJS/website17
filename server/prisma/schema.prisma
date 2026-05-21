@@ -38,6 +38,7 @@ model User {
 
    // Relationships to other features
   cart  Cart?
+  session   Session?
   
   @@index([email])
 }
@@ -99,4 +100,15 @@ model CartItem {
   quantity  Int      @default(1)
 
   @@unique([cartId, productId])
+}
+
+model Session {
+  id           String   @id @default(uuid()) @db.Uuid
+
+  userId       String   @unique @db.Uuid
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  refreshTokenHash String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }

@@ -4,15 +4,19 @@ import {
   createUserService,
   deleteUserService,
   getAllUsersService,
+  getStoredRefreshTokenHash,
   getUserByEmailService,
   getUserByIdService,
+  invalidateSession,
   loginUserService,
+  storeRefreshTokenHash,
   updateUserService,
 } from "./service/user.service.js";
 import { AppError } from "../utils/AppError.js";
-
-const ACCESS_SECRET = process.env.JWT_SECRET_KEY;
-const REFRESH_SECRET = process.env.JWT_REFRESH_SECRET;
+import { ACCESS_SECRET } from "../config/env.js";
+import { REFRESH_SECRET } from "../config/env.js";
+import { compareHash, hash } from "../utils/hash.js";
+import { generateAccessToken, generateRefreshToken } from "../utils/generateTokenHelper.js";
 
 if (!ACCESS_SECRET) {
   throw new Error("JWT_SECRET_KEY missing");
@@ -24,32 +28,25 @@ if (!REFRESH_SECRET) {
 
 export const createUser = async (req, res, next) => {
   try {
-    const result = await createUserService(req.validatedData);
-    const accessToken = jwt.sign(
-      {
-        userId: result.id,
-        email: result.email,
-        role: result.role,
-        isBlocked: result.isBlocked,
-      },
-      ACCESS_SECRET,
-      { expiresIn: "15m" },
-    );
-
-    const refreshToken = jwt.sign({ userId: result.id }, REFRESH_SECRET, { expiresIn: "7d" });
+    const user = await createUserService(req.validatedData);
+    const accessToken = generateAccessToken(user);
+    const refreshToken = generateRefreshToken(user);
 
     // Store token in HTTP-only cookie
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true, // Prevents JavaScript access
       secure: process.env.NODE_ENV === "production", // Use HTTPS in production
-      sameSite: "Strict", // Prevents CSRF
+      sameSite: "Lax", // Prevents CSRF
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     });
+    const hashedRefreshToken = await hash(refreshToken);
+    await storeRefreshTokenHash(user.id, hashedRefreshToken);
+
     res.status(201).json({
       message: "User created successfully",
       data: {
-        ...result,
-        createdAt: result.createdAt.toISOString(),
+        ...user,
+        createdAt: user.createdAt.toISOString(),
       },
       meta: {
         accessToken,
@@ -61,33 +58,25 @@ export const createUser = async (req, res, next) => {
 };
 
 // login a user
-/*Only include the token in the res if your application explicitly needs to support clients that cannot rely on cookies (e.g., mobile apps). */
 export const loginUser = async (req, res, next) => {
   const { email, password } = req.validatedData;
-
   try {
     const user = await loginUserService({ email, password });
 
-    const accessToken = jwt.sign(
-      {
-        userId: user.id,
-        email: user.email,
-        role: user.role,
-        isBlocked: user.isBlocked,
-      },
-      ACCESS_SECRET,
-      { expiresIn: "15m" },
-    );
+    const accessToken = generateAccessToken(user);
+    const refreshToken = generateRefreshToken(user);
 
-    const refreshToken = jwt.sign({ userId: user.id }, REFRESH_SECRET, { expiresIn: "7d" });
     // in production:
     // sameSite: 'None',
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "Strict",
+      sameSite: "Lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
+
+    const hashedRefreshToken = await hash(refreshToken);
+    await storeRefreshTokenHash(user.id, hashedRefreshToken);
 
     res.status(200).json({
       message: "Login successful",
@@ -105,13 +94,18 @@ export const loginUser = async (req, res, next) => {
 };
 
 // Logout a user
-export const logoutUser = (req, res, next) => {
+export const logoutUser = async (req, res, next) => {
   res.clearCookie("refreshToken", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "Strict",
+    sameSite: "Lax",
   });
-  res.status(200).json({ message: "Logged out successfully" });
+  try {
+    await invalidateSession(req.user.userId)
+    res.status(200).json({ message: "Logged out successfully" });
+  } catch (error) {
+    next(error)
+  }
 };
 
 // Update an existing user - backend should whitelist allowed fields
@@ -180,10 +174,8 @@ export const getUserByEmail = async (req, res, next) => {
 
 // Fetch all users
 export const fetchAllUsers = async (req, res, next) => {
-  console.log("Fetching all users...");
   try {
     const users = await getAllUsersService();
-    console.log(users);
     const parsed = userSchema.array().parse(users);
     res.status(200).json({ message: "Users fetched successfully", data: parsed });
   } catch (error) {
@@ -206,28 +198,37 @@ export const refreshAccessToken = async (req, res) => {
   const token = req.cookies.refreshToken;
 
   if (!token) {
-    return res.status(401).json({ error: "No refresh token" });
+    throw new AppError("No refresh token", 401);
   }
 
   try {
     const decoded = jwt.verify(token, REFRESH_SECRET);
+    const session = await getStoredRefreshTokenHash(decoded.userId)
 
+    if (!session?.data.refreshTokenHash) {
+      throw new AppError("Session not found", 403);
+    }
+    const match = await compareHash(token, session?.data.refreshTokenHash);
+    if (!match) {
+      throw new AppError("Invalid refresh token", 403);
+    }
     const user = await getUserByIdService(decoded.userId);
 
     if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      throw new AppError("User not found", 404);
     }
 
-    const accessToken = jwt.sign(
-      {
-        userId: user.id,
-        email: user.email,
-        role: user.role,
-        isBlocked: user.isBlocked,
-      },
-      ACCESS_SECRET,
-      { expiresIn: "15m" },
-    );
+    const accessToken = generateAccessToken(user);
+    const refreshToken = generateRefreshToken(user);
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "Lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+    const hashedRefreshToken = await hash(refreshToken);
+    await storeRefreshTokenHash(user.id, hashedRefreshToken);
 
     res.status(200).json({
       // success: true, // sounds good for testing
@@ -237,7 +238,8 @@ export const refreshAccessToken = async (req, res) => {
         accessToken,
       },
     });
-  } catch (err) {
-    return res.status(403).json({ error: "Invalid refresh token" });
+  } catch (error) {
+    console.error(error);
+    next(error);
   }
 };

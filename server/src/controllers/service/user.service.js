@@ -24,7 +24,7 @@ export const createUserService = async (userData) => {
       email: true,
       role: true,
       isBlocked: true,
-      createdAt: true,
+      createdAt: true,// get and login will need cart & session, wonder if i can make only 1 select to modify- foe now safeUser handles changes
     },
   });
 
@@ -99,3 +99,47 @@ export const deleteUserService = async (id) => {
 
   return { message: "User deleted successfully" };
 };
+
+// store refresh jwt hash is Session db model
+export const storeRefreshTokenHash = async (userId, tokenHash) => {
+  const existingSession = await prisma.session.findUnique({
+    where: { userId },
+  });
+
+  if (existingSession) {
+    await prisma.session.update({
+      where: { userId },
+      data: {
+        refreshTokenHash: tokenHash,
+      },
+    });
+  } else {
+    await prisma.session.create({
+      data: {
+        userId,
+        refreshTokenHash: tokenHash,
+      },
+    });
+  }
+  return { message: "Refresh Token Hash stored successfully" };
+};
+
+// get stored Refresh Token Hash
+export const getStoredRefreshTokenHash = async (userId) => {
+  const existingSession = await prisma.session.findUnique({
+    where: { userId },
+  });
+  return {
+    data: existingSession,
+    message: "Refresh Token Hash fetched successfully"
+  }
+}
+
+export const invalidateSession = async (userId) => {
+  await prisma.session.update({
+    where: { userId },
+    data: {
+      refreshTokenHash: null,
+    },
+  });
+}

@@ -20,7 +20,7 @@ const router = express.Router();
 
 router.post("/register", validateZod(registerSchema), createUser);
 router.post("/login",validateZod(loginSchema), loginUser);
-router.post("/logout", logoutUser);
+router.post("/logout", authenticateUser, logoutUser);
 
 // router.get('/all', fetchAllUsers); // for testing purposes only
 router.get("/all", authenticateUser, verifyAdmin, fetchAllUsers);
