@@ -127,7 +127,7 @@ const Cart = () => {
                     <Divider sx={{ my: 3 }} />
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <Typography variant="h6">Total: ${total.toFixed(2)}</Typography>
-                        <Button variant="contained" size="large">
+                        <Button variant="contained" color="primary" size="large">
                             Checkout
                         </Button>
                     </Box>
