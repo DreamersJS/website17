@@ -1,0 +1,11 @@
+node_modules
+.git
+server
+docs
+coverage
+data
+__tests__
+docs
+TODO.md
+work-process.md
+w-p-contacts.md
