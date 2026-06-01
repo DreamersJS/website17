@@ -1,9 +1,5 @@
 node_modules
-.git
-server
-docs
 coverage
-data
 __tests__
-docs
-*.md
+.vscode
+public/readme

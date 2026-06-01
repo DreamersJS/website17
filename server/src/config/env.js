@@ -13,3 +13,4 @@ export const ETHEREAL_USER = process.env.ETHEREAL_USER;
 export const ETHEREAL_PASS = process.env.ETHEREAL_PASS;
 export const ETHEREAL_PORT = process.env.ETHEREAL_PORT;
 export const ETHEREAL_HOST = process.env.ETHEREAL_HOST;
+export const VERCEL_URL = process.env.VERCEL_URL;

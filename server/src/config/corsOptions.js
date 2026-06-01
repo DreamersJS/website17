@@ -1,7 +1,7 @@
 import cors from "cors";
-import { FRONTEND_URL } from "../config/env.js";
+import { FRONTEND_URL, VERCEL_URL } from "../config/env.js";
 
-const allowedOrigins = [FRONTEND_URL];
+const allowedOrigins = [FRONTEND_URL, VERCEL_URL];
 
 const corsOptions = {
   origin: (origin, callback) => {
