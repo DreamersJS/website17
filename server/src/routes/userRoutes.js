@@ -22,7 +22,7 @@ router.post("/register", validateZod(registerSchema), createUser);
 router.post("/login",validateZod(loginSchema), loginUser);
 router.post("/logout", authenticateUser, logoutUser);
 
-// router.get('/all', fetchAllUsers); // for testing purposes only
+// router.get('/all', authenticateUser, fetchAllUsers); // for testing purposes only
 router.get("/all", authenticateUser, verifyAdmin, fetchAllUsers);
 router.get("/email/:email", authenticateUser, getUserByEmail);
 router.get("/:id", authenticateUser, verifyOwnershipOrAdmin, fetchUser);

@@ -135,15 +135,9 @@ export const updateUser = async (req, res, next) => {
 export const fetchUser = async (req, res, next) => {
   const { id } = req.params;
 
-  if (!isUUID(id)) {
-    return res.status(400).json({ error: "Invalid UUID format" });
-  }
-
   try {
     const user = await getUserByIdService(id);
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
+
     res.status(200).json({ message: "User fetched successfully", data: user });
   } catch (error) {
     next(error);

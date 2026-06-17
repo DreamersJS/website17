@@ -1,8 +1,9 @@
 import request from "supertest";
 import { describe, it, expect, jest } from "@jest/globals";
 import app from "../../src/app.js";
+import { createUser, getAuthHeader } from "../../__mocks__/factories/user.factory.js";
 
-describe("Auth API", () => {
+describe("register", () => {
   it("should register a new user", async () => {
     const res = await request(app)
       .post("/api/users/register")
@@ -47,47 +48,23 @@ describe("Auth API", () => {
     expect(res.body.error).toBe("Email is already in use.");
   });
 
-  it("should fail if missing username",async () => {
-    const email = `test${Date.now()}@mail.com`;
+  it.each([
+    [undefined],
+    [''],
+    ['   '],
+    ['S'],
+  ])("should reject invalid username: %p", async (username) => {
+    const res = await request(app)
+      .post("/api/users/register")
+      .send({
+        username,
+        email: `test${Date.now()}@mail.com`,
+        password: "123456",
+      });
 
-    const res = await request(app).post("/api/users/register").send({
-      email,
-      password: "123456",
-    });
-    expect(res.statusCode).toBeGreaterThanOrEqual(400);
-  })
-  it("should fail if empty username",async () => {
-    const email = `test${Date.now()}@mail.com`;
-
-    const res = await request(app).post("/api/users/register").send({
-      username:'',
-      email,
-      password: "123456",
-    });
-    expect(res.statusCode).toBeGreaterThanOrEqual(400);
-  })
-  it("should fail if whitespace username",async () => {
-    const email = `test${Date.now()}@mail.com`;
-
-    const res = await request(app).post("/api/users/register").send({
-      username:'   ',
-      email,
-      password: "123456",
-    });
-    expect(res.statusCode).toBeGreaterThanOrEqual(400);
-  })
-  it("should fail if too short username",async () => {
-    const email = `test${Date.now()}@mail.com`;
-
-    const res = await request(app).post("/api/users/register").send({
-      username:'S',
-      email,
-      password: "123456",
-    });
-    expect(res.statusCode).toBeGreaterThanOrEqual(400);
-  })
+    expect(res.statusCode).toBe(400);
+  });
 });
-
 
 describe("Login", () => {
   let email = `test${Date.now()}@mail.com`;
@@ -143,30 +120,34 @@ describe("Login", () => {
   });
 });
 
-describe("Auth-protected route", () => {
+describe("Auth-protected route Logout", () => {
   let token;
-  beforeEach(async () => {
-    const email = `auth${Date.now()}@mail.com`;
+  let email = `test${Date.now()}@mail.com`;
+  let password = "123456";
 
+  beforeEach(async () => {
     const registerRes = await request(app).post("/api/users/register").send({
       username: "AuthUser",
       email,
-      password: "123456",
+      password,
     });
-
-    token = registerRes.body.meta.accessToken;
+    token = `Bearer ${registerRes.body.meta.accessToken}`;
+    // console.log({ token });
   });
+  // beforeEach(async () => {
+  //   const user = await createUser();
+  //   token = getAuthHeader(user);
+  // });
 
   it("should allow access with valid header token", async () => {
-    const res = await request(app).get("/api/users/logout").set('Authorization',`Bearer ${token}`);
+    const res = await request(app).post("/api/users/logout").set('Authorization', token);
 
-    // maybe should make it 204?
     expect(res.statusCode).toBe(200);
     expect(res.body.message).toMatch(/successfully/i)
   });
 
   it("should block access without header token", async () => {
-    const res = await request(app).get("/api/users/logout");
+    const res = await request(app).post("/api/users/logout");
 
     expect(res.statusCode).toBe(401);
   });
