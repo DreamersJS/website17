@@ -122,10 +122,11 @@ describe("Login", () => {
 
 describe("Auth-protected route Logout", () => {
   let token;
-  let email = `test${Date.now()}@mail.com`;
+  let email;
   let password = "123456";
 
   beforeEach(async () => {
+    email = `test${Date.now()}@mail.com`;
     const registerRes = await request(app).post("/api/users/register").send({
       username: "AuthUser",
       email,
@@ -134,6 +135,7 @@ describe("Auth-protected route Logout", () => {
     token = `Bearer ${registerRes.body.meta.accessToken}`;
     // console.log({ token });
   });
+  
   // beforeEach(async () => {
   //   const user = await createUser();
   //   token = getAuthHeader(user);
