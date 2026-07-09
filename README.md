@@ -117,8 +117,9 @@ A secure contact system featuring:
 - JWT authentication
 - bcrypt
 
-### Testing & DevOps
+### Validation, Testing & DevOps
 
+- Zod
 - Jest
 - Supertest
 - Vitest
